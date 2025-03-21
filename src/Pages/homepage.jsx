@@ -1,9 +1,21 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 
 function Homepage() {
+  const navigate = useNavigate();
+
+  const signUp = () => {
+    navigate('/SignUp')
+  }
+
+  const signIn = () => {
+    navigate('/SignIn')
+  }
+
   return (
     <div className="relative w-full min-h-screen bg-white">
-      <header className="bg-transparent w-full top-0 z-50 p-5 absolute">
+      <header className="bg-transparent w-full top-0 z-50 p-5 fixed absolute">
         <nav className="flex justify-between items-center py-4 px-10">
           <div className="flex items-center space-x-3 ">
             <img src="pictures/logo.png" alt="La Verdad Christian College Logo" className="h-20" />
@@ -23,10 +35,10 @@ function Homepage() {
           </div>
 
           <div className="flex space-x-3 text-[22.5px] font-bold">
-            <button className="px-7 py-2 bg-[#A4B2BE] text-[#1F3463] rounded-[10px] hover:bg-gray-400 transition">
+            <button className="px-7 py-2 bg-[#A4B2BE] text-[#1F3463] rounded-[10px] hover:bg-gray-400 transition" onClick={signUp}>
               Sign Up
             </button>
-            <button className="px-9 py-2 bg-[#1E3A8A] text-white rounded-[10px] hover:bg-purple-700 transition">
+            <button className="px-9 py-2 bg-[#1E3A8A] text-white rounded-[10px] hover:bg-purple-700 transition" onClick={signIn}>
               Log In
             </button>
           </div>

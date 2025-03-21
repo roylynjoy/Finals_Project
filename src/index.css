@@ -16,3 +16,21 @@
     font-family: "CustomFont", sans-serif;
   }
 }
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+
+.swiper-slide {
+  transition: all 0.3s ease-in-out;
+  transform: scale(0.6);
+  opacity: 0.6;
+  filter: blur(2px);
+}
+.swiper-slide-active {
+  transform: scale(1);
+  opacity: 1;
+  filter: blur(0);
+  z-index: 10;
+}
