@@ -34,3 +34,10 @@ body {
   filter: blur(0);
   z-index: 10;
 }
+
+/* homepage*/
+
+.clip-diagonal-tb {
+  clip-path: polygon(0 0, 100% 0, 0% 100%, 0% 100%);
+}
+    
