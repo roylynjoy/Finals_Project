@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Sidebar from '../Pages/Sidebar';
-import Header from '../Pages/header';
+import Sidebar from './Sidebar';
+import Header from './header';
 import Footer from './footer';
 import { FaRegCopy, FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";

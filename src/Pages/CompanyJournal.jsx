@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import CompanySidebar from '../Pages/CompanySidebar';
-import CompanyHeader from '../Pages/CompanyHeader';
+import CompanySidebar from './CompanySidebar';
+import CompanyHeader from './CompanyHeader';
 import Footer from './footer';
 import { FaEye, FaTrash } from 'react-icons/fa';
 

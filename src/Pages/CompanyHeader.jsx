@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaChevronDown, FaEnvelope } from "react-icons/fa";
 import { GoBellFill } from "react-icons/go";
 import { useLocation } from 'react-router-dom';
-import NotifModal from '../Pages/notifModal';
+import NotifModal from './notifModal';
 
 
 function Header() {
