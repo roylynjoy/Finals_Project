@@ -9,6 +9,6 @@ export default defineConfig({
   plugins: [react(), 
     tailwindcss()],
     alias: {
-      '/src/Pages/sidebar': path.resolve(__dirname, 'src/Pages/Sidebar'),
+      '/src/Pages/Sidebar': path.resolve(__dirname, 'src/Pages/Sidebar'),
     },
 })

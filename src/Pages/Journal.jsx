@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Header from './header';
-import Sidebar from './sidebar';
+import Sidebar from './Sidebar';
 import Footer from './footer';
 
 function Journal() {

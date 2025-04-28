@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaPhone } from "react-icons/fa6";
+
 
 
 function Homepage() {
@@ -119,7 +121,7 @@ function Homepage() {
       <div className="flex justify-center px-30 py-30 bg-[#2D0F7F]">
         <div className="flex justify-center">
         <div className="bg-white shadow-md rounded-l-lg p-6 w-1/2">
-          <h3 className="text-[30px] font-bold">📞 Phone</h3>
+          <h3 className="text-[30px] font-bold"><FaPhone /> Phone</h3>
           <p className="text-[27px]">(045) 436 1040</p>
 
           <h3 className="text-[30px] font-bold mt-4">📧 Email</h3>
