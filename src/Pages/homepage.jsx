@@ -2,6 +2,10 @@ import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
 import { FaPhone } from "react-icons/fa6";
+import { BsEnvelopeFill } from "react-icons/bs";
+import { FaLocationDot } from "react-icons/fa6";
+import { CiCalendar } from "react-icons/ci";
+
 
 
 
@@ -197,54 +201,73 @@ function Homepage() {
       </div>
 
       {/* Contact Section */}
-      <div id="contact" className="flex justify-center flex-col w-full bg-[#2D0F7F] text-white py-12 px-12">
-        <h2 className="text-[40px] font-bold">Get in Touch with Us</h2>
-        <p className="text-[25px] max-w-[740px]">
-          Have questions or need assistance? We’re here to help! Reach out to us through any of the following channels:
-        </p>
-      </div>
-
-      <div className="flex justify-center px-30 py-30 bg-[#2D0F7F]">
-        <div className="flex justify-center">
-          <div className="bg-white shadow-md rounded-l-lg p-6 w-1/2">
-            <h3 className="text-[30px] font-bold"><FaPhone /> Phone</h3>
-            <p className="text-[27px]">(045) 436 1040</p>
-
-            <h3 className="text-[30px] font-bold mt-4">📧 Email</h3>
-            <p className="text-lg">info@laverdad.edu.ph</p>
-            <p className="text-lg">registrar@laverdad.edu.ph</p>
-
-            <h3 className="text-[30px] font-bold mt-4">📍 Address</h3>
-            <p className="text-lg">
-              La Verdad Christian College, McArthur Highway, Sampaloc, Apalit, Pampanga
-            </p>
+      <div id="contact" className="flex w-full place-content-center bg-[#2D0F7F] ">
+        <div className="flex flex-col place-content-center px-8 py-5 gap-8 mb-20 -mb-10">
+          <div className=" flex flex-col ">
+            <h2 className="text-[40px] text-white font-bold">Get in Touch with Us</h2>
+            <h6 className="text-[25px] text-[#D9D9D9] max-w-[740px]">
+              Have questions or need assistance? We’re here to help! Reach out to us through any of the following channels:</h6>
           </div>
+          <div className="flex justify-center bg-[#2D0F7F]">
+            <div className="bg-white shadow-md rounded-l-lg p-6 w-1/2 w-[511px] py-20">
+              <div className="flex gap-6 ">
+              <FaPhone size={39} className=""/> 
+                <div className="flex-col">
+                  <h3 className="text-[30px] font-bold text-[#1F3463] "> Phone</h3>
+                  <p className="text-[27px]">(045) 436 1040</p>
+                </div>
+              </div>
 
-          <div className="w-1/2">
-            <iframe
-              className="rounded-r-lg shadow-md h-full"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3854.606472345355!2d120.75580687511305!3d14.959002285570884!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33965634a341dc6f%3A0x17091aa8b0043f89!2sLa%20Verdad%20Christian%20College!5e0!3m2!1sen!2sph!4v1743415006176!5m2!1sen!2sph"
-              allowFullScreen=""
-              loading="lazy"
-            ></iframe>
+              <div className="flex gap-6 mt-5">
+              <BsEnvelopeFill size={39}/>
+                <div className="flex-col">
+                  <h3 className="text-[30px] font-bold text-[#1F3463]">Email</h3>
+                  <p className="text-[27px]">info@laverdad.edu.ph</p>
+                  <p className="text-[27px]">registrar@laverdad.edu.ph</p>
+                </div>
+              </div>
+
+              <div className="flex gap-6 mt-5">
+              <FaLocationDot size={39}/>
+                <div className="flex-col">
+                  <h3 className="text-[30px] font-bold text-[#1F3463]"> Address</h3>
+                  <p className="text-[27px] w-[400px]">
+                    La Verdad Christian College, McArthur Highway, Sampaloc, Apalit, Pampanga</p>
+                </div>
+              </div>
+            </div>
+            
+
+            <div className="w-1/2">
+              <iframe
+                className="rounded-r-lg shadow-md h-full w-[511px]"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3854.606472345355!2d120.75580687511305!3d14.959002285570884!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33965634a341dc6f%3A0x17091aa8b0043f89!2sLa%20Verdad%20Christian%20College!5e0!3m2!1sen!2sph!4v1743415006176!5m2!1sen!2sph"
+                allowFullScreen=""
+                loading="lazy"
+              ></iframe>
+            </div>
           </div>
         </div>
+          
 
-        <div className="-mt-45 max-w-[719px] max-h-[793px]">
+        <div className="w-[719px] max-h-[793px]">
           <div className="bg-white shadow-md rounded-lg p-10">
             <h3 className="text-[50px] font-bold text-center text-[#1F3463]">Calendar of Events</h3>
+            <p className="border-b border-2 text-[#959494] mx-5"></p>
             <div className="mt-4 space-y-4">
               {Array(4).fill().map((_, i) => (
-                <div key={i} className="flex items-center bg-[#F1F1F1] justify-between p-4 border-1 border-[#494949] rounded-md">
+                <div key={i} className="flex items-center bg-[#F1F1F1] justify-between py-8 px-4 border-1 border-[#494949] rounded-md w-[630px]">
                   <div className="flex items-center space-x-4">
-                    <div className="h-[67px] w-[66px]">📅</div>
+                    <div className="">
+                      <CiCalendar size={66}/>
+                    </div>
                     <div>
                       <h4 className="text-[26px] font-bold text-[#1F3463]">FEBRUARY 24–28</h4>
-                      <p className="text-[20px]">La Verdad Christian College 26th Foundation Week</p>
+                      <p className="text-[20px] ">La Verdad Christian College 26th Foundation Week</p>
                     </div>
                   </div>
                 </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>
