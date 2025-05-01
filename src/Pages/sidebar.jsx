@@ -18,7 +18,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
 
   return (
     <div
-      className={`h-screen bg-[#2D0F7F] text-white fixed flex flex-col justify-between transition-all duration-500 ease-in-out z-50 ${
+      className={`h-screen bg-[#1F3463] text-white fixed flex flex-col justify-between transition-all duration-500 ease-in-out z-50 ${
         isExpanded ? "w-[400px]" : "w-[100px]"
       }`}
       onMouseEnter={() => setIsExpanded(true)}
@@ -74,7 +74,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
         <p className="border-t-3 mb-3"></p>
         <a
           href="#"
-          className={`flex items-center justify-between bg-[#2D0F7F] transition-all duration-300 ease-in-out rounded-full ${
+          className={`flex items-center justify-between bg-[#1F3463] transition-all duration-300 ease-in-out rounded-full ${
             isExpanded ? "w-full" : "w-[60px] mx-auto justify-center"
           }`}
         >

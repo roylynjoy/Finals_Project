@@ -66,7 +66,7 @@ function CompanyAttendance() {
           {/* Attendance Table */}
           <div className="overflow-x-auto text-[25px]">
             <table className="min-w-full bg-white rounded-lg border">
-              <thead className="bg-[#2e1065] text-white text-left ">
+              <thead className="bg-[#1F3463] text-white text-left ">
                 <tr>
                   <th className="py-4 pl-15">Name</th>
                   <th className="py-4 px-6">Time In</th>
