@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { TbArrowBadgeRightFilled, TbArrowBadgeLeftFilled } from "react-icons/tb";
+
 
 function Explore() {
   const navigate = useNavigate();
@@ -74,8 +76,8 @@ function Explore() {
 
             {/* RIGHT Arrow to show Learn More */}
             <div className="absolute right-10 top-[50%] transform -translate-y-1/2">
-              <FaArrowRight
-                className="cursor-pointer text-[#1F3463] h-[40px] w-[40px] hover:text-blue-700"
+              <TbArrowBadgeRightFilled size={49}
+                className="cursor-pointer text-black"
                 onClick={toggleLearnMore}
               />
             </div>
@@ -101,8 +103,8 @@ function Explore() {
         <div className="mt-20 flex flex-col items-center text-center mx-auto transition-all duration-500 relative">
           {/* LEFT Arrow to go back */}
           <div className="absolute left-10 top-[50%] transform -translate-y-1/2">
-            <FaArrowLeft
-              className="cursor-pointer text-[#1F3463] h-[40px] w-[40px] hover:text-blue-700"
+            <TbArrowBadgeLeftFilled size={49}
+              className="cursor-pointer text-black "
               onClick={goBackToMain}
             />
           </div>
