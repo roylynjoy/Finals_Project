@@ -1,116 +1,202 @@
-import React, { useState } from 'react';
-import Sidebar from './Sidebar';
-import { FaChevronDown } from "react-icons/fa";
-import Header from './header';
-import Footer from './footer';
+import React, { useState } from "react";
+import Sidebar from "./Sidebar";
+import Header from "./header";
+import Footer from "./footer";
+import { LuUser } from "react-icons/lu";
+import Calendar from "./Calendar";
 
 function StudentDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
 
-  // Calendar logic
   const today = new Date();
   const currentYear = today.getFullYear();
-  const currentMonth = today.getMonth(); // 0-indexed
-  const monthName = today.toLocaleString('default', { month: 'long' });
+  const currentMonth = today.getMonth();
+  const monthName = today.toLocaleString("default", { month: "long" });
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
   const daysArray = [];
-  for (let i = 0; i < firstDay; i++) {
-    daysArray.push(null); // empty cells before first day
-  }
-  for (let i = 1; i <= daysInMonth; i++) {
-    daysArray.push(i);
-  }
+  for (let i = 0; i < firstDay; i++) daysArray.push(null);
+  for (let i = 1; i <= daysInMonth; i++) daysArray.push(i);
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Sidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
-
-      <div className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${isSidebarExpanded ? "ml-[400px]" : "ml-[106px]"}`}>
+      <Sidebar
+        isExpanded={isSidebarExpanded}
+        setIsExpanded={setIsSidebarExpanded}
+      />
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
+          isSidebarExpanded ? "ml-[400px]" : "ml-[106px]"
+        } bg-[#FAFAFF]`}
+      >
         <Header />
-
-        <div className='px-20 py-10 grid grid-cols-3 gap-6 grid-rows-[auto_auto_auto]'>
-
-          {/* Welcome Card */}
-          <div className='bg-white shadow border border-[#C2C2C2] rounded-[10px] col-span-2 flex items-center justify-between px-6 py-4'>
-            <div>
-              <h1 className='text-[30px] font-semibold'>Hello, Antonio!</h1>
-              <h2 className='text-[18px] text-gray-600'>ABCDE Company Intern</h2>
-            </div>
-            <div className='h-4 w-4 bg-[#3BC651] rounded-full'></div>
-          </div>
-
-          {/* Journal Submission */}
-          <div className='bg-white shadow border border-[#C2C2C2] rounded-[10px] p-4'>
-            <h1 className='text-[26px] font-semibold mb-2 ml-2'>Journal Submission</h1>
-            <p className='text-gray-700 bg-[#F1F1F1] h-[188px] pl-5 pt-5 text-[20px]'>Antonio Andres Watson – January 01, 2025</p>
-          </div>
-
-          {/* Attendance Summary */}
-          <div className='bg-white shadow border border-[#C2C2C2] rounded-[10px] p-6 col-span-2'>
-            <h2 className='text-[26px] font-semibold mb-4'>Attendance Summary</h2>
-            <div className='grid grid-cols-3 gap-4'>
-              <div className='bg-[#E7F8ED] border-2 border-[#6BD37C] rounded-[10px] p-4 h-[216px]'>
-                <h1 className='text-[40px] font-bold text-[#00A94D] text-start'>100</h1>
-                <p className='text-[20px]'>Days</p>
-                <p className='font-semibold text-[25px] '>Present</p>
-              </div>
-              <div className='bg-[#FFF5E9] border-2 border-[#F38A40] rounded-[10px] p-4 text-center'>
-                <h1 className='text-[32px] font-bold text-[#F38A40]'>2</h1>
-                <p className='text-sm'>Days</p>
-                <p className='font-semibold'>Late</p>
-              </div>
-              <div className='bg-[#FAEEF2] border-2 border-[#9B3F62] rounded-[10px] p-4 text-center'>
-                <h1 className='text-[32px] font-bold text-[#9B3F62]'>1</h1>
-                <p className='text-sm'>Days</p>
-                <p className='font-semibold'>Absent</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Calendar - Now dynamic and functional */}
-          <div className='bg-white shadow border border-[#C2C2C2] rounded-[10px] p-4'>
-            <h2 className='text-[20px] font-semibold mb-2'>{monthName} {currentYear}</h2>
-            <div className='grid grid-cols-7 gap-2 text-center text-sm'>
-              {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d, i) => (
-                <div key={i} className='font-bold'>{d}</div>
-              ))}
-              {daysArray.map((day, index) => (
-                <div
-                  key={index}
-                  className={`py-1 rounded ${day === today.getDate() ? 'bg-[#1F3463] text-white font-bold' : ''}`}
-                >
-                  {day || ''}
+        <div className="p-8 grid grid-cols-3 gap-6">
+          {/* Left Column (2/3) */}
+          <div className="col-span-2 space-y-6">
+            {/* Welcome Card */}
+            <div className="bg-white p-5 rounded-[10px] shadow flex items-center justify-between border-2 border-[#B9B9B9]">
+              <div className="flex items-center gap-4 h-[118px]">
+                <div className="flex items-center justify-center">
+                  <LuUser size={65} />
                 </div>
-              ))}
+                <div>
+                  <p className="text-[33px] font-semibold">Hello, Antonio!</p>
+                  <p className="text-[20px]">ABCDE Company Intern</p>
+                </div>
+              </div>
+              <div className="w-[20px] h-[20px] rounded-full bg-[#3BC651]" />
+            </div>
+
+            {/* Attendance Summary */}
+            <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9]">
+              <div className="text-[30px] font-semibold text-[#3F3F46] mb-4">
+                Attendance Summary
+              </div>
+              <div className="grid grid-cols-3 gap-4 ">
+                {/* Present */}
+                <div className="bg-[#F9FAFD] p-4  rounded-[10px] border-3 border-[#6BD37C]">
+                  <div className="flex justify-between items-center mt-7">
+                    <div>
+                      <p className="text-[40px] font-bold text-[#6BD37C]">
+                        100
+                      </p>
+                      <p className="text-[20px] text-[#6BD37C]">Interns</p>
+                    </div>
+                    <img
+                      src="/pictures/Green.png"
+                      alt="Present Icon"
+                      className="w-[85px] mr-5"
+                    />
+                  </div>
+                  <p className="text-start text-[25px] font-semibold text-[#6BD37C] mt-5 ">
+                    Present
+                  </p>
+                </div>
+
+                {/* Late */}
+                <div className="bg-[#F9FAFD] p-4 rounded-[10px] border-3 border-[#F38A40]">
+                  <div className="flex justify-between items-center  mt-7">
+                    <div>
+                      <p className="text-[40px] font-bold text-[#F38A40]">2</p>
+                      <p className="text-[20px] text-[#F38A40]">Interns</p>
+                    </div>
+                    <img
+                      src="/pictures/Orange.png"
+                      alt="Late Icon"
+                      className="w-[85px] mr-5"
+                    />
+                  </div>
+                  <p className="text-start text-[25px] font-semibold text-[#F38A40] mt-5">
+                    Late
+                  </p>
+                </div>
+
+                {/* Absent */}
+                <div className="bg-[#F9FAFD] p-4 rounded-[10px] border-3 border-[#9B3F62]">
+                  <div className="flex justify-between items-center  mt-7">
+                    <div>
+                      <p className="text-[40px] font-bold text-[#9B3F62]">0</p>
+                      <p className="text-[20px] text-[#9B3F62]">Interns</p>
+                    </div>
+                    <img
+                      src="/pictures/Pink.png"
+                      alt="Absent Icon"
+                      className="w-[85px] mr-5"
+                    />
+                  </div>
+                  <p className="text-start text-[25px] font-semibold text-[#9B3F62] mt-5">
+                    Absent
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Tasks & Journal */}
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-white p-6 rounded-[10px] shadow  border-2 border-[#B9B9B9]">
+                <h1 className="text-[30px] font-semibold mb-4 text-[#3F3F46]">
+                  Time Remaining
+                </h1>
+                <div className="flex justify-around">
+                  <div className="flex flex-col items-center">
+                    <svg className="h-38 mb-1" viewBox="0 0 36 36">
+                      <path
+                        fill="none"
+                        stroke="#1E3A8A"
+                        strokeWidth="4"
+                        strokeDasharray="53,100"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831"
+                      />
+                      <text
+                        x="18"
+                        y="22"
+                        textAnchor="middle"
+                        fill="#1E3A8A"
+                        fontSize="6"
+                        fontWeight="bold"
+                      >
+                        19/62
+                      </text>
+                    </svg>
+                    <span className="text-[25px]">Days</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <svg className="h-38 mb-1" viewBox="0 0 36 36">
+                      <path
+                        fill="none"
+                        stroke="#1E3A8A"
+                        strokeWidth="4"
+                        strokeDasharray="31,100"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831"
+                      />
+                      <text
+                        x="18"
+                        y="22"
+                        textAnchor="middle"
+                        fill="#1E3A8A"
+                        fontSize="6"
+                        fontWeight="bold"
+                      >
+                        150/486
+                      </text>
+                    </svg>
+                    <span className="text-[25px]">Hours</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9]  h-[305px] relative overflow-hidden">
+                <h2 className="text-[27px] font-semibold mb-4 bg-white text-[#3F3F46] px-2 rounded relative z-10">
+                  Recently Accessed Role
+                </h2>
+
+                <div className="text-[35px] font-bold text-[#1F3463] content-center px-2 rounded relative z-10 h-[200px] flex items-center justify-center">
+                  Project Management
+                </div>
+
+                {/* Background overlay */}
+                <div
+                  className="absolute top-[85px] left-0 w-full h-[210px] bg-cover bg-center opacity-50 z-0"
+                  style={{ backgroundImage: "url('/pictures/PM.jpg')" }}
+                ></div>
+              </div>
             </div>
           </div>
 
-          {/* Time Remaining */}
-          <div className='bg-white shadow border border-[#C2C2C2] rounded-[10px] p-4 text-center'>
-            <h2 className='text-[20px] font-semibold mb-4'>Time Remaining</h2>
-            <div className='flex justify-around'>
-              <div>
-                <svg className='w-20 h-20 mb-1' viewBox="0 0 36 36">
-                  <path fill="none" stroke="#6A0DAD" strokeWidth="3.8" strokeDasharray="53,100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" />
-                </svg>
-                <p className='text-sm'>19/38 Days</p>
-              </div>
-              <div>
-                <svg className='w-20 h-20 mb-1' viewBox="0 0 36 36">
-                  <path fill="none" stroke="#1F3463" strokeWidth="3.8" strokeDasharray="31,100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831" />
-                </svg>
-                <p className='text-sm'>150/486 Hours</p>
-              </div>
+          {/* Right Column (1/3) */}
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-[10px] shadow text-center border-2 border-[#B9B9B9]">
+              <h1 className="text-[26px] font-semibold mb-4 text-[#3F3F46]">
+                Journal Submission
+              </h1>
+              <p className="text-gray-700 bg-[#F1F1F1] h-[160px] p-5 text-[20px]">
+                Antonio Andres Watson – January 01, 2025
+              </p>
             </div>
-          </div>
 
-          {/* Recently Accessed Role */}
-          <div className='bg-white shadow border border-[#C2C2C2] rounded-[10px] p-4 flex flex-col justify-between'>
-            <h2 className='text-[20px] font-semibold'>Recently Accessed Role</h2>
-            <div className='h-full flex items-center justify-center'>
-              <p className='text-xl font-bold text-[#1F3463]'>Project Management</p>
+            <div>
+            <Calendar className="w-[500px] h-[550px] border-2 border-[#B9B9B9] rounded-[5px]"/>
             </div>
           </div>
         </div>

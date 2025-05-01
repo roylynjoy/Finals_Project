@@ -40,7 +40,7 @@ function CompanyJournal() {
               {journalEntries.map((name, index) => (
                 <div
                   key={index}
-                  className="bg-white shadow rounded p-4 flex flex-col justify-between w-full h-[370px]"
+                  className="bg-[#F9FAFD] shadow rounded border border-[#C2C2C2] p-4 flex flex-col justify-between w-full h-[370px]"
                 >
                   <div className="flex-1 mb-6">
                     <p className="text-[20px] font-medium leading-snug">
@@ -51,7 +51,7 @@ function CompanyJournal() {
                   </div>
 
                   <div className="flex justify-between items-center border-t-3 border-[#959494] pt-3">
-                    <button className="flex items-center gap-2 px-3 py-1 text-white bg-[#2D0F7F] rounded text-sm hover:bg-[#1F3463]">
+                    <button className="flex items-center gap-2 px-3 py-1 text-white bg-[#0385FF] rounded text-sm hover:bg-[#1F3463]">
                       <FaEye size={14} />
                       View
                     </button>
