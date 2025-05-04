@@ -26,14 +26,14 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
         <div className="flex items-center gap-3 px-4">
           <img src="pictures/logo.png" alt="La Verdad Logo" className="h-[60px]" />
           {isExpanded && (
-            <div className="transition-opacity duration-500">
+            <div className="transition-opacity duration-500 whitespace-nowrap">
               <p className="text-[30px] font-custom">LA VERDAD</p>
               <span className="text-[22px] font-custom">CHRISTIAN COLLEGE, INC.</span>
             </div>
           )}
         </div>
 
-        <nav className="mt-6 w-full pt-4 ">
+        <nav className="mt-6 w-full pt-4 whitespace-nowrap">
           <p className="border-t-3 p-2"></p>
           <ul className="space-y-2">
             {navItems.map((item, index) => {
@@ -47,7 +47,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
                       isExpanded ? "justify-start gap-4" : "justify-center"
                     } ${
                       isActive
-                        ? "bg-white text-[#2D0F7F]" 
+                        ? "bg-white text-[#1F3463]" 
                         : "hover:bg-[#F9FAFD] hover:text-[#1F3463]"
                     }`}
                   >
