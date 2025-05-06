@@ -195,20 +195,20 @@ function Homepage() {
       </div>
 
 
-      {/* Purple Skew Section */}
+      {/*  Skew Section */}
       <div className="relative w-full h-110 overflow-hidden">
-        <div className="absolute inset-0 bg-[#2D0F7F] transform skew-y-[10deg] origin-top-left"></div>
+        <div className="absolute inset-0 bg-[#1E3A8A] transform skew-y-[10deg] origin-top-left"></div>
       </div>
 
       {/* Contact Section */}
-      <div id="contact" className="flex w-full place-content-center bg-[#2D0F7F] ">
+      <div id="contact" className="flex w-full place-content-center bg-[#1E3A8A] ">
         <div className="flex flex-col place-content-center px-8 py-5 gap-8 mb-20 -mb-10">
           <div className=" flex flex-col ">
             <h2 className="text-[40px] text-white font-bold">Get in Touch with Us</h2>
             <h6 className="text-[25px] text-[#D9D9D9] max-w-[740px]">
               Have questions or need assistance? We’re here to help! Reach out to us through any of the following channels:</h6>
           </div>
-          <div className="flex justify-center bg-[#2D0F7F]">
+          <div className="flex justify-center bg-[#1E3A8A]">
             <div className="bg-white shadow-md rounded-l-lg p-6 w-1/2 w-[511px] py-20">
               <div className="flex gap-6 ">
               <FaPhone size={39} className=""/> 

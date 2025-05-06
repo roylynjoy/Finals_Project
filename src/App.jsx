@@ -19,6 +19,8 @@ import PM from './Pages/PM'
 import CD from './Pages/CD'
 import UIUX from './Pages/UIUX';
 import SQA from './Pages/SQA';
+import AdminDashboard from './Pages/AdminDashboard';
+import ViewJournal from './Pages/ViewJounal';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -43,6 +45,8 @@ function App() {
           <Route path="/CompanyDashboard" element={<CompanyDashboard/>} />
           <Route path="/CompanyAttendance" element={<CompanyAttendance/>} />
           <Route path="/CompanyJournal" element={<CompanyJournal/>} />
+          <Route path="/AdminDashboard" element={<AdminDashboard/>} />
+          <Route path="/ViewJournal" element={<ViewJournal/>} />
         </Routes>
      </Router>
 

@@ -27,7 +27,7 @@ function CompanyJournal() {
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
-        } bg-[#FAFAFF] min-h-screen`}
+        } bg-white] min-h-screen`}
       >
         <CompanyHeader />
 
