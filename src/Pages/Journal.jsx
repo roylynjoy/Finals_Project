@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Header from './header';
 import Sidebar from './Sidebar';
 import Footer from './footer';
@@ -7,19 +9,46 @@ function Journal() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const editorRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleFormat = (command, value = null) => {
     document.execCommand(command, false, value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isChecked && editorRef.current.innerText.trim()) {
-      alert('Journal submitted!');
-      // You can save editorRef.current.innerHTML if needed
+      try {
+        const response = await axios.post('http://localhost:5000/api/journal', {
+          content: editorRef.current.innerHTML
+        });
+        console.log(response.data);
+        navigate('/ViewJournal');
+      } catch (err) {
+        console.error(err);
+        alert('Failed to submit journal.');
+      }
     } else {
       alert('Please agree to the terms and write something.');
     }
   };
+  
+  useEffect(() => {
+    const checkTodayEntry = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/journal/today');
+        if (response.status === 200) {
+          // Journal for today exists
+          navigate('/ViewJournal');
+        }
+      } catch (err) {
+        if (err.response?.status !== 204) {
+          console.error('Error checking for today\'s entry:', err);
+        }
+      }
+    };
+
+    checkTodayEntry();
+  }, [navigate]);
 
   return (
     <div>

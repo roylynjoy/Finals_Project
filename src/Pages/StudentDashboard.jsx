@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getAuth } from "firebase/auth";
 import Sidebar from "./Sidebar";
 import Header from "./header";
 import Footer from "./footer";
@@ -7,6 +8,8 @@ import Calendar from "./Calendar";
 
 function StudentDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [company, setCompany] = useState("");
 
   const today = new Date();
   const currentYear = today.getFullYear();
@@ -18,6 +21,31 @@ function StudentDashboard() {
   const daysArray = [];
   for (let i = 0; i < firstDay; i++) daysArray.push(null);
   for (let i = 1; i <= daysInMonth; i++) daysArray.push(i);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (user && user.email) {
+        try {
+          const res = await fetch(`http://localhost:5000/api/users?email=${user.email}`);
+          const data = await res.json();
+
+          if (data && data.firstName && data.company) {
+            setFirstName(data.firstName);
+            setCompany(data.company);
+          } else {
+            console.warn("User data not found or incomplete:", data);
+          }
+        } catch (error) {
+          console.error("Failed to fetch user info:", error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -41,8 +69,8 @@ function StudentDashboard() {
                   <LuUser size={65} />
                 </div>
                 <div>
-                  <p className="text-[33px] font-semibold">Hello, Antonio!</p>
-                  <p className="text-[20px]">ABCDE Company Intern</p>
+                  <p className="text-[33px] font-semibold">Hello, {firstName || "Intern"}!</p>
+                  <p className="text-[20px]">{company ? `${company} Intern` : "Intern"}</p>
                 </div>
               </div>
               <div className="w-[20px] h-[20px] rounded-full bg-[#3BC651]" />
@@ -191,7 +219,11 @@ function StudentDashboard() {
                 Journal Submission
               </h1>
               <p className="text-gray-700 bg-[#F1F1F1] h-[160px] p-5 text-[20px]">
-                Antonio Andres Watson – January 01, 2025
+                {firstName} – {new Date().toLocaleDateString('en-US', {
+                  month: 'long',
+                  day: '2-digit',
+                  year: 'numeric'
+                })}
               </p>
             </div>
 

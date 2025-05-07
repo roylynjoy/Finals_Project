@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getAuth } from 'firebase/auth';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
 import { LuUser, LuChevronDown, LuChevronUp } from "react-icons/lu";
@@ -8,12 +9,36 @@ function AdminDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [showCoordinators, setShowCoordinators] = useState(false);
   const [selectedCoordinatorGroup, setSelectedCoordinatorGroup] = useState(null);
+  const [firstName, setFirstName] = useState("");
 
   const coordinatorGroups = {
     'ABC': ['Roylyn Didican', 'Rizalyne Asaldo'],
     'DEF': ['Shaina Karilyn Pagarigan', 'Lorenz Genesis Reyes'],
     'GHI': ['Christian Eliseo Isip', 'Kristel Magpaayo'],
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (user && user.email) {
+        try {
+          const res = await fetch(`http://localhost:5000/api/users?email=${user.email}`);
+          const data = await res.json();
+
+          if (data && data.firstName && data.company) {
+            setFirstName(data.firstName);
+          } else {
+            console.warn("User data not found or incomplete:", data);
+          }
+        } catch (error) {
+          console.error("Failed to fetch user info:", error);
+        }
+      }
+    };
+    fetchUserData();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -33,7 +58,7 @@ function AdminDashboard() {
             <div className="flex items-center gap-4 h-[118px]">
               <div className="flex items-center justify-center"><LuUser size={65} /></div>
               <div>
-                <p className="text-[33px] font-semibold">Hello, Sebastian!</p>
+                <p className="text-[33px] font-semibold">Hello, {firstName}!</p>
                 <p className="text-[20px]">Admin</p>
               </div>
             </div>

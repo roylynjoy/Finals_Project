@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getAuth } from 'firebase/auth';
 import CompanySidebar from './CompanySidebar';
 import CompanyHeader from './CompanyHeader';
 import Footer from './footer';
@@ -7,7 +8,33 @@ import { LuUser } from "react-icons/lu";
 
 function CompanyDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [company, setCompany] = useState("");
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (user && user.email) {
+        try {
+          const res = await fetch(`http://localhost:5000/api/users?email=${user.email}`);
+          const data = await res.json();
+
+          if (data && data.firstName && data.company) {
+            setFirstName(data.firstName);
+            setCompany(data.company);
+          } else {
+            console.warn("User data not found or incomplete:", data);
+          }
+        } catch (error) {
+          console.error("Failed to fetch user info:", error);
+        }
+      }
+    };
+    fetchUserData();
+  }, []);
+  
   return (
     <div className="flex flex-col min-h-screen">
       <CompanySidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
@@ -27,8 +54,8 @@ function CompanyDashboard() {
               <div className="flex items-center gap-4 h-[118px]">
                 <div className="flex items-center justify-center"><LuUser size={65}/></div>
                 <div>
-                  <p className="text-[33px] font-semibold">Alexandra Doe</p>
-                  <p className='text-[20px]'>ABCDE Company</p>
+                <p className="text-[33px] font-semibold">Hello, {firstName || "Coordinator!"}!</p>
+                <p className="text-[20px]">{company ? `${company} Coordinator` : "Coordinator"}</p>
                 </div>
               </div>
               <div className="w-[20px] h-[20px] rounded-full bg-[#3BC651]" />
