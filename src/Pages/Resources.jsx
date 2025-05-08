@@ -30,7 +30,7 @@ function Resources() {
     {
       title: 'System Quality Assurance',
       image: '/pictures/SQA.jpg',
-      description: 'ensures that the developed application is reliable, secure, and performs as expected.',
+      description: 'ensures that the develqped application is reliable, secure, and performs as expected.',
       path: '/SQA',
     },
   ];
@@ -41,7 +41,7 @@ function Resources() {
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
-        } bg-[#FAFAFF] min-h-screen`}
+        } bg-white min-h-screen`}
       >
         <Header />
 
@@ -56,14 +56,22 @@ function Resources() {
               <div
                 key={index}
                 onClick={() => navigate(item.path)}
-                className="group shadow-md flex flex-col items-center justify-center h-[284px] text-center px-6 py-4 transition-transform duration-300 border border-[#C3C3C3] cursor-pointer rounded-xl bg-cover bg-center"
-                style={{ backgroundImage: `url(${item.image})` }}
+                className="group shadow-md flex flex-col items-center justify-center h-[284px] text-center px-6 py-4 transition-transform duration-300 border border-[#C3C3C3] cursor-pointer rounded-xl"
               >
-                <div className="bg-white/70 p-3 rounded-lg">
-                  <h2 className="text-[45px] font-bold text-[#1F3463] bg-[#F9FAFD] ">{item.title}</h2>
-                  <p className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-4 text-[#1F3463] font-medium text-[30px] max-w-[786px]">
-                    {item.description}
-                  </p>
+                <div className="bg-white p-[10px] rounded-lg w-full h-full flex flex-col justify-between">
+                  {/* Image Section */}
+                  <div
+                    className="w-full h-full cover bg-center rounded-lg"
+                    style={{ backgroundImage: `url(${item.image})` }}
+                  >
+                    {/* Title and Description */}
+                    <div className="bg-white/70 p-3 rounded-lg h-full flex flex-col justify-between">
+                      <h2 className="text-[45px] font-bold text-[#1F3463] bg-[#F9FAFD]">{item.title}</h2>
+                      <p className="opacity-0 group-hover:opacity-80 transition-opacity duration-300 mt-4 text-[#1F3463] font-medium text-[30px] max-w-[786px]">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

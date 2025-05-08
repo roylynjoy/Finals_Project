@@ -1,8 +1,4 @@
-import { useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/autoplay';
+import { useState, useEffect } from 'react';
 
 export default function ThreePositionSlider() {
   const slides = [
@@ -11,52 +7,62 @@ export default function ThreePositionSlider() {
     { swiper: '/pictures/LVBG.jpg', bg: '/pictures/LVBG.jpg' },
   ];
 
-  const [activeBg, setActiveBg] = useState(slides[0].bg);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % slides.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [slides.length]);
+
+  const getSlide = (offset) => {
+    const index = (activeIndex + offset + slides.length) % slides.length;
+    return slides[index];
+  };
 
   return (
-    <div className="relative h-[1000px] flex items-center justify-end transition-all duration-500">
-      {/* Background image layer */}
+    <div className="relative w-full h-screen overflow-hidden">
+      {/* Background layer */}
       <div
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 bg-cover bg-center z-0 transition-all duration-500 opacity-20"
         style={{
-          backgroundImage: `url(${activeBg})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundImage: `url(${slides[activeIndex].bg})`,
+          
         }}
-      >
-        {/* 60% black overlay */}
-        <div className="w-full h-full bg-opacity-60"></div>
-      </div>
+      />
 
-      {/* Swiper carousel (on top) */}
-      <div className="relative z-10 rounded-xl w-[900px] mr-12">
-        <Swiper
-          modules={[Autoplay]}
-          autoplay={{ delay: 3000, disableOnInteraction: false }}
-          slidesPerView={3}
-          spaceBetween={30}
-          centeredSlides={true}
-          loop={true}
-          className="w-full"
-          onSlideChange={(swiper) => {
-            const realIndex = swiper.realIndex;
-            setActiveBg(slides[realIndex].bg);
-          }}
-        >
-          {slides.map((item, i) => (
-            <SwiperSlide
-              key={i}
-              className="overflow-hidden relative cursor-pointer"
-              onClick={() => setActiveBg(item.bg)}
-            >
-              <img
-                src={item.swiper}
-                alt={`Slide ${i + 1}`}
-                className="w-full h-64 object-cover"
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+      {/* Content layer */}
+      <div className="relative z-10 h-full flex items-center justify-end pr-16 mt-15">
+        <div className="flex items-center space-x-6">
+          {/* Left image */}
+          <div className="w-[93px] h-[293.73px] overflow-hidden rounded-xl opacity-60 shadow-xl">
+            <img
+              src={getSlide(-1).swiper}
+              alt="Previous"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          {/* Center image */}
+          <div className="w-[691px] h-[518.25px] overflow-hidden rounded-xl shadow-2xl scale-100 transition-all duration-500">
+            <img
+              src={getSlide(0).swiper}
+              alt="Current"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          {/* Right image */}
+          <div className="w-[93px] h-[293.73px] overflow-hidden rounded-xl opacity-60 shadow-xl">
+            <img
+              src={getSlide(1).swiper}
+              alt="Next"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

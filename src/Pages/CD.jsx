@@ -6,22 +6,44 @@ import { FaRegCopy, FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 
 function CD() {
-    const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-    const navigate = useNavigate();
-    
-    const arrowBack = () => {
-      navigate(-1)
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const navigate = useNavigate();
+
+  const arrowBack = () => {
+    navigate(-1);
+  };
+
+  const topics = [
+    {
+      title: "What is Code Development?",
+      link: "https://youtu.be/yAf-XQ9Fuc4?si=BY01GJP6sBk9cUYu"
+    },
+    {
+      title: "Web Foundations.",
+      link: "https://youtube.com/playlist?list=PLMJlRf5sZ0zTmdv8SuDXtCPcN-nXLKwR4&si=0x8UhHZfw44RrcjL"
+    },
+    {
+      title: "Frontend Development.",
+      link: "https://youtube.com/playlist?list=PLWKjhJtqVAbmMuZ3saqRIBimAKIMYkt0E&si=8JQ3N5yWRUS-IVSU"
+    },
+    {
+      title: "Backend Development.",
+      link: "https://youtube.com/playlist?list=PLbtI3_MArDOkXRLxdMt1NOMtCS-84ibHH&si=1-y7a5gHki0Q6vxj"
+    },
+    {
+      title: "Hosting and Deployment.",
+      link: "https://youtu.be/LLhAuUM0iU0?si=ajayjXJ18sgo9kpg"
+    },
+    {
+      title: "Progressive Web Apps.",
+      link: "https://youtu.be/sFsRylCQblw?si=vLuUpaZcK503r0HJ"
+    },
+    {
+      title: "Web App Optimizations.",
+      link: "https://youtube.com/playlist?list=PLJrzt4ameiaPTLN4LXiv1Y7ONKuaj7Q9O&si=PdjCKqT7lkMkOQ-I"
     }
-    
-      const topics = [
-        "What is Code Development?",
-        " Web Foundations.",
-        "Frontend Development.",
-        "Backend Development.",
-        "Hosting and Deployment.",
-        "Progressive Web Apps.",
-        "Web App Optimizations."
-      ];
+  ];
+
   return (
     <div className="flex flex-col">
       <Sidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
@@ -33,21 +55,28 @@ function CD() {
         <Header />
 
         <div className="mt-10 ml-10">
-          <FaArrowLeft className="text-2xl cursor-pointer" onClick={arrowBack}/>
+          <FaArrowLeft className="text-2xl cursor-pointer" onClick={arrowBack} />
         </div>
 
         <div className="py-10 px-20">
           <h1 className="text-[70px] font-bold text-[#1C1C4D] mb-2 text-center">Code Development</h1>
           <p className="text-gray-600 mb-10 text-[25px] text-center">
-            Navigate your internship journey with essential resources to strengthen your code development skills          </p>
+            Navigate your internship journey with essential resources to strengthen your code development skills
+          </p>
           <div className="space-y-3">
             {topics.map((topic, index) => (
               <div
                 key={index}
-                className="flex justify-between items-center bg-white p-4 rounded-md shadow-sm hover:shadow-md transition"
+                className="flex justify-between items-center bg-white p-4 rounded-md shadow-sm hover:bg-[#BEFAF5] transition"
               >
-                <span className="text-[#1F3463] text-[30px] py-3 px-5">{topic}</span>
-                <FaRegCopy className="w-[48px] h-[48px] text-gray-400 hover:text-black cursor-pointer mx-10" />
+                <span className="text-[#1F3463] text-[30px] py-3 px-5">{topic.title}</span>
+                <a
+                  href={topic.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaRegCopy className="w-[48px] h-[48px] text-gray-400 hover:text-black cursor-pointer mx-10" />
+                </a>
               </div>
             ))}
           </div>
@@ -58,5 +87,4 @@ function CD() {
   );
 }
 
-
-export default CD
+export default CD;
