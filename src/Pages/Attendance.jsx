@@ -72,35 +72,37 @@ function AttendanceSubmission() {
                 {resetAndDisableTimeButton ? "Time In" : (hasTimedIn ? (hasTimedOut ? "Attendance Completed" : "Time Out") : "Time In")}
               </button>
 
-              {/* Prompt Messages */}
-              {!hasTimedOut && hasTimedIn && (
-                <p className="mt-4 text-[#0385FF] text-[25px] font-regular max-w-[300px] text-center">
-                  Time In Successfully! Time in at {timeIn}.
-                </p>
-              )}
-
-              {hasTimedOut && (
-                <p className="mt-4 text-[#0385FF] text-[25px] font-regular max-w-[300px] text-center">
-                  Time Out Successfully! Time out at {timeOut}.
-                </p>
-              )}
+              {/* Message Display Area */}
+              <div className="h-[64px] flex items-center justify-center mt-3">
+                {!hasTimedOut && hasTimedIn ? (
+                  <p className="text-[#0385FF] text-[25px] font-regular max-w-[300px] text-center">
+                    Time In Successfully! Time in at {timeIn}.
+                  </p>
+                ) : hasTimedOut ? (
+                  <p className="text-[#0385FF] text-[25px] font-regular max-w-[300px] text-center">
+                    Time Out Successfully! Time out at {timeOut}.
+                  </p>
+                ) : (
+                  <div className="h-[25px]" /> // reserved space
+                )}
+              </div>
             </div>
 
             {/* Time Info Summary */}
             <div className='w-[817px] flex flex-col'>
-              <div className='flex justify-evenly gap-35  mb-1 text-sm text-gray-500 font-medium'>
+              <div className='flex justify-evenly gap-35 mt-6 text-sm text-gray-500 font-medium'>
                 <span></span>
                 <span className='text-[28px]'>Date</span>
-                <span className='text-[28px]'>Time</span>
+                <span className='text-[28px] mb-1'>Time</span>
               </div>
 
-              <div className='bg-[#F9FAFD] h-[170px] text-[25px] shadow border border-[#797979] rounded-[10px] mb-4 flex justify-evenly gap-15 text-[#2D0F7F] font-semibold items-center'>
+              <div className='bg-[#F9FAFD] py-[59px] text-[25px] shadow border border-[#797979] rounded-[10px] mb-4 flex justify-evenly gap-15 text-[#2D0F7F] font-semibold items-center'>
                 <span className='text-black'>Time In</span>
                 <span className='text-[#556689]'>{timeIn ? new Date().toLocaleDateString() : 'MM/DD/YYYY'}</span>
                 <span className='text-[#556689]'>{timeIn || '00:00:00'}</span>
               </div>
 
-              <div className='bg-[#F9FAFD] h-[170px] text-[25px] shadow border border-[#797979] rounded-[10px] mb-4 flex justify-evenly gap-15 text-[#2D0F7F] font-semibold items-center'>
+              <div className='bg-[#F9FAFD] py-[59px] text-[25px] shadow border border-[#797979] rounded-[10px] mb-4 flex justify-evenly gap-15 text-[#2D0F7F] font-semibold items-center'>
                 <span className='text-black'>Time Out</span>
                 <span className='text-[#556689]'>{timeOut ? new Date().toLocaleDateString() : 'MM/DD/YYYY'}</span>
                 <span className='text-[#556689]'>{timeOut || '00:00:00'}</span>
@@ -120,12 +122,14 @@ function AttendanceSubmission() {
                   Submit Attendance
                 </button>
 
-                {/* Submission Prompt */}
-                {attendanceSubmitted && (
-                  <p className="mt-4 text-[#0385FF] text-[22px] text-center font-regular">
-                    You have submitted your attendance!
-                  </p>
-                )}
+                {/* Submission Message Area with Reserved Space */}
+                <div className="h-[50px] mt-4 flex items-center justify-center">
+                  {attendanceSubmitted && (
+                    <p className="text-[#0385FF] text-[22px] text-center font-regular">
+                      You have submitted your attendance!
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
