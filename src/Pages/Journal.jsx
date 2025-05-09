@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { auth } from '../firebase/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-// import axios from 'axios';
+import axios from 'axios';
 import Header from './header';
 import Sidebar from './Sidebar';
 import Footer from './footer';
@@ -16,10 +18,20 @@ function Journal() {
   };
 
   const handleSubmit = async () => {
+    const user = auth.currentUser;
+
+    if (!user || !user.email) {
+      alert("You must be logged in to submit a journal.");
+      return;
+    }
+
+    console.log("Submitting journal for:", user.email);
+
     if (isChecked && editorRef.current.innerText.trim()) {
       try {
         const response = await axios.post('http://localhost:5000/api/journal', {
-          content: editorRef.current.innerHTML
+          content: editorRef.current.innerHTML,
+          email: user.email  // ✅ Send email to backend
         });
         console.log(response.data);
         navigate('/ViewJournal');
@@ -33,22 +45,19 @@ function Journal() {
   };
   
   useEffect(() => {
-    const checkTodayEntry = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/journal/today');
-        if (response.status === 200) {
-          // Journal for today exists
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user?.email) {
+        try {
+          const response = await axios.get(`http://localhost:5000/api/users?email=${user.email}`);
           navigate('/ViewJournal');
-        }
-      } catch (err) {
-        if (err.response?.status !== 204) {
-          console.error('Error checking for today\'s entry:', err);
+        } catch (err) {
+          console.error("Failed to fetch user info:", err);
         }
       }
-    };
+    });
 
-    checkTodayEntry();
-  }, [navigate]);
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div>

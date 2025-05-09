@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { getAuth } from "firebase/auth";
+import { auth } from "../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import Sidebar from "./Sidebar";
 import Header from "./header";
 import Footer from "./footer";
@@ -23,15 +24,11 @@ function StudentDashboard() {
   for (let i = 1; i <= daysInMonth; i++) daysArray.push(i);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
-
-      if (user && user.email) {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user?.email) {
         try {
           const res = await fetch(`http://localhost:5000/api/users?email=${user.email}`);
           const data = await res.json();
-
           if (data && data.firstName && data.company) {
             setFirstName(data.firstName);
             setCompany(data.company);
@@ -42,9 +39,9 @@ function StudentDashboard() {
           console.error("Failed to fetch user info:", error);
         }
       }
-    };
+    });
 
-    fetchUserData();
+    return () => unsubscribe();
   }, []);
 
   return (

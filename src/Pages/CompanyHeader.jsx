@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth } from 'firebase/auth';
+import { auth } from '../firebase/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import { FaChevronDown, FaEnvelope } from "react-icons/fa";
 import { GoBellFill } from "react-icons/go";
 import { useLocation } from 'react-router-dom';
 import NotifModal from './notifModal';
-
 
 function Header() {
   const location = useLocation();
@@ -25,16 +25,12 @@ function Header() {
   };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
-
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user && user.email) {
         try {
           const res = await fetch(`http://localhost:5000/api/users?email=${user.email}`);
           const data = await res.json();
-
-          if (data && data.firstName && data.company) {
+          if (data && data.firstName) {
             setFirstName(data.firstName);
           } else {
             console.warn("User data not found or incomplete:", data);
@@ -43,8 +39,8 @@ function Header() {
           console.error("Failed to fetch user info:", error);
         }
       }
-    };
-    fetchUserData();
+    });
+    return () => unsubscribe();
   }, []);
 
 

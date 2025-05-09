@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth } from 'firebase/auth';
+import { auth } from '../firebase/firebase';
+import { onAuthStateChanged } from "firebase/auth";
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
 import { LuUser, LuChevronDown, LuChevronUp } from "react-icons/lu";
@@ -18,16 +19,13 @@ function AdminDashboard() {
   };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
-
-      if (user && user.email) {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user?.email) {
         try {
           const res = await fetch(`http://localhost:5000/api/users?email=${user.email}`);
           const data = await res.json();
 
-          if (data && data.firstName && data.company) {
+          if (data?.firstName) {
             setFirstName(data.firstName);
           } else {
             console.warn("User data not found or incomplete:", data);
@@ -36,8 +34,9 @@ function AdminDashboard() {
           console.error("Failed to fetch user info:", error);
         }
       }
-    };
-    fetchUserData();
+    });
+
+    return () => unsubscribe();
   }, []);
 
   return (
