@@ -45,19 +45,28 @@ function Journal() {
   };
   
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user?.email) {
-        try {
-          const response = await axios.get(`http://localhost:5000/api/users?email=${user.email}`);
+    const checkTodayEntry = async () => {
+      const user = auth.currentUser;
+      if (!user?.email) return;
+
+      try {
+        const response = await axios.get('http://localhost:5000/api/journal/today');
+        if (response.status === 200 && response.data?.content) {
           navigate('/ViewJournal');
-        } catch (err) {
-          console.error("Failed to fetch user info:", err);
+        }
+      } catch (err) {
+        if (err.response?.status !== 204) {
+          console.error('Error checking for today\'s entry:', err);
         }
       }
+    };
+
+    const unsubscribe = onAuthStateChanged(auth, () => {
+      checkTodayEntry();
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [navigate]);
 
   return (
     <div>

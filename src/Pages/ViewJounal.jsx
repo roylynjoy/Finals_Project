@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { auth } from '../firebase/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from './header';
@@ -18,18 +19,24 @@ function ViewJournal() {
     const fetchJournal = async () => {
       try {
         const response = await axios.get('/api/journal/today');
-        if (response.status === 200) {
-          setJournalContent(response.data.content); // Set journal content
+        if (response.status === 200 && response.data?.content) {
+          setJournalContent(response.data.content);
         } else {
-          navigate('/Journal'); 
+          console.warn("No journal entry today.");
+          navigate('/Journal');
         }
       } catch (err) {
-        navigate('/Journal'); 
+        console.error("Error fetching journal:", err);
+        navigate('/Journal');
       }
     };
 
-    fetchJournal();
-  }, []);
+    const unsubscribe = onAuthStateChanged(auth, () => {
+      fetchJournal();
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
 
   useEffect(() => {
     const fetchUserData = async () => {
