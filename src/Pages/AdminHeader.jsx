@@ -4,12 +4,10 @@ import { onAuthStateChanged } from "firebase/auth";
 import { FaChevronDown, FaEnvelope } from "react-icons/fa";
 import { GoBellFill } from "react-icons/go";
 import { useLocation } from 'react-router-dom';
-import NotifModal from './notifModal';
 
 
 function AdminHeader() {
   const location = useLocation();
-  const [showNotifications, setShowNotifications] = useState(false);
   const [firstName, setFirstName] = useState("");
 
   const pageTitles = {
@@ -65,7 +63,6 @@ function AdminHeader() {
           <FaChevronDown className='h-4 w-4 text-[#494949]' />
         </div>
       </div>
-      <NotifModal isOpen={showNotifications} onClose={() => setShowNotifications(false)} />
     </header>
   );
 }

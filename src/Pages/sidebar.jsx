@@ -4,6 +4,7 @@ import { TiHome } from "react-icons/ti";
 import { PiBookOpenUserFill } from "react-icons/pi";
 import { HiMiniPencilSquare } from "react-icons/hi2";
 import { AiOutlineLogout } from "react-icons/ai";
+import { FaBars, FaChevronLeft } from "react-icons/fa";
 import { useLocation, Link } from "react-router-dom";
 
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
@@ -16,15 +17,19 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
     { label: "Role-based Resources", icon: <PiBookOpenUserFill size={35} />, path: "/Resources" },
   ];
 
+  const toggleSidebar = () => {
+    setIsExpanded((prev) => !prev);
+  };
+
   return (
     <div
       className={`h-screen bg-[#1F3463] text-white fixed flex flex-col justify-between transition-all duration-500 ease-in-out z-50 ${
         isExpanded ? "w-[400px]" : "w-[100px]"
       }`}
-      onMouseEnter={() => setIsExpanded(true)}
-      onMouseLeave={() => setIsExpanded(false)}
     >
-      <div className="flex flex-col pt-4 ">
+      {/* Top Section */}
+      <div className="flex flex-col pt-4">
+        {/* Logo */}
         <div className="flex items-center gap-3 px-4">
           <img src="pictures/logo.png" alt="La Verdad Logo" className="h-[60px]" />
           {isExpanded && (
@@ -35,6 +40,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
           )}
         </div>
 
+        {/* Navigation */}
         <nav className="mt-6 w-full pt-4 whitespace-nowrap">
           <p className="border-t-3 p-2"></p>
           <ul className="space-y-2">
@@ -45,11 +51,11 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
                 <li key={index}>
                   <Link
                     to={item.path}
-                    className={`flex items-center transition-all duration-300 ease-in-out rounded-l-[50px] p-4 py-3  ${
+                    className={`flex items-center transition-all duration-300 ease-in-out rounded-l-[50px] px-4  py-3  ${
                       isExpanded ? "justify-start gap-4" : "justify-center"
                     } ${
                       isActive
-                        ? "bg-white text-[#1F3463]" 
+                        ? "bg-white text-[#1F3463]"
                         : "hover:bg-[#F9FAFD] hover:text-[#1F3463]"
                     }`}
                   >
@@ -69,29 +75,25 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
         </nav>
       </div>
 
-      {/* FieldMate section */}
-      <div className="pb-3 w-full px-4 py-3 ">
-        <p className="border-t-3 mb-3"></p>
+      {/* Bottom Section: FieldMate + Toggle */}
+      <div className="pb-3 w-full px-4 py-3 flex flex-col gap-4">
+        {/* FieldMate */}
         <a
           href="#"
           className={`flex items-center justify-between bg-[#1F3463] transition-all duration-300 ease-in-out rounded-full ${
-            isExpanded ? "w-full" : "w-[60px] mx-auto justify-center "
+            isExpanded ? "w-full" : "w-[60px] mx-auto justify-center"
           }`}
         >
           <div className="flex items-center gap-3">
-            <div className="bg-white rounded w-[50px] h-[50px] ">
-              <img src="/pictures/lg.png" alt="FieldMate Logo" className="p-1" />
-            </div>
-            {isExpanded && (
-              <span className="text-[27px] font-medium">FieldMate</span>
-            )}
+            <button onClick={toggleSidebar} className="w-[50px] h-[50px]">
+              {isExpanded ? <FaChevronLeft size={24} /> : <FaBars size={24} />}
+            </button>
           </div>
-          {isExpanded && <AiOutlineLogout size={30} className="text-white" />}
         </a>
+
       </div>
     </div>
   );
 };
 
 export default Sidebar;
- 
