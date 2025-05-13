@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaChevronDown, FaCog, FaKey, FaSignOutAlt } from "react-icons/fa";
 import AccountSettingsModal from './AccountSettingModal';
-import ChangePass from './ChangePass'; // Imported updated modal
+import ChangePass from './ChangePass'; 
 
 const UserProfileModal = ({ name, initials }) => {
   const [isOpen, setIsOpen] = useState(false);
