@@ -16,7 +16,7 @@ function CompanyDashboard() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
-          const res = await fetch(`http://localhost:5000/api/users?email=${user.email}`);
+          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
           const data = await res.json();
           setFirstName(data.firstName || "");
           setCompany(data.company || "");

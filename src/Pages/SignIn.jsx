@@ -17,7 +17,7 @@ export default function LoginPage() {
       const user = userCredential.user;
   
       // Send email to backend to check the role
-      const res = await fetch("http://localhost:5000/api/users/checkUserExists", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/checkUserExists`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: user.email }),

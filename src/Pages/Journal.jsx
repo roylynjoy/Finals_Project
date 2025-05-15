@@ -29,7 +29,7 @@ function Journal() {
 
     if (isChecked && editorRef.current.innerText.trim()) {
       try {
-        const response = await axios.post('http://localhost:5000/api/journal', {
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/journal`, {
           content: editorRef.current.innerHTML,
           email: user.email  // ✅ Send email to backend
         });
@@ -50,7 +50,7 @@ function Journal() {
       if (!user?.email) return;
 
       try {
-        const response = await axios.get('http://localhost:5000/api/journal/today');
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/journal/today`);
         if (response.status === 200 && response.data?.content) {
           navigate('/ViewJournal');
         }

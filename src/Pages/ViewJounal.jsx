@@ -44,7 +44,7 @@ function ViewJournal() {
 
       if (user && user.email) {
         try {
-          const res = await fetch(`http://localhost:5000/api/users?email=${user.email}`);
+          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
           const data = await res.json();
 
           if (data && data.firstName && data.lastName) {

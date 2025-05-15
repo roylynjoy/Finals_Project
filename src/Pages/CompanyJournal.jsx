@@ -16,7 +16,7 @@ function CompanyJournal() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
-          const res = await axios.get(`http://localhost:5000/api/journal/company?email=${user.email}`);
+          const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/journal/company?email=${user.email}`);
           setJournals(res.data);
         } catch (err) {
           console.error('Failed to load company journal entries:', err);

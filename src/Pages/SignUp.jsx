@@ -42,7 +42,7 @@ export default function CreateAccount() {
       console.log("User created:", user);
   
       // Send user info to your backend (without token)
-      const res = await fetch("http://localhost:5000/api/users/register", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
