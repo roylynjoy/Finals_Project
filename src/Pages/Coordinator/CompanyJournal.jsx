@@ -22,13 +22,14 @@ function CompanyJournal() {
   const [filteredJournals, setFilteredJournals] = useState([]);
   const [selectedDate, setSelectedDate] = useState(getTodayDateString());
   const [loading, setLoading] = useState(false);
-
+  const baseURL = import.meta.env.VITE_BASE_URL;
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
           setLoading(true);
-          const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/journal/company?email=${user.email}`);
+          const res = await axios.get(`${baseURL}/journal/company?email=${user.email}`);
           setAllJournals(res.data);
         } catch (err) {
           console.error('Failed to load company journal entries:', err);

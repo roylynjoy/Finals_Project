@@ -9,7 +9,8 @@ import { useLocation } from 'react-router-dom';
 function AdminHeader() {
   const location = useLocation();
   const [firstName, setFirstName] = useState("");
-
+  const baseURL = import.meta.env.VITE_BASE_URL;
+  
   const pageTitles = {
     '/AdminDashboard': 'Admin Dashboard',
     '/CompanyList': 'Company List',
@@ -27,7 +28,7 @@ function AdminHeader() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
 
           if (data?.firstName) {

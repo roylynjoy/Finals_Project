@@ -19,7 +19,8 @@ function AttendanceSubmission() {
   const [attendanceSubmitted, setAttendanceSubmitted] = useState(false);
   const [submittedMessage, setSubmittedMessage] = useState(false);
   const [loading, setLoading] = useState(true); // ✅ Spinner state
-
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
+  
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
@@ -29,7 +30,7 @@ function AttendanceSubmission() {
     const checkAttendance = async (email) => {
       const start = Date.now();
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/attendance/today?email=${email}`);
+        const res = await axios.get(`${baseURL}/attendance/today?email=${email}`);
         if (res.data) {
           setRecordId(res.data._id);
           setTimeIn(res.data.timeIn || '');
@@ -70,7 +71,7 @@ function AttendanceSubmission() {
   const handleTimeClick = async () => {
     if (canTimeIn) {
       try {
-        const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/attendance/timein`, { email: userEmail });
+        const res = await axios.post(`${baseURL}/attendance/timein`, { email: userEmail });
         setRecordId(res.data._id);
         setTimeIn(res.data.timeIn);
         setCanTimeIn(false);
@@ -80,7 +81,7 @@ function AttendanceSubmission() {
       }
     } else if (canTimeOut && recordId) {
       try {
-        const res = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/attendance/timeout/${recordId}`);
+        const res = await axios.put(`${baseURL}/attendance/timeout/${recordId}`);
         setTimeOut(res.data.timeOut);
         setCanTimeOut(false);
       } catch (err) {
@@ -91,7 +92,7 @@ function AttendanceSubmission() {
 
   const handleSubmit = async () => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/attendance/submit/${recordId}`);
+      await axios.put(`${baseURL}/attendance/submit/${recordId}`);
       setAttendanceSubmitted(true);
       setSubmittedMessage(true);
     } catch (err) {

@@ -16,6 +16,7 @@ function ViewJournal() {
   const journalContentRef = useRef(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const fetchJournal = async () => {
@@ -31,7 +32,7 @@ function ViewJournal() {
         }
 
         const duration = Date.now() - startTime;
-        const delay = Math.max(300 - duration, 0);
+        const delay = Math.max(500 - duration, 0);
         setTimeout(() => setLoading(false), delay);
       } catch (err) {
         console.error("Error fetching journal:", err);
@@ -52,7 +53,7 @@ function ViewJournal() {
 
       if (user && user.email) {
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
 
           if (data && data.firstName && data.lastName) {

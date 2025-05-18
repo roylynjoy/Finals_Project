@@ -8,7 +8,7 @@ import UserProfileModal from './UserProfileModal';  // Importing the UserProfile
 function Header() {
   const location = useLocation();
   const [firstName, setFirstName] = useState("");
-  
+  const baseURL = import.meta.env.VITE_BASE_URL;
   const pageTitles = {
     '/StudentDashboard': 'Student Dashboard',
     '/Attendance': 'Attendance Submission',
@@ -34,7 +34,7 @@ function Header() {
 
       if (user && user.email) {
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
 
           if (data && data.firstName && data.company) {

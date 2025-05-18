@@ -11,6 +11,7 @@ function AdminDashboard() {
   const [showCoordinators, setShowCoordinators] = useState(false);
   const [selectedCoordinatorGroup, setSelectedCoordinatorGroup] = useState(null);
   const [firstName, setFirstName] = useState("");
+  const baseURL = import.meta.env.VITE_BASE_URL;
 
   const coordinatorGroups = {
     'ABC': ['Roylyn Didican', 'Rizalyne Asaldo'],
@@ -22,7 +23,7 @@ function AdminDashboard() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
 
           if (data?.firstName) {

@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 function Header() {
   const location = useLocation();
   const [firstName, setFirstName] = useState("");
+  const baseURL = import.meta.env.VITE_BASE_URL;
   const pageTitles = {
     '/CompanyDashboard': 'Company Dashboard',
     '/CompanyAttendance': 'Attendance Tracking',
@@ -26,7 +27,7 @@ function Header() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user && user.email) {
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
           if (data && data.firstName) {
             setFirstName(data.firstName);

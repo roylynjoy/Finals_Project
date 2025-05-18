@@ -13,6 +13,7 @@ function CompanyAttendance() {
   const [allAttendances, setAllAttendances] = useState([]);
   const [filteredAttendances, setFilteredAttendances] = useState([]);
   const [userEmail, setUserEmail] = useState('');
+  const baseURL = import.meta.env.VITE_BASE_URL;
   const [selectedDate, setSelectedDate] = useState(() => {
     const today = new Date();
     return today.toISOString().split('T')[0]; // YYYY-MM-DD
@@ -24,10 +25,10 @@ function CompanyAttendance() {
 
   const fetchUserAndAttendance = async (email) => {
     try {
-      const userRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users?email=${email}`);
+      const userRes = await axios.get(`${baseURL}/users?email=${email}`);
       const { company } = userRes.data;
 
-      const attendanceRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/attendance/company?email=${email}`);
+      const attendanceRes = await axios.get(`${baseURL}/attendance/company?email=${email}`);
       const all = attendanceRes.data || [];
 
       setAllAttendances(all);
@@ -68,7 +69,7 @@ function CompanyAttendance() {
 
   const handleModalConfirm = async () => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/attendance/${modalAction}/${modalRecordId}`);
+      await axios.put(`${baseURL}/attendance/${modalAction}/${modalRecordId}`);
       setAllAttendances(prev => prev.filter(record => record._id !== modalRecordId));
       setFilteredAttendances(prev => prev.filter(record => record._id !== modalRecordId));
     } catch (err) {

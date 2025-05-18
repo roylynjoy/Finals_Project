@@ -12,7 +12,8 @@ function Journal() {
   const [isChecked, setIsChecked] = useState(false);
   const editorRef = useRef(null);
   const navigate = useNavigate();
-
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
+  
   const handleFormat = (command, value = null) => {
     document.execCommand(command, false, value);
   };
@@ -29,7 +30,7 @@ function Journal() {
 
     if (isChecked && editorRef.current.innerText.trim()) {
       try {
-        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/journal`, {
+        const response = await axios.post(`${baseURL}/journal`, {
           content: editorRef.current.innerHTML,
           email: user.email  // ✅ Send email to backend
         });
@@ -50,7 +51,7 @@ function Journal() {
       if (!user?.email) return;
 
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/journal/today`);
+        const response = await axios.get(`${baseURL}/journal/today`);
         if (response.status === 200 && response.data?.content) {
           navigate('/ViewJournal');
         }

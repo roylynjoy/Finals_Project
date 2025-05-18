@@ -13,7 +13,7 @@ function StudentDashboard() {
   const [firstName, setFirstName] = useState("");
   const [company, setCompany] = useState("");
   const [loading, setLoading] = useState(true); // ✅ loading state
-
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
   const today = new Date();
   const currentYear = today.getFullYear();
   const currentMonth = today.getMonth();
@@ -29,7 +29,7 @@ function StudentDashboard() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
           if (data && data.firstName && data.company) {
             setFirstName(data.firstName);
