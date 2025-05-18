@@ -5,6 +5,7 @@ import Header from '../PageComponents/header';
 import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import axios from 'axios';
+import LoadingOverlay from '../../components/loadingOverlay'; // ✅ Import the reusable spinner
 
 function AttendanceSubmission() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
@@ -17,6 +18,7 @@ function AttendanceSubmission() {
   const [canTimeOut, setCanTimeOut] = useState(false);
   const [attendanceSubmitted, setAttendanceSubmitted] = useState(false);
   const [submittedMessage, setSubmittedMessage] = useState(false);
+  const [loading, setLoading] = useState(true); // ✅ Spinner state
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -25,13 +27,15 @@ function AttendanceSubmission() {
 
   useEffect(() => {
     const checkAttendance = async (email) => {
+      const start = Date.now();
       try {
         const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/attendance/today?email=${email}`);
         if (res.data) {
           setRecordId(res.data._id);
           setTimeIn(res.data.timeIn || '');
           setTimeOut(res.data.timeOut || '');
-          setAttendanceSubmitted(!!res.data.timeIn && !!res.data.timeOut);
+          setAttendanceSubmitted(!!res.data.submitted);
+          setSubmittedMessage(!!res.data.submitted);
           setCanTimeIn(!res.data.timeIn);
           setCanTimeOut(!!res.data.timeIn && !res.data.timeOut);
         } else {
@@ -43,6 +47,10 @@ function AttendanceSubmission() {
         } else {
           console.error('Error fetching attendance:', err);
         }
+      } finally {
+        const elapsed = Date.now() - start;
+        const delay = Math.max(300 - elapsed, 0);
+        setTimeout(() => setLoading(false), delay); // ✅ Delay spinner visibility
       }
     };
 
@@ -60,13 +68,9 @@ function AttendanceSubmission() {
     date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
 
   const handleTimeClick = async () => {
-    const nowFormatted = formatTime();
-
     if (canTimeIn) {
       try {
-        const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/attendance/timein`, {
-          email: userEmail,
-        });
+        const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/attendance/timein`, { email: userEmail });
         setRecordId(res.data._id);
         setTimeIn(res.data.timeIn);
         setCanTimeIn(false);
@@ -85,8 +89,6 @@ function AttendanceSubmission() {
     }
   };
 
-  const resetAndDisableTimeButton = attendanceSubmitted;
-
   const handleSubmit = async () => {
     try {
       await axios.put(`${import.meta.env.VITE_API_BASE_URL}/attendance/submit/${recordId}`);
@@ -97,12 +99,18 @@ function AttendanceSubmission() {
     }
   };
 
-  const showSubmitButton = timeIn && timeOut;
+  const showSubmitButton = (timeIn && timeOut) || attendanceSubmitted;
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen relative">
       <Sidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
-      <div className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${isSidebarExpanded ? "ml-[400px]" : "ml-[106px]"} bg-[#FAFAFF]`}>
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 ease-in-out relative ${
+          isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
+        } bg-[#FAFAFF]`}
+      >
+        {loading && <LoadingOverlay />} {/* ✅ Covers header + content, not sidebar */}
+
         <Header />
         <div className='flex-1 flex items-center justify-center p-10'>
           <div className='flex gap-12 justify-center items-start'>
@@ -118,28 +126,19 @@ function AttendanceSubmission() {
                 </p>
               </div>
 
-              {/* Time Button */}
               <button
                 onClick={handleTimeClick}
                 className={`mt-4 py-2 text-[28px] w-full rounded font-semibold ${
-                  (resetAndDisableTimeButton || (!canTimeIn && !canTimeOut))
+                  (attendanceSubmitted || (!canTimeIn && !canTimeOut))
                     ? "bg-gray-400 text-white cursor-not-allowed"
                     : "bg-[#2D0F7F] hover:bg-[#1F3463] text-white"
                 }`}
-                disabled={resetAndDisableTimeButton || (!canTimeIn && !canTimeOut)}
+                disabled={attendanceSubmitted || (!canTimeIn && !canTimeOut)}
               >
-                {attendanceSubmitted
-                  ? "Time In"
-                  : canTimeIn
-                  ? "Time In"
-                  : canTimeOut
-                  ? "Time Out"
-                  : "Time Out"}
+                {attendanceSubmitted ? "Time In" : canTimeIn ? "Time In" : "Time Out"}
               </button>
 
-
-              {/* Message Display Area */}
-               {!submittedMessage && (
+              {!submittedMessage && (
                 <div className="h-[64px] flex items-center justify-center mt-3">
                   {timeIn && !timeOut ? (
                     <p className="text-[#0385FF] text-[25px] font-regular max-w-[300px] text-center">
@@ -181,9 +180,7 @@ function AttendanceSubmission() {
                   <button
                     onClick={handleSubmit}
                     className={`text-[30px] font-semibold px-10 py-2 rounded text-white ${
-                      submittedMessage
-                        ? 'bg-gray-400 cursor-not-allowed'
-                        : 'bg-[#1E3A8A] hover:bg-gray-600'
+                      submittedMessage ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#1E3A8A] hover:bg-gray-600'
                     }`}
                     disabled={submittedMessage}
                   >

@@ -6,6 +6,7 @@ import axios from 'axios';
 import Header from '../PageComponents/header';
 import Sidebar from '../PageComponents/sidebar';
 import Footer from '../PageComponents/footer';
+import LoadingOverlay from '../../components/loadingOverlay';
 
 function ViewJournal() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
@@ -14,17 +15,24 @@ function ViewJournal() {
   const [lastName, setLastName] = useState('');
   const journalContentRef = useRef(null);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchJournal = async () => {
       try {
+        const startTime = Date.now();
+
         const response = await axios.get('/api/journal/today');
         if (response.status === 200 && response.data?.content) {
           setJournalContent(response.data.content);
         } else {
-          console.warn("No journal entry today.");
           navigate('/Journal');
+          return;
         }
+
+        const duration = Date.now() - startTime;
+        const delay = Math.max(300 - duration, 0);
+        setTimeout(() => setLoading(false), delay);
       } catch (err) {
         console.error("Error fetching journal:", err);
         navigate('/Journal');
@@ -50,8 +58,6 @@ function ViewJournal() {
           if (data && data.firstName && data.lastName) {
             setFirstName(data.firstName);
             setLastName(data.lastName);
-          } else {
-            console.warn("User data not found or incomplete:", data);
           }
         } catch (error) {
           console.error("Failed to fetch user info:", error);
@@ -63,14 +69,17 @@ function ViewJournal() {
   }, []);
 
   return (
-    <div>
+    <div className="relative">
       <Sidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
       <div
-        className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
+        className={`flex-1 flex flex-col transition-all duration-300 ease-in-out relative ${
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
         } bg-white min-h-screen`}
       >
         <Header />
+
+        {loading && <LoadingOverlay />}
+
         <div className="p-6">
           <div className="bg-[#F9FAFD] rounded-md shadow-md p-10">
             <h2 className="text-[25px] font-semibold mb-2">
