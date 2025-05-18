@@ -32,8 +32,6 @@ function CompanyJournal() {
           setAllJournals(res.data);
         } catch (err) {
           console.error('Failed to load company journal entries:', err);
-        } finally {
-          setLoading(false);
         }
       }
     });
@@ -65,9 +63,7 @@ function CompanyJournal() {
               className="border border-gray-300 rounded-md p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          {loading ? (
-            <div className="text-center text-lg">Loading journal entries...</div>
-          ) : !selectedDate ? (
+          {!selectedDate ? (
             <p className="text-gray-500 text-xl">Select a date to view daily journal submissions.</p>
           ) : filteredJournals.length === 0 ? (
             <p className="text-center text-gray-500 text-xl mt-50">No journal entries found for this date.</p>

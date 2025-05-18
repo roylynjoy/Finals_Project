@@ -109,7 +109,7 @@ function AttendanceSubmission() {
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
         } bg-[#FAFAFF]`}
       >
-        {loading && <LoadingOverlay />} {/* ✅ Covers header + content, not sidebar */}
+        {loading && <LoadingOverlay />} 
 
         <Header />
         <div className='flex-1 flex items-center justify-center p-10'>

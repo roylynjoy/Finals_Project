@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CompanySidebar from './CompanySidebar';
 import CompanyHeader from './CompanyHeader';
-import { calculateTotalHours } from '../../components/attendanceHours';
+
 import Footer from '../PageComponents/footer';
 import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -18,7 +18,6 @@ function CompanyAttendance() {
     return today.toISOString().split('T')[0]; // YYYY-MM-DD
   });
 
-  // Modal state
   const [modalVisible, setModalVisible] = useState(false);
   const [modalAction, setModalAction] = useState('');
   const [modalRecordId, setModalRecordId] = useState(null);
@@ -131,34 +130,28 @@ function CompanyAttendance() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredAttendances.map((record, index) => {
-                    const totalHours = record.timeIn && record.timeOut
-                      ? calculateTotalHours(record.timeIn, record.timeOut)
-                      : '—';
-
-                    return (
-                      <tr key={record._id} onClick={() => setSelectedRow(index)}>
-                        <td className="py-10 px-15 font-medium text-[#556689]">{record.firstName} {record.lastName}</td>
-                        <td className="py-4 px-6">{record.timeIn || '—'}</td>
-                        <td className="py-4 px-6">{record.timeOut || '—'}</td>
-                        <td className="py-4 px-6">{totalHours}</td>
-                        <td className="py-7 px-6 pr-15 flex justify-end items-center gap-4">
-                          <button
-                            onClick={() => confirmAction(record._id, 'approve')}
-                            className="bg-[#64AD70] text-white px-4 py-3 rounded-md hover:bg-green-600 transition"
-                          >
-                            Approve
-                          </button>
-                          <button
-                            onClick={() => confirmAction(record._id, 'deny')}
-                            className="bg-[#D84040] text-white px-10 py-3 rounded-md hover:bg-red-600 transition"
-                          >
-                            Deny
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {filteredAttendances.map((record, index) => (
+                    <tr key={record._id} onClick={() => setSelectedRow(index)}>
+                      <td className="py-10 px-15 font-medium text-[#556689]">{record.firstName} {record.lastName}</td>
+                      <td className="py-4 px-6">{record.timeIn || '—'}</td>
+                      <td className="py-4 px-6">{record.timeOut || '—'}</td>
+                      <td className="py-4 px-6">{record.hours || '—'}</td>
+                      <td className="py-7 px-6 pr-15 flex justify-end items-center gap-4">
+                        <button
+                          onClick={() => confirmAction(record._id, 'approve')}
+                          className="bg-[#64AD70] text-white px-4 py-3 rounded-md hover:bg-green-600 transition"
+                        >
+                          Approve
+                        </button>
+                        <button
+                          onClick={() => confirmAction(record._id, 'deny')}
+                          className="bg-[#D84040] text-white px-10 py-3 rounded-md hover:bg-red-600 transition"
+                        >
+                          Deny
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

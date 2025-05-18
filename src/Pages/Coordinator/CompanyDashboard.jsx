@@ -3,6 +3,7 @@ import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import CompanySidebar from './CompanySidebar';
 import CompanyHeader from './CompanyHeader';
+import LoadingOverlay from '../../components/loadingOverlay'
 import Footer from '../PageComponents/footer';
 import Calendar from '../PageComponents/Calendar';
 import { LuUser } from "react-icons/lu";
@@ -11,6 +12,7 @@ function CompanyDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [company, setCompany] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -22,6 +24,8 @@ function CompanyDashboard() {
           setCompany(data.company || "");
         } catch (error) {
           console.error("Failed to fetch user info:", error);
+        } finally {
+          setLoading(false);
         }
       }
     });
@@ -37,6 +41,7 @@ function CompanyDashboard() {
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
         } bg-white`}
       >
+        {loading && <LoadingOverlay />} 
         <CompanyHeader />
 
         {/* Main Content */}
