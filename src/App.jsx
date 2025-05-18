@@ -1,23 +1,23 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Homepage from './Pages/homepage'
-import Slider from './Pages/slider';
+import Slider from './Pages/PageComponents/slider';
 import SignUp from './Pages/SignUp';
 import SignIn from './Pages/SignIn';
-import StudentDashboard from './Pages/StudentDashboard';
-import Explore from './Pages/Explore';
-import Attendance from './Pages/Attendance';
-import Resources from './Pages/Resources';
-import Journal from './Pages/Journal';
-import CompanyDashboard from './Pages/CompanyDashboard'
-import CompanyAttendance from './Pages/CompanyAttendance'
-import CompanyJournal from './Pages/CompanyJournal'
-import PM from './Pages/PM'
-import CD from './Pages/CD'
-import UIUX from './Pages/UIUX';
-import SQA from './Pages/SQA';
-import AdminDashboard from './Pages/AdminDashboard';
-import ViewJournal from './Pages/ViewJounal';
+import StudentDashboard from './Pages/Student/StudentDashboard';
+import Explore from './Pages/PageComponents/Explore';
+import Attendance from './Pages/Student/Attendance';
+import Resources from './Pages/Student/Resources';
+import Journal from './Pages/Student/Journal';
+import CompanyDashboard from './Pages/Coordinator/CompanyDashboard'
+import CompanyAttendance from './Pages/Coordinator/CompanyAttendance'
+import CompanyJournal from './Pages/Coordinator/CompanyJournal'
+import PM from './Pages/Student/PM'
+import CD from './Pages/Student/CD'
+import UIUX from './Pages/Student/UIUX';
+import SQA from './Pages/Student/SQA';
+import AdminDashboard from './Pages/Admin/AdminDashboard';
+import ViewJournal from './Pages/Student/ViewJounal';
 
 import ProtectedRoute from './components/ProtectedRoute';
 

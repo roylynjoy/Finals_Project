@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './Sidebar';
-import Footer from './footer';
-import Header from './header';
-import { auth } from '../firebase/firebase';
+import Sidebar from '../PageComponents/sidebar';
+import Footer from '../PageComponents/footer';
+import Header from '../PageComponents/header';
+import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import axios from 'axios';
 

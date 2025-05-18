@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Sidebar from './Sidebar';
-import Header from './header';
-import Footer from './footer';
+import Sidebar from '../PageComponents/sidebar';
+import Header from '../PageComponents/header';
+import Footer from '../PageComponents/footer';
 import { FaRegCopy, FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 
-function CD() {
+function SQA() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const navigate = useNavigate();
 
@@ -15,32 +15,32 @@ function CD() {
 
   const topics = [
     {
-      title: "What is Code Development?",
-      link: "https://youtu.be/yAf-XQ9Fuc4?si=BY01GJP6sBk9cUYu"
+      title: "Understand the quality assurance context.",
+      link: "https://youtu.be/4neq2L6yDRI?si=7gP0m32J6xqWaIzf"
     },
     {
-      title: "Web Foundations.",
-      link: "https://youtube.com/playlist?list=PLMJlRf5sZ0zTmdv8SuDXtCPcN-nXLKwR4&si=0x8UhHZfw44RrcjL"
+      title: "Understand SQA projects.",
+      link: "https://youtube.com/playlist?list=PLsjUcU8CQXGGguAbeip-Q_ZckElVGUwxQ&si=hRpZPGHYVv3hnpIj"
     },
     {
-      title: "Frontend Development.",
-      link: "https://youtube.com/playlist?list=PLWKjhJtqVAbmMuZ3saqRIBimAKIMYkt0E&si=8JQ3N5yWRUS-IVSU"
+      title: "Understand SQA management organization.",
+      link: "https://youtu.be/ixJGuPx7EO8?si=4pjwFXyDcg1EtmD6"
     },
     {
-      title: "Backend Development.",
-      link: "https://youtube.com/playlist?list=PLbtI3_MArDOkXRLxdMt1NOMtCS-84ibHH&si=1-y7a5gHki0Q6vxj"
+      title: "Understand TEST CASES In Manual Testing.",
+      link: "https://youtu.be/g0PrXoWKM2Y?si=5v-mq4dR51o3AQef"
     },
     {
-      title: "Hosting and Deployment.",
-      link: "https://youtu.be/LLhAuUM0iU0?si=ajayjXJ18sgo9kpg"
+      title: "The Software Quality Challenge.",
+      link: "https://youtu.be/AF1_k8ikykk?si=asKIug8OnDG7GlmP"
     },
     {
-      title: "Progressive Web Apps.",
-      link: "https://youtu.be/sFsRylCQblw?si=vLuUpaZcK503r0HJ"
+      title: "Software Quality Factors.",
+      link: "https://youtu.be/7Z1kRTRDUKg?si=J_3iD5cihyvjGVsk"
     },
     {
-      title: "Web App Optimizations.",
-      link: "https://youtube.com/playlist?list=PLJrzt4ameiaPTLN4LXiv1Y7ONKuaj7Q9O&si=PdjCKqT7lkMkOQ-I"
+      title: "Components of SQA System.",
+      link: "https://youtu.be/A315SGjrA14?si=5vjAQZkTcMWVU1Ml"
     }
   ];
 
@@ -53,15 +53,16 @@ function CD() {
         } bg-[#FAFAFF] min-h-screen`}
       >
         <Header />
-
         <div className="mt-10 ml-10">
           <FaArrowLeft className="text-2xl cursor-pointer" onClick={arrowBack} />
         </div>
 
         <div className="py-10 px-20">
-          <h1 className="text-[70px] font-bold text-[#1C1C4D] mb-2 text-center">Code Development</h1>
+          <h1 className="text-[70px] font-bold text-[#1C1C4D] mb-2 text-center">
+            System Quality Assurance
+          </h1>
           <p className="text-gray-600 mb-10 text-[25px] text-center">
-            Navigate your internship journey with essential resources to strengthen your code development skills
+            Navigate your internship journey with essential resources to strengthen your system quality assurance skills
           </p>
           <div className="space-y-3">
             {topics.map((topic, index) => (
@@ -87,4 +88,4 @@ function CD() {
   );
 }
 
-export default CD;
+export default SQA;

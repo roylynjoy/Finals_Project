@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { auth } from '../firebase/firebase';
+import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Header from './header';
-import Sidebar from './Sidebar';
-import Footer from './footer';
+import Header from '../PageComponents/header';
+import Sidebar from '../PageComponents/sidebar';
+import Footer from '../PageComponents/footer';
 
 function Journal() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);

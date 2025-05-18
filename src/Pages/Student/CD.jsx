@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Sidebar from './Sidebar';
-import Header from './header';
-import Footer from './footer';
+import Sidebar from '../PageComponents/sidebar';
+import Header from '../PageComponents/header';
+import Footer from '../PageComponents/footer';
 import { FaRegCopy, FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 
-function PM() {
+function CD() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const navigate = useNavigate();
 
@@ -15,32 +15,32 @@ function PM() {
 
   const topics = [
     {
-      title: "What is Project Management.",
-      link: "https://youtu.be/bw-NvGvLHtM?si=Lo75rl8a78cZ_w_g"
+      title: "What is Code Development?",
+      link: "https://youtu.be/yAf-XQ9Fuc4?si=BY01GJP6sBk9cUYu"
     },
     {
-      title: "How to be a Project Manager ?",
-      link: "https://youtu.be/J2RQTf0ecsA?si=U_ZRCcCiuOtod5MF"
+      title: "Web Foundations.",
+      link: "https://youtube.com/playlist?list=PLMJlRf5sZ0zTmdv8SuDXtCPcN-nXLKwR4&si=0x8UhHZfw44RrcjL"
     },
     {
-      title: "Introduction to project management.",
-      link: "https://youtu.be/rBSCvPYGnTc?si=D245aG3pZV2LK0pA"
+      title: "Frontend Development.",
+      link: "https://youtube.com/playlist?list=PLWKjhJtqVAbmMuZ3saqRIBimAKIMYkt0E&si=8JQ3N5yWRUS-IVSU"
     },
     {
-      title: "Agile and waterfall methodology.",
-      link: "https://youtu.be/mepINtMD1aE?si=DYNyapdgTi1AVl7Q"
+      title: "Backend Development.",
+      link: "https://youtube.com/playlist?list=PLbtI3_MArDOkXRLxdMt1NOMtCS-84ibHH&si=1-y7a5gHki0Q6vxj"
     },
     {
-      title: "Project Management Foundations, Initiation, and Planning.",
-      link: "https://youtu.be/hIhTtzo0eBg?si=Ziagjf6Hv-HZE34P"
+      title: "Hosting and Deployment.",
+      link: "https://youtu.be/LLhAuUM0iU0?si=ajayjXJ18sgo9kpg"
     },
     {
-      title: "Introduction to Scrum Master Training.",
-      link: "https://youtube.com/playlist?list=PLEiEAq2VkUUJKZEL96YBV78Dd5gsHSVZ7&si=N4y14EqVNZqfGAsZ"
+      title: "Progressive Web Apps.",
+      link: "https://youtu.be/sFsRylCQblw?si=vLuUpaZcK503r0HJ"
     },
     {
-      title: "Agile Leadership: Introduction to Change.",
-      link: "https://youtu.be/ReG5nkfc89A?si=bDBcllq1VNuy8knm"
+      title: "Web App Optimizations.",
+      link: "https://youtube.com/playlist?list=PLJrzt4ameiaPTLN4LXiv1Y7ONKuaj7Q9O&si=PdjCKqT7lkMkOQ-I"
     }
   ];
 
@@ -53,13 +53,15 @@ function PM() {
         } bg-[#FAFAFF] min-h-screen`}
       >
         <Header />
+
         <div className="mt-10 ml-10">
           <FaArrowLeft className="text-2xl cursor-pointer" onClick={arrowBack} />
         </div>
+
         <div className="py-10 px-20">
-          <h1 className="text-[70px] font-bold text-[#1C1C4D] mb-2 text-center">Project Management</h1>
+          <h1 className="text-[70px] font-bold text-[#1C1C4D] mb-2 text-center">Code Development</h1>
           <p className="text-gray-600 mb-10 text-[25px] text-center">
-            Navigate your internship journey with essential resources to strengthen your project management skills
+            Navigate your internship journey with essential resources to strengthen your code development skills
           </p>
           <div className="space-y-3">
             {topics.map((topic, index) => (
@@ -85,4 +87,4 @@ function PM() {
   );
 }
 
-export default PM;
+export default CD;

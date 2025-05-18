@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from '../firebase/firebase';
+import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import CompanySidebar from './CompanySidebar';
 import CompanyHeader from './CompanyHeader';
-import Footer from './footer';
-import Calendar from './Calendar';
+import Footer from '../PageComponents/footer';
+import Calendar from '../PageComponents/Calendar';
 import { LuUser } from "react-icons/lu";
 
 function CompanyDashboard() {

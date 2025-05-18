@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "../firebase/firebase";
+import { auth } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import Sidebar from "./Sidebar";
-import Header from "./header";
-import Footer from "./footer";
+import Sidebar from "../PageComponents/sidebar";
+import Header from "../PageComponents/header";
+import Footer from "../PageComponents/footer";
 import { LuUser } from "react-icons/lu";
-import Calendar from "./Calendar";
+import Calendar from "../PageComponents/Calendar";
 
 function StudentDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
@@ -86,7 +86,7 @@ function StudentDashboard() {
                       <p className="text-[40px] font-bold text-[#6BD37C]">
                         100
                       </p>
-                      <p className="text-[20px] text-[#6BD37C]">Interns</p>
+                      <p className="text-[20px] text-[#6BD37C]">Days</p>
                     </div>
                     <img
                       src="/pictures/Green.png"
@@ -95,7 +95,7 @@ function StudentDashboard() {
                     />
                   </div>
                   <p className="text-start text-[25px] font-semibold text-[#6BD37C] mt-5 ">
-                    Present
+                    Total Present Days
                   </p>
                 </div>
 
@@ -104,7 +104,7 @@ function StudentDashboard() {
                   <div className="flex justify-between items-center  mt-7">
                     <div>
                       <p className="text-[40px] font-bold text-[#F38A40]">2</p>
-                      <p className="text-[20px] text-[#F38A40]">Interns</p>
+                      <p className="text-[20px] text-[#F38A40]">Hours</p>
                     </div>
                     <img
                       src="/pictures/Orange.png"
@@ -113,7 +113,7 @@ function StudentDashboard() {
                     />
                   </div>
                   <p className="text-start text-[25px] font-semibold text-[#F38A40] mt-5">
-                    Late
+                    Total Late Time
                   </p>
                 </div>
 
@@ -122,7 +122,7 @@ function StudentDashboard() {
                   <div className="flex justify-between items-center  mt-7">
                     <div>
                       <p className="text-[40px] font-bold text-[#9B3F62]">0</p>
-                      <p className="text-[20px] text-[#9B3F62]">Interns</p>
+                      <p className="text-[20px] text-[#9B3F62]">Days</p>
                     </div>
                     <img
                       src="/pictures/Pink.png"
@@ -131,7 +131,7 @@ function StudentDashboard() {
                     />
                   </div>
                   <p className="text-start text-[25px] font-semibold text-[#9B3F62] mt-5">
-                    Absent
+                    Total Absent Days
                   </p>
                 </div>
               </div>

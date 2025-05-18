@@ -5,7 +5,7 @@ import { FaPhone } from "react-icons/fa6";
 import { BsEnvelopeFill } from "react-icons/bs";
 import { FaLocationDot } from "react-icons/fa6";
 import { CiCalendar } from "react-icons/ci";
-import Slider from "./slider";
+import Slider from "./PageComponents/slider";
 
 function Homepage() {
   const navigate = useNavigate();

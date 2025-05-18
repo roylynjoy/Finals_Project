@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Sidebar from './Sidebar';
-import Header from './header';
-import Footer from './footer';
+import Sidebar from '../PageComponents/sidebar';
+import Header from '../PageComponents/header';
+import Footer from '../PageComponents/footer';
 import { FaRegCopy, FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 
-function SQA() {
+function PM() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const navigate = useNavigate();
 
@@ -15,32 +15,32 @@ function SQA() {
 
   const topics = [
     {
-      title: "Understand the quality assurance context.",
-      link: "https://youtu.be/4neq2L6yDRI?si=7gP0m32J6xqWaIzf"
+      title: "What is Project Management.",
+      link: "https://youtu.be/bw-NvGvLHtM?si=Lo75rl8a78cZ_w_g"
     },
     {
-      title: "Understand SQA projects.",
-      link: "https://youtube.com/playlist?list=PLsjUcU8CQXGGguAbeip-Q_ZckElVGUwxQ&si=hRpZPGHYVv3hnpIj"
+      title: "How to be a Project Manager ?",
+      link: "https://youtu.be/J2RQTf0ecsA?si=U_ZRCcCiuOtod5MF"
     },
     {
-      title: "Understand SQA management organization.",
-      link: "https://youtu.be/ixJGuPx7EO8?si=4pjwFXyDcg1EtmD6"
+      title: "Introduction to project management.",
+      link: "https://youtu.be/rBSCvPYGnTc?si=D245aG3pZV2LK0pA"
     },
     {
-      title: "Understand TEST CASES In Manual Testing.",
-      link: "https://youtu.be/g0PrXoWKM2Y?si=5v-mq4dR51o3AQef"
+      title: "Agile and waterfall methodology.",
+      link: "https://youtu.be/mepINtMD1aE?si=DYNyapdgTi1AVl7Q"
     },
     {
-      title: "The Software Quality Challenge.",
-      link: "https://youtu.be/AF1_k8ikykk?si=asKIug8OnDG7GlmP"
+      title: "Project Management Foundations, Initiation, and Planning.",
+      link: "https://youtu.be/hIhTtzo0eBg?si=Ziagjf6Hv-HZE34P"
     },
     {
-      title: "Software Quality Factors.",
-      link: "https://youtu.be/7Z1kRTRDUKg?si=J_3iD5cihyvjGVsk"
+      title: "Introduction to Scrum Master Training.",
+      link: "https://youtube.com/playlist?list=PLEiEAq2VkUUJKZEL96YBV78Dd5gsHSVZ7&si=N4y14EqVNZqfGAsZ"
     },
     {
-      title: "Components of SQA System.",
-      link: "https://youtu.be/A315SGjrA14?si=5vjAQZkTcMWVU1Ml"
+      title: "Agile Leadership: Introduction to Change.",
+      link: "https://youtu.be/ReG5nkfc89A?si=bDBcllq1VNuy8knm"
     }
   ];
 
@@ -56,13 +56,10 @@ function SQA() {
         <div className="mt-10 ml-10">
           <FaArrowLeft className="text-2xl cursor-pointer" onClick={arrowBack} />
         </div>
-
         <div className="py-10 px-20">
-          <h1 className="text-[70px] font-bold text-[#1C1C4D] mb-2 text-center">
-            System Quality Assurance
-          </h1>
+          <h1 className="text-[70px] font-bold text-[#1C1C4D] mb-2 text-center">Project Management</h1>
           <p className="text-gray-600 mb-10 text-[25px] text-center">
-            Navigate your internship journey with essential resources to strengthen your system quality assurance skills
+            Navigate your internship journey with essential resources to strengthen your project management skills
           </p>
           <div className="space-y-3">
             {topics.map((topic, index) => (
@@ -88,4 +85,4 @@ function SQA() {
   );
 }
 
-export default SQA;
+export default PM;
