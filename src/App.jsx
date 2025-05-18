@@ -15,7 +15,7 @@ const Attendance = lazy(() => import('./Pages/Student/Attendance'));
 const Resources = lazy(() => import('./Pages/Student/Resources'));
 const Journal = lazy(() => import('./Pages/Student/Journal'));
 const ViewJournal = lazy(() => import('./Pages/Student/ViewJounal'));
-const Explore = lazy(() => import('./Pages/PageComponents/Explore'));
+const Explore = lazy(() => import('./Pages/Explore'));
 const PM = lazy(() => import('./Pages/Student/PM'));
 const CD = lazy(() => import('./Pages/Student/CD'));
 const UIUX = lazy(() => import('./Pages/Student/UIUX'));
