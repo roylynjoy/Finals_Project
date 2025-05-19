@@ -40,12 +40,12 @@ function AttendanceSubmission() {
     <div className="flex min-h-screen">
       <Sidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
 
-      <div className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${isSidebarExpanded ? "ml-[400px]" : "ml-[106px]"} bg-[#FAFAFF]`}>
+      <div className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${isSidebarExpanded ? "ml-[400px]" : "ml-[106px]"} bg-white`}>
         {/* Header */}
-        <Header />
+        <Header isExpanded={isSidebarExpanded} />
 
         {/* Content */}
-        <div className='flex-1 flex items-center justify-center p-10'>
+        <div className='flex-1 flex items-center justify-center p-10 mt-[100px]'>
           <div className='flex gap-12 justify-center items-center'>
             {/* Clock Display */}
             <div className='flex flex-col items-center'>

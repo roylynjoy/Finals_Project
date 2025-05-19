@@ -1,10 +1,9 @@
 import React from "react";
 import { FaUserCheck } from "react-icons/fa";
 import { TiHome } from "react-icons/ti";
-import { PiBookOpenUserFill } from "react-icons/pi";
+import { PiBookOpenUserFill, PiSidebarFill } from "react-icons/pi";
 import { HiMiniPencilSquare } from "react-icons/hi2";
-import { AiOutlineLogout } from "react-icons/ai";
-import { FaBars, FaChevronLeft } from "react-icons/fa";
+import { FaChevronLeft } from "react-icons/fa";
 import { useLocation, Link } from "react-router-dom";
 
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
@@ -51,12 +50,12 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
                 <li key={index}>
                   <Link
                     to={item.path}
-                    className={`flex items-center transition-all duration-300 ease-in-out rounded-l-[50px] px-4  py-3  ${
+                    className={`flex items-center transition-all duration-300 ease-in-out rounded-l-[50px] px-4 py-3 ml-4 pl-2 ${
                       isExpanded ? "justify-start gap-4" : "justify-center"
                     } ${
                       isActive
-                        ? "bg-white text-[#1F3463]"
-                        : "hover:bg-[#F9FAFD] hover:text-[#1F3463]"
+                        ? "bg-white text-[#1F3463] ml-4 pl-3"
+                        : "hover:bg-[#F9FAFD] hover:text-[#1F3463] pl-3"
                     }`}
                   >
                     {item.icon}
@@ -75,22 +74,20 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
         </nav>
       </div>
 
-      {/* Bottom Section: FieldMate + Toggle */}
+      {/* Bottom Toggle Button */}
       <div className="pb-3 w-full px-4 py-3 flex flex-col gap-4">
-        {/* FieldMate */}
         <a
           href="#"
           className={`flex items-center justify-between bg-[#1F3463] transition-all duration-300 ease-in-out rounded-full ${
             isExpanded ? "w-full" : "w-[60px] mx-auto justify-center"
           }`}
         >
-          <div className="flex items-center gap-3">
-            <button onClick={toggleSidebar} className="w-[50px] h-[50px]">
-              {isExpanded ? <FaChevronLeft size={24} /> : <FaBars size={24} />}
+          <div className="flex items-center">
+            <button onClick={toggleSidebar}>
+              {isExpanded ? <FaChevronLeft size={35} /> : <PiSidebarFill size={35} />}
             </button>
           </div>
         </a>
-
       </div>
     </div>
   );

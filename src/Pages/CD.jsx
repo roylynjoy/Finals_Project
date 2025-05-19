@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import Header from './header';
 import Footer from './footer';
-import { FaRegCopy, FaArrowLeft } from 'react-icons/fa';
+import { FaExternalLinkAlt, FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 
 function CD() {
@@ -50,11 +50,11 @@ function CD() {
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
-        } bg-[#FAFAFF] min-h-screen`}
+        } bg-white min-h-screen`}
       >
         <Header />
 
-        <div className="mt-10 ml-10">
+        <div className="mt-[110px] ml-10">
           <FaArrowLeft className="text-2xl cursor-pointer" onClick={arrowBack} />
         </div>
 
@@ -67,7 +67,7 @@ function CD() {
             {topics.map((topic, index) => (
               <div
                 key={index}
-                className="flex justify-between items-center bg-white p-4 rounded-md shadow-sm hover:bg-[#BEFAF5] transition"
+                className="flex justify-between items-center bg-[#FAFAFF] p-4 rounded-md shadow-sm hover:bg-[#BEFAF5] transition"
               >
                 <span className="text-[#1F3463] text-[30px] py-3 px-5">{topic.title}</span>
                 <a
@@ -75,7 +75,7 @@ function CD() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <FaRegCopy className="w-[48px] h-[48px] text-gray-400 hover:text-black cursor-pointer mx-10" />
+                  <FaExternalLinkAlt size={25} className="text-gray-400 hover:text-black cursor-pointer mx-10" />
                 </a>
               </div>
             ))}

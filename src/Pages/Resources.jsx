@@ -43,9 +43,9 @@ function Resources() {
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
         } bg-white min-h-screen`}
       >
-        <Header />
+        <Header isExpanded={isSidebarExpanded}/>
 
-        <div className="p-8">
+        <div className="p-8 mt-[100px]">
           <h1 className="text-[70px] font-semibold text-center mb-2 text-[#1F3463]">Internship Roadmap</h1>
           <p className="text-center text-gray-600 mb-8 text-[25px] px-40">
             Gain access to carefully selected resources that support skill development, boost productivity, and help you navigate your professional path with confidence.
