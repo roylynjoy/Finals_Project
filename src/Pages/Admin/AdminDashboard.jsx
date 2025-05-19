@@ -11,7 +11,7 @@ function AdminDashboard() {
   const [showCoordinators, setShowCoordinators] = useState(false);
   const [selectedCoordinatorGroup, setSelectedCoordinatorGroup] = useState(null);
   const [firstName, setFirstName] = useState("");
-  const baseURL = import.meta.env.VITE_BASE_URL;
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   const coordinatorGroups = {
     'ABC': ['Roylyn Didican', 'Rizalyne Asaldo'],

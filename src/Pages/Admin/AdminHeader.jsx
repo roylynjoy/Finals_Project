@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom';
 function AdminHeader() {
   const location = useLocation();
   const [firstName, setFirstName] = useState("");
-  const baseURL = import.meta.env.VITE_BASE_URL;
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
   
   const pageTitles = {
     '/AdminDashboard': 'Admin Dashboard',

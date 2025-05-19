@@ -22,17 +22,22 @@ function CompanyJournal() {
   const [filteredJournals, setFilteredJournals] = useState([]);
   const [selectedDate, setSelectedDate] = useState(getTodayDateString());
   const [loading, setLoading] = useState(false);
-  const baseURL = import.meta.env.VITE_BASE_URL;
-  
+
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
           setLoading(true);
           const res = await axios.get(`${baseURL}/journal/company?email=${user.email}`);
-          setAllJournals(res.data);
+          const data = Array.isArray(res.data) ? res.data : []; // ✅ Ensure it's always an array
+          setAllJournals(data);
         } catch (err) {
           console.error('Failed to load company journal entries:', err);
+          setAllJournals([]); // ✅ Fail-safe fallback
+        } finally {
+          setLoading(false);
         }
       }
     });
@@ -45,8 +50,11 @@ function CompanyJournal() {
       setFilteredJournals([]);
       return;
     }
+
     const formatted = new Date(selectedDate).toLocaleDateString();
-    const filtered = allJournals.filter(journal => new Date(journal.createdAt).toLocaleDateString() === formatted);
+    const filtered = allJournals.filter(journal =>
+      new Date(journal.createdAt).toLocaleDateString() === formatted
+    );
     setFilteredJournals(filtered);
   }, [selectedDate, allJournals]);
 
@@ -64,7 +72,10 @@ function CompanyJournal() {
               className="border border-gray-300 rounded-md p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          {!selectedDate ? (
+
+          {loading ? (
+            <div className="text-center text-lg">Loading journal entries...</div>
+          ) : !selectedDate ? (
             <p className="text-gray-500 text-xl">Select a date to view daily journal submissions.</p>
           ) : filteredJournals.length === 0 ? (
             <p className="text-center text-gray-500 text-xl mt-50">No journal entries found for this date.</p>
@@ -77,7 +88,11 @@ function CompanyJournal() {
                       <p className="text-[20px] font-medium leading-snug">
                         {entry.firstName} {entry.lastName}<br />
                         <span className="text-gray-500 text-xs">
-                          {new Date(entry.createdAt).toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' })}
+                          {new Date(entry.createdAt).toLocaleDateString('en-US', {
+                            month: 'long',
+                            day: '2-digit',
+                            year: 'numeric'
+                          })}
                         </span>
                       </p>
                     </div>

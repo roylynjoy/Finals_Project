@@ -13,7 +13,7 @@ function CompanyDashboard() {
   const [firstName, setFirstName] = useState("");
   const [company, setCompany] = useState("");
   const [loading, setLoading] = useState(true);
-  const baseURL = import.meta.env.VITE_BASE_URL;
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {

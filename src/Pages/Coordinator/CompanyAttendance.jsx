@@ -13,7 +13,7 @@ function CompanyAttendance() {
   const [allAttendances, setAllAttendances] = useState([]);
   const [filteredAttendances, setFilteredAttendances] = useState([]);
   const [userEmail, setUserEmail] = useState('');
-  const baseURL = import.meta.env.VITE_BASE_URL;
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
   const [selectedDate, setSelectedDate] = useState(() => {
     const today = new Date();
     return today.toISOString().split('T')[0]; // YYYY-MM-DD

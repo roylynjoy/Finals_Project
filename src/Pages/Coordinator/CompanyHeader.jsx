@@ -8,7 +8,7 @@ import { useLocation } from 'react-router-dom';
 function Header() {
   const location = useLocation();
   const [firstName, setFirstName] = useState("");
-  const baseURL = import.meta.env.VITE_BASE_URL;
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
   const pageTitles = {
     '/CompanyDashboard': 'Company Dashboard',
     '/CompanyAttendance': 'Attendance Tracking',
