@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from '../firebase/firebase';
-import { onAuthStateChanged } from "firebase/auth";
+import { auth } from '../../firebase/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import { FaChevronDown, FaEnvelope } from "react-icons/fa";
 import { GoBellFill } from "react-icons/go";
 import { useLocation } from 'react-router-dom';
 
-
-function AdminHeader() {
+function Header() {
   const location = useLocation();
   const [firstName, setFirstName] = useState("");
-
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
   const pageTitles = {
-    '/AdminDashboard': 'Admin Dashboard',
-    '/CompanyList': 'Company List',
+    '/CompanyDashboard': 'Company Dashboard',
+    '/CompanyAttendance': 'Attendance Tracking',
+    '/CompanyJournal': 'Journal Submission',
 
   };
 
@@ -25,12 +25,11 @@ function AdminHeader() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user?.email) {
+      if (user && user.email) {
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
-
-          if (data?.firstName) {
+          if (data && data.firstName) {
             setFirstName(data.firstName);
           } else {
             console.warn("User data not found or incomplete:", data);
@@ -40,7 +39,6 @@ function AdminHeader() {
         }
       }
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -52,11 +50,11 @@ function AdminHeader() {
     <header className='relative flex justify-between bg-[#FFFFFF] h-[100px] shadow px-10 items-center px-20'>
       <h1 className='text-[28px] font-semibold'>{title}</h1>
       <div className='flex items-center gap-5'>
-        <GoBellFill
+        {/* <GoBellFill
           className='text-[30px] cursor-pointer'
           onClick={() => setShowNotifications(prev => !prev)}
         />
-        <FaEnvelope className='text-[30px]' />
+        <FaEnvelope className='text-[30px]' /> */}
         <div className='flex items-center gap-3 bg-[#F1F1F1] pl-2 pr-4 py-2 text-[18px] border border-[#1F3463] rounded'>
           <span className='bg-[#1F3463] text-white font-bold p-2 text-[22px] rounded'>{getInitials(firstName)}</span>
           <p>{firstName}</p>
@@ -68,4 +66,4 @@ function AdminHeader() {
 }
 
 
-export default AdminHeader;
+export default Header;

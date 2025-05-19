@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD:src/Pages/UIUX.jsx
 import Sidebar from './Sidebar';
 import Header from './header';
 import Footer from './footer';
 import { FaExternalLinkAlt, FaArrowLeft } from 'react-icons/fa';
+=======
+import Sidebar from '../PageComponents/sidebar';
+import Header from '../PageComponents/header';
+import Footer from '../PageComponents/footer';
+import { FaRegCopy, FaArrowLeft } from 'react-icons/fa';
+>>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/UIUX.jsx
 import { useNavigate } from "react-router-dom";
 
-function CD() {
+function UIUX() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const navigate = useNavigate();
 
@@ -15,32 +22,32 @@ function CD() {
 
   const topics = [
     {
-      title: "What is Code Development?",
-      link: "https://youtu.be/yAf-XQ9Fuc4?si=BY01GJP6sBk9cUYu"
+      title: "UI Designer.",
+      link: "https://youtu.be/8rTTP7DE3rs?si=9zw51vx4s8w34ege"
     },
     {
-      title: "Web Foundations.",
-      link: "https://youtube.com/playlist?list=PLMJlRf5sZ0zTmdv8SuDXtCPcN-nXLKwR4&si=0x8UhHZfw44RrcjL"
+      title: "UX Designer.",
+      link: "https://youtu.be/SRec90j6lTY?si=ABAhe-KEArb6GAdr"
     },
     {
-      title: "Frontend Development.",
-      link: "https://youtube.com/playlist?list=PLWKjhJtqVAbmMuZ3saqRIBimAKIMYkt0E&si=8JQ3N5yWRUS-IVSU"
+      title: "Accessibility and Inclusive Design.",
+      link: "https://youtu.be/s00A3SjZarc?si=8YkR6phbj22Exq6f"
     },
     {
-      title: "Backend Development.",
-      link: "https://youtube.com/playlist?list=PLbtI3_MArDOkXRLxdMt1NOMtCS-84ibHH&si=1-y7a5gHki0Q6vxj"
+      title: "Mobile and Web Applications.",
+      link: "https://youtu.be/lMadZH4AgT4?si=L2wRsWQ7_fLp5_nD"
     },
     {
-      title: "Hosting and Deployment.",
-      link: "https://youtu.be/LLhAuUM0iU0?si=ajayjXJ18sgo9kpg"
+      title: "Responsive Design.",
+      link: "https://youtu.be/lMadZH4AgT4?si=L2wRsWQ7_fLp5_nD"
     },
     {
-      title: "Progressive Web Apps.",
-      link: "https://youtu.be/sFsRylCQblw?si=vLuUpaZcK503r0HJ"
+      title: "Industry Trends and Case Studies.",
+      link: "https://youtu.be/XX2gZTGwZWc?si=b199Yt6FKuV4KsBJ"
     },
     {
-      title: "Web App Optimizations.",
-      link: "https://youtube.com/playlist?list=PLJrzt4ameiaPTLN4LXiv1Y7ONKuaj7Q9O&si=PdjCKqT7lkMkOQ-I"
+      title: "UI/UX Tools.",
+      link: "https://youtu.be/dcPp_U-v3bI?si=E7B-c0n6FnACBJGZ"
     }
   ];
 
@@ -53,15 +60,14 @@ function CD() {
         } bg-white min-h-screen`}
       >
         <Header />
-
         <div className="mt-[110px] ml-10">
           <FaArrowLeft className="text-2xl cursor-pointer" onClick={arrowBack} />
         </div>
 
         <div className="py-10 px-20">
-          <h1 className="text-[70px] font-bold text-[#1C1C4D] mb-2 text-center">Code Development</h1>
+          <h1 className="text-[70px] font-bold text-[#1C1C4D] mb-2 text-center">UI/UX Design</h1>
           <p className="text-gray-600 mb-10 text-[25px] text-center">
-            Navigate your internship journey with essential resources to strengthen your code development skills
+            Navigate your internship journey with essential resources to strengthen your UI/UX design skills
           </p>
           <div className="space-y-3">
             {topics.map((topic, index) => (
@@ -75,7 +81,7 @@ function CD() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <FaExternalLinkAlt size={25} className="text-gray-400 hover:text-black cursor-pointer mx-10" />
+                  <FaExternalLinkAlt size={25} className=" text-gray-400 hover:text-black cursor-pointer mx-10" />
                 </a>
               </div>
             ))}
@@ -87,4 +93,4 @@ function CD() {
   );
 }
 
-export default CD;
+export default UIUX;

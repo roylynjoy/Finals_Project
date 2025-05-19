@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from '../firebase/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../firebase/firebase';
+import { onAuthStateChanged } from "firebase/auth";
 import { FaChevronDown, FaEnvelope } from "react-icons/fa";
 import { GoBellFill } from "react-icons/go";
 import { useLocation } from 'react-router-dom';
 
-function Header() {
+
+function AdminHeader() {
   const location = useLocation();
   const [firstName, setFirstName] = useState("");
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
+  
   const pageTitles = {
-    '/CompanyDashboard': 'Company Dashboard',
-    '/CompanyAttendance': 'Attendance Tracking',
-    '/CompanyJournal': 'Journal Submission',
+    '/AdminDashboard': 'Admin Dashboard',
+    '/CompanyList': 'Company List',
 
   };
 
@@ -24,11 +26,12 @@ function Header() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user && user.email) {
+      if (user?.email) {
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
-          if (data && data.firstName) {
+
+          if (data?.firstName) {
             setFirstName(data.firstName);
           } else {
             console.warn("User data not found or incomplete:", data);
@@ -38,6 +41,7 @@ function Header() {
         }
       }
     });
+
     return () => unsubscribe();
   }, []);
 
@@ -65,4 +69,4 @@ function Header() {
 }
 
 
-export default Header;
+export default AdminHeader;

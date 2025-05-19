@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Header from './header';
-import Sidebar from './Sidebar';
-import Footer from './footer';
+import Header from '../PageComponents/header';
+import Sidebar from '../PageComponents/sidebar';
+import Footer from '../PageComponents/footer';
 import { useNavigate } from 'react-router-dom';
 
 function Resources() {

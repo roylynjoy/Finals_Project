@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD:src/Pages/PM.jsx
 import Sidebar from './Sidebar';
 import Header from './header';
 import Footer from './footer';
-import { FaExternalLinkAlt, FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft } from 'react-icons/fa';
+=======
+import Sidebar from '../PageComponents/sidebar';
+import Header from '../PageComponents/header';
+import Footer from '../PageComponents/footer';
+import { FaRegCopy, FaArrowLeft } from 'react-icons/fa';
+>>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/PM.jsx
 import { useNavigate } from "react-router-dom";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
-function UIUX() {
+function PM() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const navigate = useNavigate();
 
@@ -15,32 +23,32 @@ function UIUX() {
 
   const topics = [
     {
-      title: "UI Designer.",
-      link: "https://youtu.be/8rTTP7DE3rs?si=9zw51vx4s8w34ege"
+      title: "What is Project Management.",
+      link: "https://youtu.be/bw-NvGvLHtM?si=Lo75rl8a78cZ_w_g"
     },
     {
-      title: "UX Designer.",
-      link: "https://youtu.be/SRec90j6lTY?si=ABAhe-KEArb6GAdr"
+      title: "How to be a Project Manager ?",
+      link: "https://youtu.be/J2RQTf0ecsA?si=U_ZRCcCiuOtod5MF"
     },
     {
-      title: "Accessibility and Inclusive Design.",
-      link: "https://youtu.be/s00A3SjZarc?si=8YkR6phbj22Exq6f"
+      title: "Introduction to project management.",
+      link: "https://youtu.be/rBSCvPYGnTc?si=D245aG3pZV2LK0pA"
     },
     {
-      title: "Mobile and Web Applications.",
-      link: "https://youtu.be/lMadZH4AgT4?si=L2wRsWQ7_fLp5_nD"
+      title: "Agile and waterfall methodology.",
+      link: "https://youtu.be/mepINtMD1aE?si=DYNyapdgTi1AVl7Q"
     },
     {
-      title: "Responsive Design.",
-      link: "https://youtu.be/lMadZH4AgT4?si=L2wRsWQ7_fLp5_nD"
+      title: "Project Management Foundations, Initiation, and Planning.",
+      link: "https://youtu.be/hIhTtzo0eBg?si=Ziagjf6Hv-HZE34P"
     },
     {
-      title: "Industry Trends and Case Studies.",
-      link: "https://youtu.be/XX2gZTGwZWc?si=b199Yt6FKuV4KsBJ"
+      title: "Introduction to Scrum Master Training.",
+      link: "https://youtube.com/playlist?list=PLEiEAq2VkUUJKZEL96YBV78Dd5gsHSVZ7&si=N4y14EqVNZqfGAsZ"
     },
     {
-      title: "UI/UX Tools.",
-      link: "https://youtu.be/dcPp_U-v3bI?si=E7B-c0n6FnACBJGZ"
+      title: "Agile Leadership: Introduction to Change.",
+      link: "https://youtu.be/ReG5nkfc89A?si=bDBcllq1VNuy8knm"
     }
   ];
 
@@ -56,11 +64,10 @@ function UIUX() {
         <div className="mt-[110px] ml-10">
           <FaArrowLeft className="text-2xl cursor-pointer" onClick={arrowBack} />
         </div>
-
         <div className="py-10 px-20">
-          <h1 className="text-[70px] font-bold text-[#1C1C4D] mb-2 text-center">UI/UX Design</h1>
+          <h1 className="text-[70px] font-bold text-[#1C1C4D] mb-2 text-center">Project Management</h1>
           <p className="text-gray-600 mb-10 text-[25px] text-center">
-            Navigate your internship journey with essential resources to strengthen your UI/UX design skills
+            Navigate your internship journey with essential resources to strengthen your project management skills
           </p>
           <div className="space-y-3">
             {topics.map((topic, index) => (
@@ -86,4 +93,4 @@ function UIUX() {
   );
 }
 
-export default UIUX;
+export default PM;

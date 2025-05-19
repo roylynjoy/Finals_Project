@@ -1,27 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from '../firebase/firebase';
+import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import CompanySidebar from './CompanySidebar';
 import CompanyHeader from './CompanyHeader';
-import Footer from './footer';
-import Calendar from './Calendar';
+import LoadingOverlay from '../../components/loadingOverlay'
+import Footer from '../PageComponents/footer';
+import Calendar from '../PageComponents/Calendar';
 import { LuUser } from "react-icons/lu";
 
 function CompanyDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [company, setCompany] = useState("");
+  const [loading, setLoading] = useState(true);
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
           setFirstName(data.firstName || "");
           setCompany(data.company || "");
         } catch (error) {
           console.error("Failed to fetch user info:", error);
+        } finally {
+          setLoading(false);
         }
       }
     });
@@ -37,6 +42,7 @@ function CompanyDashboard() {
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
         } bg-white`}
       >
+        {loading && <LoadingOverlay />} 
         <CompanyHeader />
 
         {/* Main Content */}

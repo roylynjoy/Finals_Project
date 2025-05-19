@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { auth } from '../firebase/firebase';
+import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from "firebase/auth";
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
 import { LuUser, LuChevronDown, LuChevronUp } from "react-icons/lu";
-import Footer from './footer';
+import Footer from '../PageComponents/footer';
 
 function AdminDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [showCoordinators, setShowCoordinators] = useState(false);
   const [selectedCoordinatorGroup, setSelectedCoordinatorGroup] = useState(null);
   const [firstName, setFirstName] = useState("");
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   const coordinatorGroups = {
     'ABC': ['Roylyn Didican', 'Rizalyne Asaldo'],
@@ -22,7 +23,7 @@ function AdminDashboard() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
 
           if (data?.firstName) {
