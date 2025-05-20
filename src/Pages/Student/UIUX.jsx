@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD:src/Pages/UIUX.jsx
-import Sidebar from './Sidebar';
-import Header from './header';
-import Footer from './footer';
-import { FaExternalLinkAlt, FaArrowLeft } from 'react-icons/fa';
-=======
 import Sidebar from '../PageComponents/sidebar';
 import Header from '../PageComponents/header';
 import Footer from '../PageComponents/footer';
 import { FaRegCopy, FaArrowLeft } from 'react-icons/fa';
->>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/UIUX.jsx
 import { useNavigate } from "react-router-dom";
 
 function UIUX() {
