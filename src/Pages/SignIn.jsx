@@ -97,7 +97,7 @@ export default function LoginPage() {
           <input
             type="email"
             placeholder="Email"
-            className="border border-[#D3CECE] text-[20px] rounded p-3 w-full"
+            className="border border-[#D3CECE] text-[20px] rounded p-3 w-full mb-2"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -113,19 +113,20 @@ export default function LoginPage() {
               className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
+              {showPassword ? <FaEye size={25}/> : <FaEyeSlash size={25} className="text-[#D3CECE]"/>}
             </span>
           </div>
+          <div className="text-[#005CFA] text-[18px]">Forgot your password?</div>
           <button
             onClick={handleLogin}
-            className="w-full bg-[#240F8C] text-white py-3 rounded text-[22.5px] font-bold"
+            className="w-full bg-[#1E3A8A] text-white py-3 rounded text-[22.5px] font-bold"
           >
             Log In
           </button>
-          <div className="flex items-center my-4">
-            <div className="flex-grow h-px bg-gray-300" />
-            <span className="mx-4 text-[#5F5454]">or</span>
-            <div className="flex-grow h-px bg-gray-300" />
+          <div className="flex items-center ">
+            <div className="flex-grow h-px bg-[#9B9494]" />
+            <span className="mx-4 -mt-2 text-[#5F5454] text-[22px]">or</span>
+            <div className="flex-grow h-px bg-[#9B9494]" />
           </div>
           <button
             onClick={handleGoogleSignIn}
