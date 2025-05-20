@@ -83,7 +83,7 @@ function ViewJournal() {
 
         <div className="p-6">
           <div className="bg-[#F9FAFD] rounded-md shadow-md p-10">
-            <h2 className="text-[25px] font-semibold mb-2">
+            <h2 className="text-[25px] font-semibold mb-2 mt-10">
               {firstName} {lastName} - {new Date().toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' })}
             </h2>
             <p className='border-b border-[#959494] -ml-3 -mr-3 mb-7'></p>
