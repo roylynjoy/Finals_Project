@@ -1,3 +1,63 @@
+
+import React, { useState, useEffect } from "react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
+import TextStyle from "@tiptap/extension-text-style";
+import { Extension } from "@tiptap/core";
+import axios from "axios";
+import { auth } from "../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import Header from "./header";
+import Sidebar from "./Sidebar";
+import Footer from "./footer";
+import {
+  Bold,
+  Italic,
+  Underline as UnderlineIcon,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  List,
+  ListOrdered,
+  Undo,
+  Redo,
+} from "lucide-react";
+
+
+
+const FontSize = Extension.create({
+  name: "fontSize",
+  addOptions() {
+    return {
+      types: ["textStyle"],
+    };
+  },
+  addGlobalAttributes() {
+    return [
+      {
+        types: ["textStyle"],
+        attributes: {
+          fontSize: {
+            default: null,
+            renderHTML: attributes => {
+              if (!attributes.fontSize) return {};
+              return {
+                style: `font-size: ${attributes.fontSize}px`,
+              };
+            },
+            parseHTML: element => ({
+              fontSize: element.style.fontSize?.replace("px", ""),
+            }),
+          },
+        },
+      },
+    ];
+  },
+});
+
 import React, { useState, useRef, useEffect } from 'react';
 import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -6,58 +66,95 @@ import axios from 'axios';
 import Header from '../PageComponents/header';
 import Sidebar from '../PageComponents/sidebar';
 import Footer from '../PageComponents/footer';
+>>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/Journal.jsx
 
 function Journal() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const editorRef = useRef(null);
+  const [fontSize, setFontSize] = useState(14);
   const navigate = useNavigate();
+<<<<<<< HEAD:src/Pages/Journal.jsx
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      TextStyle,
+      FontSize,
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
+    ],
+    content: "",
+    editorProps: {
+      attributes: {
+        class: "min-h-[764px] p-4 bg-white rounded-b-md outline-none text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-indigo-200",
+        placeholder: "Type here...",
+      },
+    },
+  });
+=======
   const baseURL = import.meta.env.VITE_API_BASE_URL;
   
   const handleFormat = (command, value = null) => {
     document.execCommand(command, false, value);
   };
+>>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/Journal.jsx
 
   const handleSubmit = async () => {
     const user = auth.currentUser;
-
     if (!user || !user.email) {
       alert("You must be logged in to submit a journal.");
       return;
     }
 
-    console.log("Submitting journal for:", user.email);
-
-    if (isChecked && editorRef.current.innerText.trim()) {
+    const content = editor?.getHTML();
+    if (isChecked && content?.trim()) {
       try {
+<<<<<<< HEAD:src/Pages/Journal.jsx
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/journal`,
+          {
+            content,
+            email: user.email,
+          }
+        );
+=======
         const response = await axios.post(`${baseURL}/journal`, {
           content: editorRef.current.innerHTML,
           email: user.email  // ✅ Send email to backend
         });
+>>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/Journal.jsx
         console.log(response.data);
-        navigate('/ViewJournal');
+        navigate("/ViewJournal");
       } catch (err) {
         console.error(err);
-        alert('Failed to submit journal.');
+        alert("Failed to submit journal.");
       }
     } else {
-      alert('Please agree to the terms and write something.');
+      alert("Please agree to the terms and write something.");
     }
   };
-  
+
   useEffect(() => {
     const checkTodayEntry = async () => {
       const user = auth.currentUser;
       if (!user?.email) return;
 
       try {
+<<<<<<< HEAD:src/Pages/Journal.jsx
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/journal/today`
+        );
+=======
         const response = await axios.get(`${baseURL}/journal/today`);
+>>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/Journal.jsx
         if (response.status === 200 && response.data?.content) {
-          navigate('/ViewJournal');
+          navigate("/ViewJournal");
         }
       } catch (err) {
         if (err.response?.status !== 204) {
-          console.error('Error checking for today\'s entry:', err);
+          console.error("Error checking for today's entry:", err);
         }
       }
     };
@@ -71,59 +168,114 @@ function Journal() {
 
   return (
     <div>
-      <Sidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
+      <Sidebar
+        isExpanded={isSidebarExpanded}
+        setIsExpanded={setIsSidebarExpanded}
+      />
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
-          isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
+          isSidebarExpanded ? "ml-[400px]" : "ml-[106px]"
         } bg-[#FAFAFF] min-h-screen`}
       >
-        <Header />
-        <div className="p-6 mt-10 mx-20 ">
-
-          {/* Toolbar */}
-          <div className="border-3 border-[#C2C2C2] rounded-md bg-[#f9f9fc]">
-            <div className="flex items-center border-b px-4 py-2 text-gray-400 text-[20px]">
-              <div className="flex space-x-2">
-                <button onClick={() => handleFormat('bold')} className="hover:text-black font-bold">B</button>
-                <button onClick={() => handleFormat('italic')} className="hover:text-black italic">I</button>
-                <button onClick={() => handleFormat('underline')} className="hover:text-black underline">U</button>
-                <button onClick={() => handleFormat('foreColor', 'black')} className="hover:text-black">A</button>
-
-                <select
-                  onChange={(e) => handleFormat('fontSize', e.target.value)}
-                  className="bg-transparent focus:outline-none"
+        <Header isExpanded={isSidebarExpanded} />
+        <div className="p-6 mt-10 mx-20 mt-[100px]">
+          {/* Editor */}
+          {editor && (
+            <div className="border border-gray-300 rounded-md bg-[#f9f9fc] shadow-sm">
+              <div className="flex flex-wrap items-center gap-2 px-4 py-4 border-b text-gray-600">
+                <button onClick={() => editor.chain().focus().toggleBold().run()}>
+                  <Bold size={25} />
+                </button>
+                <button onClick={() => editor.chain().focus().toggleItalic().run()}>
+                  <Italic size={25} />
+                </button>
+                <button
+                  onClick={() => editor.chain().focus().toggleUnderline().run()}
                 >
-                  <option value="3">14</option>
-                  <option value="4">16</option>
-                  <option value="5">18</option>
-                </select>
+                  <UnderlineIcon size={25} />
+                </button>
+                {/* Font Size Controls */}
+                <div className="flex items-center space-x-2 ml-2">
+                  <button
+                    onClick={() => {
+                      const newSize = Math.max(10, fontSize - 1);
+                      setFontSize(newSize);
+                      editor
+                        .chain()
+                        .focus()
+                        .setMark("textStyle", { fontSize: newSize })
+                        .run();
+                    }}
+                    className="text-xl"
+                  >
+                    −
+                  </button>
+                  <input
+                    type="text"
+                    value={fontSize}
+                    readOnly
+                    className="w-10 h-7 text-center rounded bg-gray-100 border text-sm"
+                  />
+                  <button
+                    onClick={() => {
+                      const newSize = fontSize + 1;
+                      setFontSize(newSize);
+                      editor
+                        .chain()
+                        .focus()
+                        .setMark("textStyle", { fontSize: newSize })
+                        .run();
+                    }}
+                    className="text-xl"
+                  >
+                    +
+                  </button>
+                </div>
+                <span className="mx-2">|</span>
+                <button
+                  onClick={() => editor.chain().focus().setTextAlign("left").run()}
+                >
+                  <AlignLeft size={25} />
+                </button>
+                <button
+                  onClick={() =>
+                    editor.chain().focus().setTextAlign("center").run()
+                  }
+                >
+                  <AlignCenter size={25} />
+                </button>
+                <button
+                  onClick={() =>
+                    editor.chain().focus().setTextAlign("right").run()
+                  }
+                >
+                  <AlignRight size={25} />
+                </button>
+                <span className="mx-2">|</span>
+                <button
+                  onClick={() => editor.chain().focus().toggleBulletList().run()}
+                >
+                  <List size={25} />
+                </button>
+                <button
+                  onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                >
+                  <ListOrdered size={25} />
+                </button>
+                <span className="mx-2">|</span>
+                <button onClick={() => editor.chain().focus().undo().run()}>
+                  <Undo size={25} />
+                </button>
+                <button onClick={() => editor.chain().focus().redo().run()}>
+                  <Redo size={25} />
+                </button>
 
-                <span>|</span>
-
-                <button onClick={() => handleFormat('insertUnorderedList')} className="hover:text-black">•</button>
-                <button onClick={() => handleFormat('insertOrderedList')} className="hover:text-black">1.</button>
-
-                <span>|</span>
-
-                <button onClick={() => handleFormat('justifyLeft')} className="hover:text-black">L</button>
-                <button onClick={() => handleFormat('justifyCenter')} className="hover:text-black">C</button>
-                <button onClick={() => handleFormat('justifyRight')} className="hover:text-black">R</button>
-
-                <span>|</span>
-
-                <button onClick={() => handleFormat('formatBlock', 'blockquote')} className="hover:text-black">“”</button>
+                
               </div>
-            </div>
 
-            {/* Editable area */}
-            <div
-              ref={editorRef}
-              contentEditable
-              className="w-full min-h-[587px] bg-[#f9f9fc] p-6 focus:outline-none resize-none placeholder-gray-400 text-gray-800 text-base"
-              placeholder="Type Here..."
-              suppressContentEditableWarning={true}
-            />
-          </div>
+              <EditorContent editor={editor} />
+            </div>
+          )}
 
           {/* Checkbox */}
           <div className="flex items-center mt-6 space-x-3">
@@ -142,7 +294,7 @@ function Journal() {
           <button
             className="text-[28px] mt-6 px-6 py-2 bg-[#1E3A8A] hover:bg-[#1E40AF] text-white rounded disabled:opacity-50"
             onClick={handleSubmit}
-            disabled={!isChecked || !editorRef.current?.innerText.trim()}
+            disabled={!isChecked || !editor?.getText().trim()}
           >
             Submit
           </button>

@@ -60,11 +60,10 @@ function StudentDashboard() {
           isSidebarExpanded ? "ml-[400px]" : "ml-[106px]"
         } bg-[#ffffff] relative`}
       >
-        {loading && <LoadingOverlay />}
+        <Header isExpanded={isSidebarExpanded} firstName={firstName} />
 
-        <Header />
-        <div className="p-8 grid grid-cols-3 gap-6">
-          {/* Left Column */}
+        <div className="p-8 grid grid-cols-3 gap-6 mt-[100px]">
+          {/* Left Column (2/3) */}
           <div className="col-span-2 space-y-6">
             {/* Welcome Card */}
             <div className="bg-white p-5 rounded-[10px] shadow flex items-center justify-between border-2 border-[#B9B9B9]">
