@@ -2,32 +2,46 @@ import React, { useState } from "react";
 import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
 import { auth, googleProvider } from "../firebase/firebase";
+import ForgotPassword from "./ForgotPassword";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
 
   const handleLogin = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
-  
+
       // Send email to backend to check the role
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/checkUserExists`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: user.email }),
-      });
-  
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/users/checkUserExists`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: user.email }),
+        }
+      );
+
       const data = await res.json();
-  
+
       if (data.exists && data.user) {
         console.log("User role:", data.user.role);
-  
+
         if (data.user.role === "Student") {
           navigate("/StudentDashboard");
         } else if (data.user.role === "Coordinator") {
@@ -50,19 +64,21 @@ export default function LoginPage() {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-  
+
       // Send user.email to backend to check if it exists in MongoDB
-      const res = await fetch("http://localhost:5000/api/users/checkUserExists", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: user.email }),
-      });
-      
+      const res = await fetch(
+        "http://localhost:5000/api/users/checkUserExists",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: user.email }),
+        }
+      );
+
       const data = await res.json();
-      
+
       // Check if user exists and inspect structure
       if (data.exists && data.user) {
-
         if (data.user.role === "Student") {
           navigate("/StudentDashboard");
         } else if (data.user.role === "Coordinator") {
@@ -83,11 +99,25 @@ export default function LoginPage() {
     }
   };
 
+  const handlePasswordReset = async () => {
+    try {
+      await sendPasswordResetEmail(auth, resetEmail);
+      alert("Password reset email sent!");
+      setIsForgotModalOpen(false);
+      setResetEmail("");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <div className="flex h-screen">
       <div className="w-1/2 flex flex-col justify-center items-center bg-white p-12 relative">
         <div className="absolute top-6 left-6">
-          <FaArrowLeft className="text-2xl cursor-pointer" onClick={() => navigate(-1)} />
+          <FaArrowLeft
+            className="text-2xl cursor-pointer"
+            onClick={() => navigate(-1)}
+          />
         </div>
         <div className="absolute top-6 right-6">
           <img src="/pictures/logo.png" alt="Logo" className="w-14 h-14" />
@@ -113,10 +143,28 @@ export default function LoginPage() {
               className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <FaEye size={25}/> : <FaEyeSlash size={25} className="text-[#D3CECE]"/>}
+              {showPassword ? (
+                <FaEye size={25} />
+              ) : (
+                <FaEyeSlash size={25} className="text-[#D3CECE]" />
+              )}
             </span>
           </div>
-          <div className="text-[#005CFA] text-[18px]">Forgot your password?</div>
+          <div
+            className="text-[#005CFA] text-[18px] cursor-pointer"
+            onClick={() => setIsForgotModalOpen(true)}
+          >
+            Forgot your password?
+          </div>
+
+          <ForgotPassword
+            isOpen={isForgotModalOpen}
+            onClose={() => setIsForgotModalOpen(false)}
+            onSubmit={handlePasswordReset}
+            email={resetEmail}
+            setEmail={setResetEmail}
+          />
+
           <button
             onClick={handleLogin}
             className="w-full bg-[#1E3A8A] text-white py-3 rounded text-[22.5px] font-bold"
@@ -133,7 +181,9 @@ export default function LoginPage() {
             className="flex items-center justify-center border border-[#D3CECE] py-3 w-full rounded space-x-2"
           >
             <FcGoogle className="h-[40px] w-[40px]" />
-            <span className="text-[22.5px] text-[#5F5454]">Sign in with Google</span>
+            <span className="text-[22.5px] text-[#5F5454]">
+              Sign in with Google
+            </span>
           </button>
           <p className="text-center text-[18px]">
             Don’t have an Account?{" "}
