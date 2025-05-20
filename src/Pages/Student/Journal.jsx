@@ -58,22 +58,11 @@ const FontSize = Extension.create({
   },
 });
 
-import React, { useState, useRef, useEffect } from 'react';
-import { auth } from '../../firebase/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Header from '../PageComponents/header';
-import Sidebar from '../PageComponents/sidebar';
-import Footer from '../PageComponents/footer';
->>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/Journal.jsx
-
 function Journal() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [fontSize, setFontSize] = useState(14);
   const navigate = useNavigate();
-<<<<<<< HEAD:src/Pages/Journal.jsx
 
   const editor = useEditor({
     extensions: [
@@ -93,13 +82,6 @@ function Journal() {
       },
     },
   });
-=======
-  const baseURL = import.meta.env.VITE_API_BASE_URL;
-  
-  const handleFormat = (command, value = null) => {
-    document.execCommand(command, false, value);
-  };
->>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/Journal.jsx
 
   const handleSubmit = async () => {
     const user = auth.currentUser;
@@ -111,7 +93,6 @@ function Journal() {
     const content = editor?.getHTML();
     if (isChecked && content?.trim()) {
       try {
-<<<<<<< HEAD:src/Pages/Journal.jsx
         const response = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/journal`,
           {
@@ -119,12 +100,6 @@ function Journal() {
             email: user.email,
           }
         );
-=======
-        const response = await axios.post(`${baseURL}/journal`, {
-          content: editorRef.current.innerHTML,
-          email: user.email  // ✅ Send email to backend
-        });
->>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/Journal.jsx
         console.log(response.data);
         navigate("/ViewJournal");
       } catch (err) {
@@ -142,13 +117,9 @@ function Journal() {
       if (!user?.email) return;
 
       try {
-<<<<<<< HEAD:src/Pages/Journal.jsx
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/journal/today`
         );
-=======
-        const response = await axios.get(`${baseURL}/journal/today`);
->>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/Journal.jsx
         if (response.status === 200 && response.data?.content) {
           navigate("/ViewJournal");
         }
