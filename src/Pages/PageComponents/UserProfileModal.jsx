@@ -45,7 +45,15 @@ const UserProfileModal = ({ name, initials }) => {
       </div>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-[300px] bg-white border border-gray-200 shadow-lg rounded z-50">
+        <div className="absolute right-0 mt-2 w-[430px] bg-white border border-gray-200 shadow-lg rounded z-50">
+          <div className="flex px-4 py-6 gap-3">
+              <div className="bg-[#1F3463] h-[75px] w-[70px] rounded-[10px]"></div>
+              <div className="flex-col content-center">
+                <p className="text-[26px] font-semibold">Antonio Andres Watson</p>
+                <p className="text-[14px]">antonioandreswatson@laverdad.gmail.com</p>
+              </div>
+          </div>
+          <p className="border-t border-[#959494]"></p>
           <ul className="p-2 text-[23px]">
             <li
               className="flex items-center gap-2 p-2 hover:bg-[#E8EEFF] cursor-pointer"
