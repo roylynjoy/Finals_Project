@@ -7,12 +7,12 @@ import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import { Extension } from "@tiptap/core";
 import axios from "axios";
-import { auth } from "../firebase/firebase";
+import { auth } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import Header from "./header";
-import Sidebar from "./Sidebar";
-import Footer from "./footer";
+import Header from "../PageComponents/header";
+import Footer from "../PageComponents/footer";
+import Sidebar from "../PageComponents/sidebar";
 import {
   Bold,
   Italic,
@@ -58,22 +58,12 @@ const FontSize = Extension.create({
   },
 });
 
-import React, { useState, useRef, useEffect } from 'react';
-import { auth } from '../../firebase/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Header from '../PageComponents/header';
-import Sidebar from '../PageComponents/sidebar';
-import Footer from '../PageComponents/footer';
->>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/Journal.jsx
-
 function Journal() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [fontSize, setFontSize] = useState(14);
   const navigate = useNavigate();
-<<<<<<< HEAD:src/Pages/Journal.jsx
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   const editor = useEditor({
     extensions: [
@@ -93,13 +83,10 @@ function Journal() {
       },
     },
   });
-=======
-  const baseURL = import.meta.env.VITE_API_BASE_URL;
   
   const handleFormat = (command, value = null) => {
     document.execCommand(command, false, value);
   };
->>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/Journal.jsx
 
   const handleSubmit = async () => {
     const user = auth.currentUser;
@@ -111,20 +98,10 @@ function Journal() {
     const content = editor?.getHTML();
     if (isChecked && content?.trim()) {
       try {
-<<<<<<< HEAD:src/Pages/Journal.jsx
-        const response = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/journal`,
-          {
-            content,
-            email: user.email,
-          }
-        );
-=======
         const response = await axios.post(`${baseURL}/journal`, {
-          content: editorRef.current.innerHTML,
-          email: user.email  // ✅ Send email to backend
+          content: content,
+          email: user.email,
         });
->>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/Journal.jsx
         console.log(response.data);
         navigate("/ViewJournal");
       } catch (err) {
@@ -136,19 +113,14 @@ function Journal() {
     }
   };
 
+
   useEffect(() => {
     const checkTodayEntry = async () => {
       const user = auth.currentUser;
       if (!user?.email) return;
 
       try {
-<<<<<<< HEAD:src/Pages/Journal.jsx
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/journal/today`
-        );
-=======
         const response = await axios.get(`${baseURL}/journal/today`);
->>>>>>> de13993b346ef390be3cd413d34a55920b4ec4e4:src/Pages/Student/Journal.jsx
         if (response.status === 200 && response.data?.content) {
           navigate("/ViewJournal");
         }
