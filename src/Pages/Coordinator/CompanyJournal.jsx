@@ -6,7 +6,8 @@ import axios from 'axios';
 import CompanySidebar from './CompanySidebar';
 import CompanyHeader from './CompanyHeader';
 import Footer from '../PageComponents/footer';
-import { FaEye, FaTrash } from 'react-icons/fa';
+import { FaRegTrashAlt } from 'react-icons/fa';
+import { BiEnvelope } from "react-icons/bi";
 
 function getTodayDateString() {
   const today = new Date();
@@ -62,8 +63,8 @@ function CompanyJournal() {
     <div className="flex flex-col min-h-screen">
       <CompanySidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
       <div className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'} bg-white min-h-screen`}>
-        <CompanyHeader />
-        <div className="py-12 px-30">
+        <CompanyHeader isExpanded={isSidebarExpanded}/>
+        <div className="py-12 px-30 mt-[100px]">
           <div className="mb-6">
             <input
               type="date"
@@ -97,11 +98,14 @@ function CompanyJournal() {
                       </p>
                     </div>
                     <div className="flex justify-between items-center border-t-3 border-[#959494] pt-3">
-                      <button className="flex items-center gap-2 px-3 py-1 text-white bg-[#0385FF] rounded text-sm hover:bg-[#1F3463]">
-                        <FaEye size={14} /> View
+                      <button>
+                        <BiEnvelope size={30} className='text-[#0060F0]'/>
                       </button>
-                      <button className="text-gray-500 hover:text-red-600">
-                        <FaTrash size={16} />
+                      <button className="flex items-center gap-2 px-3 py-1 text-white bg-[#0385FF] rounded text-[20px] hover:bg-[#0385FF]">
+                        View
+                      </button>
+                      <button className="text-[#1D1B20] hover:text-red-600">
+                        <FaRegTrashAlt size={28} />
                       </button>
                     </div>
                   </div>
@@ -111,7 +115,7 @@ function CompanyJournal() {
           )}
         </div>
       </div>
-      <Footer />
+      <Footer/>
     </div>
   );
 }

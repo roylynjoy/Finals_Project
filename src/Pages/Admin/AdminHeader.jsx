@@ -1,28 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from "firebase/auth";
-import { FaChevronDown, FaEnvelope } from "react-icons/fa";
-import { GoBellFill } from "react-icons/go";
+import { FaChevronDown } from "react-icons/fa";
 import { useLocation } from 'react-router-dom';
 
-
-function AdminHeader() {
+function AdminHeader({isExpanded}) {
   const location = useLocation();
   const [firstName, setFirstName] = useState("");
+  const [showShadow, setShowShadow] = useState(false);
   const baseURL = import.meta.env.VITE_API_BASE_URL;
-  
+
   const pageTitles = {
     '/AdminDashboard': 'Admin Dashboard',
     '/CompanyList': 'Company List',
-
   };
 
-  const getInitials = (name) => {
-    return name
+  const getInitials = (name) =>
+    name
       .split(" ")
       .map(word => word.charAt(0).toUpperCase())
       .join("");
-  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -30,7 +27,6 @@ function AdminHeader() {
         try {
           const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
-
           if (data?.firstName) {
             setFirstName(data.firstName);
           } else {
@@ -41,32 +37,37 @@ function AdminHeader() {
         }
       }
     });
-
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => setShowShadow(window.scrollY > 0);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const title = pageTitles[location.pathname] || 'Dashboard';
 
-
   return (
-    <header className='relative flex justify-between bg-[#FFFFFF] h-[100px] shadow px-10 items-center px-20'>
-      <h1 className='text-[28px] font-semibold'>{title}</h1>
-      <div className='flex items-center gap-5'>
-        <GoBellFill
-          className='text-[30px] cursor-pointer'
-          onClick={() => setShowNotifications(prev => !prev)}
-        />
-        <FaEnvelope className='text-[30px]' />
-        <div className='flex items-center gap-3 bg-[#F1F1F1] pl-2 pr-4 py-2 text-[18px] border border-[#1F3463] rounded'>
-          <span className='bg-[#1F3463] text-white font-bold p-2 text-[22px] rounded'>{getInitials(firstName)}</span>
-          <p>{firstName}</p>
-          <FaChevronDown className='h-4 w-4 text-[#494949]' />
-        </div>
-      </div>
-    </header>
+    <header
+          className={`fixed top-0 z-40 flex justify-between items-center h-[100px] bg-white px-20 transition-all duration-300 ${showShadow ? 'shadow' : ''}`}
+          style={{
+            left: isExpanded ? 400 : 100,
+            width: `calc(100% - ${isExpanded ? 400 : 100}px)`
+          }}
+        >
+          <h1 className="text-[28px] font-semibold">{title}</h1>
+          <div className="flex items-center gap-5">
+            <div className="flex items-center gap-3 bg-[#F1F1F1] pl-2 pr-4 py-2 text-[18px] border border-[#1F3463] rounded">
+              <span className="bg-[#1F3463] text-white font-bold p-2 text-[22px] rounded">
+                {getInitials(firstName)}
+              </span>
+              <p>{firstName}</p>
+              <FaChevronDown className="h-4 w-4 text-[#494949]" />
+            </div>
+          </div>
+        </header>
   );
 }
-
 
 export default AdminHeader;

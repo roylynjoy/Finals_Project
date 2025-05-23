@@ -40,7 +40,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
         </div>
 
         {/* Navigation */}
-        <nav className="mt-6 w-full pt-4 whitespace-nowrap">
+        <nav className="mt-6 w-full whitespace-nowrap">
           <p className="border-t-3 p-2"></p>
           <ul className="space-y-2">
             {navItems.map((item, index) => {
