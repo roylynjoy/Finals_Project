@@ -46,23 +46,27 @@ const useAttendanceSummaryStats = (firstName, lastName) => {
         const totalHours = userRecords.reduce((acc, r) => acc + (parseFloat(r.hours) || 0), 0);
 
         // Absent Days
-        let absentDays = 0;
-        const uniqueDates = userRecords.map((r) => new Date(r.date).toDateString());
-        const dateSet = new Set(uniqueDates);
+      // Absent Days
+      let absentDays = 0;
+      const uniqueDates = userRecords.map((r) => new Date(r.date).toDateString());
+      const dateSet = new Set(uniqueDates);
 
-        if (userRecords.length > 0) {
-          const sorted = userRecords
-            .map((r) => new Date(r.date))
-            .sort((a, b) => a - b);
-          const start = new Date(sorted[0]);
-          const end = new Date();
+      if (userRecords.length > 0) {
+        const sorted = userRecords
+          .map((r) => new Date(r.date))
+          .sort((a, b) => a - b);
 
-          for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-            if (!dateSet.has(d.toDateString())) {
-              absentDays++;
-            }
+        const start = new Date(sorted[0]);
+        const end = new Date();
+        end.setDate(end.getDate() - 1); // Subtract 1 day to exclude today
+
+        for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+          if (!dateSet.has(d.toDateString())) {
+            absentDays++;
           }
         }
+      }
+
 
         setSummary({
           presentDays,

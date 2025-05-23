@@ -2,14 +2,41 @@ import React, { useState, useRef, useEffect } from "react";
 import { FaChevronDown, FaCog, FaKey, FaSignOutAlt } from "react-icons/fa";
 import AccountSettingsModal from './AccountSettingModal';
 import ChangePass from './ChangePass'; 
+import {auth} from '../../firebase/firebase';
+import { onAuthStateChanged } from "firebase/auth";
 
 const UserProfileModal = ({ name, initials }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAccountSettingsOpen, setIsAccountSettingsOpen] = useState(false);
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const dropdownRef = useRef(null);
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   const toggleDropdown = () => setIsOpen(prev => !prev);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user && user.email) {
+        try {
+          const res = await fetch(`${baseURL}/users?email=${user.email}`);
+          const data = await res.json();
+          if (data && data.firstName && data.lastName && data.email) {
+            setFirstName(data.firstName);
+            setLastName(data.lastName);
+            setEmail(data.email);
+          } else {
+            console.warn("User data not found or incomplete:", data);
+          }
+        } catch (error) {
+          console.error("Failed to fetch user info:", error);
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -31,6 +58,13 @@ const UserProfileModal = ({ name, initials }) => {
     setIsChangePasswordOpen(true);
   };
 
+  const getInitials = (name) => {
+    return name
+      .split(" ")
+      .map(word => word.charAt(0).toUpperCase())
+      .join("");
+  };
+
   return (
     <div className="relative" ref={dropdownRef}>
       <div
@@ -47,10 +81,13 @@ const UserProfileModal = ({ name, initials }) => {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-[430px] bg-white border border-gray-200 shadow-lg rounded z-50">
           <div className="flex px-4 py-6 gap-3">
-              <div className="bg-[#1F3463] h-[75px] w-[70px] rounded-[10px]"></div>
+              <div className="bg-[#1F3463] text-white flex items-center justify-center text-[28px] font-bold h-[75px] w-[70px] rounded-[10px]">
+                {getInitials(`${firstName} ${lastName}`)}
+              </div>
+
               <div className="flex-col content-center">
-                <p className="text-[26px] font-semibold">Antonio Andres Watson</p>
-                <p className="text-[14px]">antonioandreswatson@laverdad.gmail.com</p>
+                <p className="text-[26px] font-semibold"> {firstName} {lastName}</p>
+                <p className="text-[14px]">{email}</p>
               </div>
           </div>
           <p className="border-t border-[#959494]"></p>

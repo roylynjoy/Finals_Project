@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { getAuth } from "firebase/auth";
+import { auth } from "../../firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import UserProfileModal from "./UserProfileModal";
 
 function Header({ isExpanded }) {
   const location = useLocation();
   const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [scrolled, setScrolled] = useState(false);
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   const pageTitles = {
     "/StudentDashboard": "Student Dashboard",
@@ -27,23 +31,24 @@ function Header({ isExpanded }) {
   }, []);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
-
-      if (user?.email) {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user && user.email) {
         try {
-          const res = await fetch(
-            `${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`
-          );
+          const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
-          if (data?.firstName) setFirstName(data.firstName);
+          if (data && data.firstName && data.lastName && data.email) {
+            setFirstName(data.firstName);
+            setLastName(data.lastName);
+            setEmail(data.email);
+          } else {
+            console.warn("User data not found or incomplete:", data);
+          }
         } catch (error) {
           console.error("Failed to fetch user info:", error);
         }
       }
-    };
-    fetchUserData();
+    });
+    return () => unsubscribe();
   }, []);
 
   const getInitials = (name) =>
@@ -65,7 +70,7 @@ function Header({ isExpanded }) {
     >
       <h1 className="text-[28px] font-semibold">{title}</h1>
       <div className="flex items-center gap-5">
-        <UserProfileModal name={firstName} initials={getInitials(firstName)} />
+        <UserProfileModal name={`${firstName} ${lastName}`} initials={getInitials(`${firstName} ${lastName}`)} />
       </div>
     </header>
   );
