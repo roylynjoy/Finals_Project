@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth, googleProvider } from "../firebase/firebase";
 import ForgotPassword from "./ForgotPassword";
@@ -14,43 +15,32 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
+  const navigate = useNavigate();
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   const handleLogin = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Send email to backend to check the role
-      const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/users/checkUserExists`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: user.email }),
-        }
-      );
+      if (!user || !user.email) throw new Error("Invalid user");
+
+      const res = await fetch(`${baseURL}/users/checkUserExists`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: user.email }),
+      });
 
       const data = await res.json();
 
       if (data.exists && data.user) {
-        console.log("User role:", data.user.role);
-
-        if (data.user.role === "Student") {
-          navigate("/StudentDashboard");
-        } else if (data.user.role === "Coordinator") {
-          navigate("/CompanyDashboard");
-        } else if (data.user.role === "Admin") {
-          navigate("/AdminDashboard");
-        } else {
-          alert("Unknown role.");
-        }
+        const role = data.user.role;
+        if (role === "Student") navigate("/StudentDashboard");
+        else if (role === "Coordinator") navigate("/CompanyDashboard");
+        else if (role === "Admin") navigate("/AdminDashboard");
+        else alert("Unknown role.");
       } else {
         await signOut(auth);
         alert("This email is not registered in our system.");
@@ -65,31 +55,24 @@ export default function LoginPage() {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      // Send user.email to backend to check if it exists in MongoDB
-      const res = await fetch(
-        "http://localhost:5000/api/users/checkUserExists",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: user.email }),
-        }
-      );
+      if (!user || !user.email) throw new Error("Invalid Google user");
+
+      const res = await fetch(`${baseURL}/users/checkUserExists`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: user.email }),
+      });
 
       const data = await res.json();
 
-      // Check if user exists and inspect structure
       if (data.exists && data.user) {
-        if (data.user.role === "Student") {
-          navigate("/StudentDashboard");
-        } else if (data.user.role === "Coordinator") {
-          navigate("/CompanyDashboard");
-        } else if (data.user.role === "Admin") {
-          navigate("/AdminDashboard");
-        } else {
-          alert("Unknown role.");
-        }
+        const role = data.user.role;
+        if (role === "Student") navigate("/StudentDashboard");
+        else if (role === "Coordinator") navigate("/CompanyDashboard");
+        else if (role === "Admin") navigate("/AdminDashboard");
+        else alert("Unknown role.");
       } else {
-        await result.user.delete();
+        await user.delete();
         await signOut(auth);
         alert("This email is not registered in our system.");
       }
@@ -107,6 +90,7 @@ export default function LoginPage() {
       setResetEmail("");
     } catch (error) {
       alert(error.message);
+      setResetEmail("");
     }
   };
 
@@ -171,11 +155,13 @@ export default function LoginPage() {
           >
             Log In
           </button>
-          <div className="flex items-center ">
+
+          <div className="flex items-center">
             <div className="flex-grow h-px bg-[#9B9494]" />
             <span className="mx-4 -mt-2 text-[#5F5454] text-[22px]">or</span>
             <div className="flex-grow h-px bg-[#9B9494]" />
           </div>
+
           <button
             onClick={handleGoogleSignIn}
             className="flex items-center justify-center border border-[#D3CECE] py-3 w-full rounded space-x-2"
@@ -185,6 +171,7 @@ export default function LoginPage() {
               Sign in with Google
             </span>
           </button>
+
           <p className="text-center text-[18px]">
             Don’t have an Account?{" "}
             <span

@@ -72,7 +72,7 @@ function App() {
             path="/Journal"
             element={
               <ProtectedRoute allowedRoles={["Student"]}>
-                <ViewJournal />
+                <Journal />
               </ProtectedRoute>
             }
           />
