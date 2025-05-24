@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase/firebase"; // ✅ import from firebase.js
+import { auth } from "../firebase/firebase";
+import ErrorBoundary from "./ErrorBoundary"; // 👈 import it
 
 const ProtectedRoute = ({ allowedRoles, children }) => {
-  const [status, setStatus] = useState("checking"); // start with 'checking'
+  const [status, setStatus] = useState("checking");
   const navigate = useNavigate();
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
 
           if (data?.role && allowedRoles.includes(data.role)) {
@@ -58,7 +60,7 @@ const ProtectedRoute = ({ allowedRoles, children }) => {
     );
   }
 
-  return status === "authorized" ? children : null;
+  return status === "authorized" ? <ErrorBoundary>{children}</ErrorBoundary> : null;
 };
 
 export default ProtectedRoute;

@@ -245,20 +245,7 @@ function StudentDashboard() {
               </div>
             </div>
 
-              {/* Recently Accessed Role */}
-              {/* <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9] h-[305px] relative overflow-hidden">
-                <h2 className="text-[27px] font-semibold mb-4 bg-white text-[#3F3F46] px-2 rounded relative z-10">
-                  Recently Accessed Role
-                </h2>
-                <div className="text-[35px] font-bold text-[#1F3463] content-center px-2 rounded relative z-10 h-[200px] flex items-center justify-center">
-                  {loading ? <Skeleton width="220px" height="40px" /> : "Project Management"}
-                </div>
-                <div
-                  className="absolute top-[85px] left-0 w-full h-[210px] bg-cover bg-center opacity-50 z-0"
-                  style={{ backgroundImage: "url('/pictures/PM.jpg')" }}
-                />
-              </div> */}
-              
+              {/* Recently Accessed Role */}     
             <RecentlyAccessedRole loading={loading} />
             </div>
           </div>

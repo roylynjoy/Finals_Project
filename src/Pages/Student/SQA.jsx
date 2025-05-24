@@ -15,7 +15,7 @@ function SQA() {
   };
 
   useEffect(() => {
-    localStorage.setItem("recentRole", "SQA");
+    localStorage.setItem("recentRole", "/SQA");
   }, []);
 
   const topics = [

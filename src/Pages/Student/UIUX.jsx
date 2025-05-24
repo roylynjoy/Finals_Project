@@ -14,7 +14,7 @@ function UIUX() {
   };
 
   useEffect(() => {
-    localStorage.setItem("recentRole", "UIUX");
+    localStorage.setItem("recentRole", "/UIUX");
   }, []);
 
   const topics = [

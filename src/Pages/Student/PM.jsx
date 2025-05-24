@@ -46,7 +46,7 @@ function PM() {
   ];
 
   useEffect(() => {
-    localStorage.setItem("recentRole", "PM");
+    localStorage.setItem("recentRole", "/PM");
   }, []);
 
   return (

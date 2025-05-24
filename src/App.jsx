@@ -31,123 +31,127 @@ const AdminDashboard = lazy(() => import('./Pages/Admin/AdminDashboard'));
 
 // Route Protection
 import ProtectedRoute from './components/ProtectedRoute';
+import TrackRoleVisit from "./components/TrackRoleVisit";
 
 function App() {
   return (
     <Router>
-      <Suspense fallback={<LoadingOverlay />}>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Homepage />} />
-          <Route path="/slider" element={<Slider />} />
-          <Route path="/SignUp" element={<SignUp />} />
-          <Route path="/SignIn" element={<SignIn />} />
+      <TrackRoleVisit> {/* ✅ Wrap the entire routing tree */}
+        <Suspense fallback={<LoadingOverlay />}>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Homepage />} />
+            <Route path="/slider" element={<Slider />} />
+            <Route path="/SignUp" element={<SignUp />} />
+            <Route path="/SignIn" element={<SignIn />} />
 
-          {/* Student Routes */}
-          <Route
-            path="/StudentDashboard"
-            element={
-              <ProtectedRoute allowedRoles={["Student"]}>
-                <StudentDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/Attendance"
-            element={
-              <ProtectedRoute allowedRoles={["Student"]}>
-                <Attendance />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/Resources"
-            element={
-              <ProtectedRoute allowedRoles={["Student"]}>
-                <Resources />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/Journal"
-            element={
-              <ProtectedRoute allowedRoles={["Student"]}>
-                <Journal />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/ViewJournal"
-            element={
-              <ProtectedRoute allowedRoles={["Student"]}>
-                <ViewJournal />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/Explore"
-            element={
-              <ProtectedRoute allowedRoles={["Student"]}>
-                <Explore />
-              </ProtectedRoute>
-            }
-          />
+            {/* Student Routes */}
+            <Route
+              path="/StudentDashboard"
+              element={
+                <ProtectedRoute allowedRoles={["Student"]}>
+                  <StudentDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Attendance"
+              element={
+                <ProtectedRoute allowedRoles={["Student"]}>
+                  <Attendance />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Resources"
+              element={
+                <ProtectedRoute allowedRoles={["Student"]}>
+                  <Resources />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Journal"
+              element={
+                <ProtectedRoute allowedRoles={["Student"]}>
+                  <Journal />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ViewJournal"
+              element={
+                <ProtectedRoute allowedRoles={["Student"]}>
+                  <ViewJournal />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Explore"
+              element={
+                <ProtectedRoute allowedRoles={["Student"]}>
+                  <Explore />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Coordinator Routes */}
-          <Route
-            path="/CompanyDashboard"
-            element={
-              <ProtectedRoute allowedRoles={["Coordinator"]}>
-                <CompanyDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/CompanyAttendance"
-            element={
-              <ProtectedRoute allowedRoles={["Coordinator"]}>
-                <CompanyAttendance />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/CompanyJournal"
-            element={
-              <ProtectedRoute allowedRoles={["Coordinator"]}>
-                <CompanyJournal />
-              </ProtectedRoute>
-            }
-          />
+            {/* Coordinator Routes */}
+            <Route
+              path="/CompanyDashboard"
+              element={
+                <ProtectedRoute allowedRoles={["Coordinator"]}>
+                  <CompanyDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/CompanyAttendance"
+              element={
+                <ProtectedRoute allowedRoles={["Coordinator"]}>
+                  <CompanyAttendance />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/CompanyJournal"
+              element={
+                <ProtectedRoute allowedRoles={["Coordinator"]}>
+                  <CompanyJournal />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Admin Routes */}
-          <Route
-            path="/AdminDashboard"
-            element={
-              <ProtectedRoute allowedRoles={["Admin"]}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
+            {/* Admin Route */}
+            <Route
+              path="/AdminDashboard"
+              element={
+                <ProtectedRoute allowedRoles={["Admin"]}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Shared */}
-          <Route path="/PM" element={<PM />} />
-          <Route path="/CD" element={<CD />} />
-          <Route path="/UIUX" element={<UIUX />} />
-          <Route path="/SQA" element={<SQA />} />
+            {/* Recently Accessed Role Routes */}
+            <Route path="/PM" element={<PM />} />
+            <Route path="/CD" element={<CD />} />
+            <Route path="/UIUX" element={<UIUX />} />
+            <Route path="/SQA" element={<SQA />} />
 
-          {/* Unauthorized */}
-          <Route
-            path="/unauthorized"
-            element={
-              <div className="text-center mt-20 text-2xl text-red-500">
-                Unauthorized Access
-              </div>
-            }
-          />
-        </Routes>
-      </Suspense>
+            {/* Unauthorized Fallback */}
+            <Route
+              path="/unauthorized"
+              element={
+                <div className="text-center mt-20 text-2xl text-red-500">
+                  Unauthorized Access
+                </div>
+              }
+            />
+          </Routes>
+        </Suspense>
+      </TrackRoleVisit>
     </Router>
   );
 }
+
 
 export default App;

@@ -14,7 +14,7 @@ function CD() {
   };
 
   useEffect(() => {
-    localStorage.setItem("recentRole", "CD");
+    localStorage.setItem("recentRole", "/CD");
   }, []);
 
 
