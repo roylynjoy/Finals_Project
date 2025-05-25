@@ -25,6 +25,7 @@ export default function CreateAccount() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigate = useNavigate();
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   const handleContinue = () => setStep(2);
   const handleBack = () => setStep(1);
@@ -42,7 +43,7 @@ export default function CreateAccount() {
       console.log("User created:", user);
   
       // Send user info to your backend (without token)
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/register`, {
+      const res = await fetch(`${baseURL}/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -100,10 +101,9 @@ export default function CreateAccount() {
             </div>
             <input type="email" placeholder="LV Email" value={email} onChange={e => setEmail(e.target.value)} className="border border-[#D3CECE] text-[#5F5454] text-[20px] rounded p-3 w-full" />
             <div className="relative">
-              <select value={role} onChange={e => setRole(e.target.value)} className="appearance-none border bg-[rgba(217,217,217,0.5)] text-[#5F5454] border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
+              <select value={role} placeholder="Role" onChange={e => setRole(e.target.value)} className="appearance-none border bg-[rgba(217,217,217,0.5)] text-[#5F5454] border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
                 <option>Student</option>
                 <option>Coordinator</option>
-                <option>Supervisor</option>
               </select>
               <FaChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#B3B3B3] pointer-events-none" />
             </div>
@@ -119,16 +119,14 @@ export default function CreateAccount() {
             <h1 className="text-[50px] font-bold text-center mb-0">Create Account</h1>
             <p className="text-[20px] text-center font-poppins">Step 2 of 2</p>
             <div className="relative mt-20">
-              <select value={company} onChange={e => setCompany(e.target.value)} className="appearance-none border text-[#5F5454] bg-white border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
-                <option>Company</option>
+              <select value={company} placeholder="Company Name" onChange={e => setCompany(e.target.value)} className="appearance-none border text-[#5F5454] bg-white border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
                 <option>Company A</option>
                 <option>Company B</option>
               </select>
               <FaChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#B3B3B3] pointer-events-none" />
             </div>
             <div className="relative">
-              <select value={arrangement} onChange={e => setArrangement(e.target.value)} className="appearance-none border text-[#5F5454] bg-white border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
-                <option>Workplace Arrangement</option>
+              <select value={arrangement} placeholder="Workplace Arrangement" onChange={e => setArrangement(e.target.value)} className="appearance-none border text-[#5F5454] bg-white border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
                 <option>On-site</option>
                 <option>Remote</option>
                 <option>Hybrid</option>

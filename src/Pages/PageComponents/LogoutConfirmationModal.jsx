@@ -13,13 +13,13 @@ const LogoutConfirmationModal = ({ isOpen, onConfirm, onCancel }) => {
         </p>
         <div className="flex justify-center gap-4">
           <button
-            className="px-5 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded"
+            className="px-5 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded cursor-pointer"
             onClick={onCancel}
           >
             Cancel
           </button>
           <button
-            className="px-5 py-2 bg-[#E70000] hover:bg-red-700 text-white rounded"
+            className="px-5 py-2 bg-red-600 hover:bg-red-800 text-white rounded cursor-pointer"
             onClick={onConfirm}
           >
             Logout

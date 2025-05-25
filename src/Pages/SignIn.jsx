@@ -9,7 +9,7 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth, googleProvider } from "../firebase/firebase";
-import ForgotPassword from "./ForgotPassword";
+import ForgotPassword from "../Pages/PageComponents/ForgotPassword";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);

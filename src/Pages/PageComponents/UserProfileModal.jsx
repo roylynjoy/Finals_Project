@@ -134,19 +134,26 @@ const UserProfileModal = ({ name, initials }) => {
         closeModal={() => setIsChangePasswordOpen(false)}
       />
 
-      <LogoutConfirmationModal
-        isOpen={isLogoutConfirmOpen}
-        onConfirm={async () => {
-          try {
-            await signOut(auth);
-            localStorage.removeItem("userInfo"); // clear cached user data
-            navigate("/SignIn");
-          } catch (err) {
-            console.error("Error during logout:", err);
-          }
-        }}
-        onCancel={() => setIsLogoutConfirmOpen(false)}
-      />
+    <LogoutConfirmationModal
+      isOpen={isLogoutConfirmOpen}
+      onConfirm={async () => {
+        try {
+          await signOut(auth);
+          localStorage.removeItem("userInfo");
+
+          // Delay navigation until auth state is truly null
+          const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (!user) {
+              navigate("/SignIn");
+              unsubscribe(); // stop listening once redirected
+            }
+          });
+        } catch (err) {
+          console.error("Error during logout:", err);
+        }
+      }}
+      onCancel={() => setIsLogoutConfirmOpen(false)}
+    />
 
     </div>
   );
