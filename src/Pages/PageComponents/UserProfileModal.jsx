@@ -4,6 +4,10 @@ import AccountSettingsModal from './AccountSettingModal';
 import ChangePass from './ChangePass'; 
 import {auth} from '../../firebase/firebase';
 import { onAuthStateChanged } from "firebase/auth";
+import LogoutConfirmationModal from "./LogoutConfirmationModal";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+
 
 const UserProfileModal = ({ name, initials }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,6 +17,8 @@ const UserProfileModal = ({ name, initials }) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const dropdownRef = useRef(null);
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
+  const navigate = useNavigate();
   const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   const toggleDropdown = () => setIsOpen(prev => !prev);
@@ -69,12 +75,12 @@ const UserProfileModal = ({ name, initials }) => {
     <div className="relative" ref={dropdownRef}>
       <div
         onClick={toggleDropdown}
-        className="flex items-center gap-3 bg-[#F1F1F1] pl-2 pr-4 py-2 text-[18px] border border-[#1F3463] rounded cursor-pointer"
+        className="flex justify-between items-center gap-3 bg-[#F1F1F1] pl-2 pr-4 py-2 text-[18px] border border-[#1F3463]  w-[300px] rounded cursor-pointer"
       >
         <span className="bg-[#1F3463] text-white font-bold p-2 text-[22px] rounded">
           {initials}
         </span>
-        <p>{name}</p>
+        <div>{name}</div>
         <FaChevronDown className="h-4 w-4 text-[#494949]" />
       </div>
 
@@ -107,7 +113,10 @@ const UserProfileModal = ({ name, initials }) => {
               Change Password
             </li>
             <hr className="my-1 border-gray-200" />
-            <li className="flex items-center gap-2 p-2 hover:bg-[#E8EEFF] cursor-pointer">
+            <li
+              className="flex items-center gap-2 p-2 hover:bg-[#E8EEFF] cursor-pointer"
+              onClick={() => setIsLogoutConfirmOpen(true)}
+            >
               <FaSignOutAlt className="h-7 w-7" />
               Logout
             </li>
@@ -124,6 +133,21 @@ const UserProfileModal = ({ name, initials }) => {
         isOpen={isChangePasswordOpen}
         closeModal={() => setIsChangePasswordOpen(false)}
       />
+
+      <LogoutConfirmationModal
+        isOpen={isLogoutConfirmOpen}
+        onConfirm={async () => {
+          try {
+            await signOut(auth);
+            localStorage.removeItem("userInfo"); // clear cached user data
+            navigate("/SignIn");
+          } catch (err) {
+            console.error("Error during logout:", err);
+          }
+        }}
+        onCancel={() => setIsLogoutConfirmOpen(false)}
+      />
+
     </div>
   );
 };

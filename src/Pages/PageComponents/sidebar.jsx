@@ -4,20 +4,50 @@ import { TiHome } from "react-icons/ti";
 import { PiBookOpenUserFill, PiSidebarFill } from "react-icons/pi";
 import { HiMiniPencilSquare } from "react-icons/hi2";
 import { FaChevronLeft } from "react-icons/fa";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../firebase/firebase"; // adjust path as needed
 
 const Sidebar = ({ isExpanded, setIsExpanded }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   const navItems = [
     { label: "Student Dashboard", icon: <TiHome size={35} />, path: "/StudentDashboard" },
     { label: "Attendance Tracking", icon: <FaUserCheck size={35} />, path: "/Attendance" },
-    { label: "Journal Submission", icon: <HiMiniPencilSquare size={35} />, path: "/Journal" },
+    { label: "Journal Submission", icon: <HiMiniPencilSquare size={35} />, path: "/Journal" }, // handled manually below
     { label: "Role-based Resources", icon: <PiBookOpenUserFill size={35} />, path: "/Resources" },
   ];
 
   const toggleSidebar = () => {
     setIsExpanded((prev) => !prev);
+  };
+
+  const handleJournalClick = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user?.email) {
+        navigate("/SignIn");
+        return;
+      }
+
+      const baseURL = import.meta.env.VITE_API_BASE_URL;
+      const res = await axios.get(`${baseURL}/journal/today`);
+
+      if (res.status === 200 && res.data?.content) {
+        navigate("/ViewJournal");
+      } else {
+        navigate("/Journal");
+      }
+    } catch (err) {
+      if (err.response?.status === 204) {
+        navigate("/Journal");
+      } else {
+        console.error("Error checking journal:", err);
+      }
+    }
   };
 
   return (
@@ -27,7 +57,7 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
       }`}
     >
       {/* Top Section */}
-      <div className="flex flex-col pt-4">
+      <div className="flex flex-col pt-10">
         {/* Logo */}
         <div className="flex items-center gap-3 px-4">
           <img src="pictures/logo.png" alt="La Verdad Logo" className="h-[60px]" />
@@ -40,14 +70,37 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
         </div>
 
         {/* Navigation */}
-        <nav className="mt-6 w-full pt-4 whitespace-nowrap">
+        <nav className="mt-2 w-full pt-4 whitespace-nowrap">
           <p className="border-t-3 p-2"></p>
           <ul className="space-y-2">
-            {navItems.map((item, index) => {
-              const isActive = location.pathname === item.path;
+          {navItems.map((item, index) => {
+            const isActive = location.pathname === item.path;
 
-              return (
-                <li key={index}>
+            const isJournal = item.label === "Journal Submission";
+
+            return (
+              <li key={index}>
+                {isJournal ? (
+                  <div
+                    onClick={handleJournalClick}
+                    className={`flex items-center transition-all duration-300 ease-in-out rounded-l-[50px] px-4 py-3 ml-4 pl-2 cursor-pointer ${
+                      isExpanded ? "justify-start gap-4" : "justify-center"
+                    } ${
+                      isActive
+                        ? "bg-white text-[#1F3463] ml-4 pl-3"
+                        : "hover:bg-[#F9FAFD] hover:text-[#1F3463] pl-3"
+                    }`}
+                  >
+                    {item.icon}
+                    <span
+                      className={`text-[24px] transition-opacity duration-300 ${
+                        isExpanded ? "opacity-100" : "opacity-0 hidden"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </div>
+                ) : (
                   <Link
                     to={item.path}
                     className={`flex items-center transition-all duration-300 ease-in-out rounded-l-[50px] px-4 py-3 ml-4 pl-2 ${
@@ -67,9 +120,10 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
                       {item.label}
                     </span>
                   </Link>
-                </li>
-              );
-            })}
+                )}
+              </li>
+            );
+          })}
           </ul>
         </nav>
       </div>

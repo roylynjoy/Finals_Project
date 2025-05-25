@@ -3,12 +3,14 @@ import { useLocation } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import UserProfileModal from "./UserProfileModal";
+import Skeleton from "../../components/Skeleton";
 
 function Header({ isExpanded }) {
   const location = useLocation();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -30,13 +32,23 @@ function Header({ isExpanded }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
+useEffect(() => {
+  const cachedUser = localStorage.getItem("userInfo");
+
+  if (cachedUser) {
+    const user = JSON.parse(cachedUser);
+    setFirstName(user.firstName);
+    setLastName(user.lastName);
+    setEmail(user.email);
+    setLoading(false); // ✅ immediately stop loading
+  } else {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user && user.email) {
+      if (user?.email) {
         try {
           const res = await fetch(`${baseURL}/users?email=${user.email}`);
           const data = await res.json();
-          if (data && data.firstName && data.lastName && data.email) {
+          if (data?.firstName && data?.lastName && data?.email) {
+            localStorage.setItem("userInfo", JSON.stringify(data)); // ✅ cache it
             setFirstName(data.firstName);
             setLastName(data.lastName);
             setEmail(data.email);
@@ -45,11 +57,16 @@ function Header({ isExpanded }) {
           }
         } catch (error) {
           console.error("Failed to fetch user info:", error);
+        } finally {
+          setLoading(false);
         }
       }
     });
+
     return () => unsubscribe();
-  }, []);
+  }
+}, []);
+
 
   const getInitials = (name) =>
     name
@@ -69,9 +86,26 @@ function Header({ isExpanded }) {
       }}
     >
       <h1 className="text-[28px] font-semibold">{title}</h1>
-      <div className="flex items-center gap-5">
-        <UserProfileModal name={`${firstName} ${lastName}`} initials={getInitials(`${firstName} ${lastName}`)} />
-      </div>
+
+    <div className="flex items-center">
+      <UserProfileModal
+        name={
+          loading ? (
+            <Skeleton width="100px" height="20px" />
+          ) : (
+            `${firstName} ${lastName}`
+          )
+        }
+        initials={
+          loading ? (
+            <Skeleton width="24px" height="24px" />
+          ) : (
+            getInitials(`${firstName} ${lastName}`)
+          )
+        }
+      />
+    </div>
+
     </header>
   );
 }

@@ -45,7 +45,6 @@ const useAttendanceSummaryStats = (firstName, lastName) => {
         // Total Hours
         const totalHours = userRecords.reduce((acc, r) => acc + (parseFloat(r.hours) || 0), 0);
 
-        // Absent Days
       // Absent Days
       let absentDays = 0;
       const uniqueDates = userRecords.map((r) => new Date(r.date).toDateString());

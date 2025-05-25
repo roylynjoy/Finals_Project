@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../PageComponents/sidebar";
 import Header from "../PageComponents/header";
 import Footer from "../PageComponents/footer";
@@ -25,6 +26,7 @@ function StudentDashboard() {
   const monthName = today.toLocaleString("default", { month: "long" });
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const navigate = useNavigate();
 
   const daysArray = [];
   for (let i = 0; i < firstDay; i++) daysArray.push(null);
@@ -144,7 +146,7 @@ function StudentDashboard() {
             {/* Time Remaining & Recently Accessed */}
             <div className="grid grid-cols-2 gap-6">
             <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9]">
-              <h1 className="text-[30px] font-semibold mb-4 text-[#3F3F46]">
+              <h1 className="text-[30px] text-center font-semibold mb-4 text-[#3F3F46]">
                 Time Remaining
               </h1>
               <div className="flex justify-around">
@@ -254,17 +256,26 @@ function StudentDashboard() {
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-[10px] shadow text-center border-2 border-[#B9B9B9]">
               <h1 className="text-[26px] font-semibold mb-4 text-[#3F3F46]">Journal Submission</h1>
-              <div className="flex justify-center text-gray-700 bg-[#F1F1F1] h-[160px] p-5 text-[20px]">
+              <div
+                onClick={() => navigate('/ViewJournal')}
+                className="relative flex justify-center border-2 border-[#B9B9B9] rounded-[10px] text-gray-700 bg-[#F1F1F1] h-[160px] p-5 text-[20px] cursor-pointer group hover:border-transparent hover:bg-[#E0E0E0] transition-colors duration-300"
+              >
                 {loading ? (
-                  <Skeleton width="200px" height="28px"/>
+                  <Skeleton width="200px" height="28px" />
                 ) : (
-                  `${firstName} – ${new Date().toLocaleDateString('en-US', {
+                  `${firstName} ${lastName} – ${new Date().toLocaleDateString('en-US', {
                     month: 'long',
                     day: '2-digit',
                     year: 'numeric',
                   })}`
                 )}
+
+                {/* Hover overlay */}
+                <div className="absolute border-2 rounded-[10px] border-[#005CFA] inset-0 bg-white bg-opacity-90 opacity-0 group-hover:opacity-100 flex justify-center items-center transition-opacity duration-300">
+                  <span className="text-black/70 text-[22px]">View Submission</span>
+                </div>
               </div>
+
             </div>
 
             <div>

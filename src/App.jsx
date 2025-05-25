@@ -44,6 +44,7 @@ function App() {
             <Route path="/slider" element={<Slider />} />
             <Route path="/SignUp" element={<SignUp />} />
             <Route path="/SignIn" element={<SignIn />} />
+            <Route path="/Explore" element={<Explore />} />
 
             {/* Student Routes */}
             <Route
@@ -83,14 +84,6 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["Student"]}>
                   <ViewJournal />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/Explore"
-              element={
-                <ProtectedRoute allowedRoles={["Student"]}>
-                  <Explore />
                 </ProtectedRoute>
               }
             />
