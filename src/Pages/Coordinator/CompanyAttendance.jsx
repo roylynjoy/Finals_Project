@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import CompanySidebar from './CompanySidebar';
-import CompanyHeader from './CompanyHeader';
+import CompanySidebar from '../PageComponents/CompanySidebar';
+import CompanyHeader from '../PageComponents/CompanyHeader';
 
 import Footer from '../PageComponents/footer';
 import { auth } from '../../firebase/firebase';
@@ -93,7 +93,7 @@ function CompanyAttendance() {
       <div className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'} bg-[#FAFAFF] min-h-screen`}>
         <CompanyHeader />
 
-        <div className="py-12 px-30">
+        <div className="mt-20 py-12 px-30">
           {/* Date Picker */}
           <div className="mb-6">
             <input

@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import axios from 'axios';
-import CompanySidebar from './CompanySidebar';
-import CompanyHeader from './CompanyHeader';
+import CompanySidebar from '../PageComponents/CompanySidebar';
+import CompanyHeader from '../PageComponents/CompanyHeader';
 import Footer from '../PageComponents/footer';
 import { FaEye, FaTrash } from 'react-icons/fa';
 
@@ -63,7 +63,7 @@ function CompanyJournal() {
       <CompanySidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
       <div className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'} bg-white min-h-screen`}>
         <CompanyHeader />
-        <div className="py-12 px-30">
+        <div className="mt-20  py-12 px-30">
           <div className="mb-6">
             <input
               type="date"

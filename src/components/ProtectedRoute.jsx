@@ -5,19 +5,19 @@ import { auth } from "../firebase/firebase";
 
 const ProtectedRoute = ({ allowedRoles, children }) => {
   const [status, setStatus] = useState("checking"); // 'checking' | 'authorized' | 'unauthorized'
-  const navigate = useNavigate();
   const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        // ✅ Wait until auth detects logout
         setStatus("unauthorized");
         return;
       }
 
       try {
-        const res = await fetch(`${baseURL}/users?email=${user.email}`);
+        const res = await fetch(`${baseURL}/user?email=${user.email}`);
+        if (!res.ok) throw new Error("Failed to fetch user");
+
         const data = await res.json();
 
         if (data?.role && allowedRoles.includes(data.role)) {
@@ -43,7 +43,6 @@ const ProtectedRoute = ({ allowedRoles, children }) => {
   }
 
   if (status === "unauthorized") {
-    // ✅ Don’t redirect immediately. Just show UI.
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-[#FAFAFF] text-center px-8">
         <div className="bg-white border border-[#D3CECE] shadow-md p-10 rounded-xl max-w-md">
