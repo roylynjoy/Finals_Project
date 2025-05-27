@@ -28,6 +28,7 @@ const CompanyJournal = lazy(() => import('./Pages/Coordinator/CompanyJournal'));
 
 // Admin
 const AdminDashboard = lazy(() => import('./Pages/Admin/AdminDashboard'));
+const CompanyList = lazy(() => import('./Pages/Admin/CompanyList'));
 
 // Route Protection
 import ProtectedRoute from './components/ProtectedRoute';
@@ -126,6 +127,14 @@ function App() {
               <ProtectedRoute allowedRoles={["Admin"]}>
                 <AdminDashboard />
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/CompanyList"
+            element={<CompanyList />
+              // <ProtectedRoute allowedRoles={["Admin"]}>
+                
+              // </ProtectedRoute>
             }
           />
 
