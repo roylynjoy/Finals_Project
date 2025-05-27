@@ -6,13 +6,21 @@ function CompanyDashboardStats({ onDataReady }) {
   const [loading, setLoading] = useState(true);
   const baseURL = import.meta.env.VITE_API_BASE_URL;
 
+  // Helper to normalize dates like "5/21/2025" into "2025-05-21"
+  const normalizeToISODate = (dateStr) => {
+    if (!dateStr) return "";
+    const [month, day, year] = dateStr.split("/");
+    if (!month || !day || !year) return "";
+    const isoDate = new Date(`${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`);
+    return isoDate.toISOString().split("T")[0];
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const user = auth.currentUser;
       if (!user?.email) return;
 
       try {
-        // ✅ Corrected endpoint
         const userRes = await fetch(`${baseURL}/user?email=${user.email}`);
         const userData = await userRes.json();
         const company = userData.company;
@@ -29,28 +37,43 @@ function CompanyDashboardStats({ onDataReady }) {
           usersRes.json(),
         ]);
 
-        const today = new Date().toISOString().split("T")[0];
+        const today = new Date().toISOString().split("T")[0]; // ISO: "2025-05-21"
 
-        const interns = users.filter(u => u.role === "student" && u.company === company);
-        const todaysAttendances = attendances.filter(
-          a => a.company === company && a.date === today
+        const interns = users.filter(
+          (u) => u.role === "student" && u.company === company
         );
+
+        const todaysAttendances = attendances.filter(
+          (a) =>
+            a.company === company &&
+            normalizeToISODate(a.date) === today
+        );
+
         const presentInterns = todaysAttendances.length;
-        const lateInterns = todaysAttendances.filter(a => {
-          const time = new Date(`1970-01-01T${a.timeIn}`);
-          return time.getHours() > 8 || (time.getHours() === 8 && time.getMinutes() >= 15);
+
+        const lateInterns = todaysAttendances.filter((a) => {
+          if (!a.timeIn) return false;
+          const [time, modifier] = a.timeIn.split(" ");
+          let [hours, minutes] = time.split(":").map(Number);
+          if (modifier === "PM" && hours !== 12) hours += 12;
+          if (modifier === "AM" && hours === 12) hours = 0;
+          return hours > 8 || (hours === 8 && minutes >= 15);
         }).length;
-        const presentNames = todaysAttendances.map(a => `${a.firstName} ${a.lastName}`);
-        const absentInterns = interns.filter(i =>
-          !presentNames.includes(`${i.firstName} ${i.lastName}`)
+
+        const presentNames = todaysAttendances.map(
+          (a) => `${a.firstName} ${a.lastName}`
+        );
+
+        const absentInterns = interns.filter(
+          (i) => !presentNames.includes(`${i.firstName} ${i.lastName}`)
         ).length;
 
         const pendingAttendance = attendances.filter(
-          a => a.company === company && !a.approved && !a.denied
+          (a) => a.company === company && !a.approved && !a.denied
         ).length;
 
         const unreadJournals = journals.filter(
-          j => j.company === company && j.removed !== true
+          (j) => j.company === company && j.removed !== true
         ).length;
 
         onDataReady({
@@ -58,9 +81,8 @@ function CompanyDashboardStats({ onDataReady }) {
           lateInterns,
           absentInterns,
           pendingAttendance,
-          unreadJournals
+          unreadJournals,
         });
-
       } catch (err) {
         console.error("Failed to load company dashboard stats:", err);
       } finally {

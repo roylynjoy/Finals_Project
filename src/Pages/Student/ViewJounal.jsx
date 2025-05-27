@@ -18,63 +18,51 @@ function ViewJournal() {
   const [loading, setLoading] = useState(true);
   const baseURL = import.meta.env.VITE_API_BASE_URL;
 
+  // Fetch user info first
   useEffect(() => {
-    const fetchJournal = async () => {
-      try {
-        const startTime = Date.now();
+    const fetchUserAndJournal = async () => {
+      const user = auth.currentUser;
+      if (!user?.email) return;
 
-        const response = await axios.get('/api/journal/today');
+      try {
+        // 1. Get user details
+        const userRes = await fetch(`${baseURL}/user?email=${user.email}`);
+        const userData = await userRes.json();
+
+        if (!userData.firstName || !userData.lastName) {
+          throw new Error("Incomplete user data");
+        }
+
+        setFirstName(userData.firstName);
+        setLastName(userData.lastName);
+
+        // 2. Get journal for this user
+        const response = await axios.get(
+          `${baseURL}/journal/today?firstName=${encodeURIComponent(userData.firstName)}&lastName=${encodeURIComponent(userData.lastName)}`
+        );
+
         if (response.status === 200 && response.data?.content) {
           setJournalContent(response.data.content);
         } else {
-          navigate('/Journal');
-          return;
+          navigate('/Journal'); // No journal for today
         }
-
-        const duration = Date.now() - startTime;
-        const delay = Math.max(500 - duration, 0);
-        setTimeout(() => setLoading(false), delay);
-      } catch (err) {
-        console.error("Error fetching journal:", err);
+      } catch (error) {
+        console.error("Error fetching journal:", error);
         navigate('/Journal');
+      } finally {
+        setTimeout(() => setLoading(false), 500); // Simulate consistent loading
       }
     };
 
-    const unsubscribe = onAuthStateChanged(auth, () => {
-      fetchJournal();
-    });
-
+    const unsubscribe = onAuthStateChanged(auth, fetchUserAndJournal);
     return () => unsubscribe();
-  }, [navigate]);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = auth.currentUser;
-
-      if (user && user.email) {
-        try {
-          const res = await fetch(`${baseURL}/users?email=${user.email}`);
-          const data = await res.json();
-
-          if (data && data.firstName && data.lastName) {
-            setFirstName(data.firstName);
-            setLastName(data.lastName);
-          }
-        } catch (error) {
-          console.error("Failed to fetch user info:", error);
-        }
-      }
-    };
-
-    fetchUserData();
-  }, []);
+  }, [navigate, baseURL]);
 
   const isDataLoaded = !loading && firstName && lastName && journalContent;
 
   return (
     <div className="flex min-h-screen">
       <Sidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
-
       <div
         className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
@@ -82,23 +70,22 @@ function ViewJournal() {
       >
         <Header />
 
-        {/* Main Content fills remaining space */}
         <div className="flex flex-col flex-1 px-10 py-6">
           <div className="bg-[#F9FAFD] mt-20 ml-10 mr-10 border border-[#B9B9B9] rounded-md shadow-lg px-10 h-[75vh] flex flex-col">
-          <div className="h-[40px] mb-5 mt-10 flex items-center">
-            {firstName && lastName ? (
-              <h2 className="text-[25px] font-semibold">
-                {firstName} {lastName} -{' '}
-                {new Date().toLocaleDateString('en-US', {
-                  month: 'long',
-                  day: '2-digit',
-                  year: 'numeric',
-                })}
-              </h2>
-            ) : (
-              <Skeleton width="300px" height="35px" />
-            )}
-          </div>
+            <div className="h-[40px] mb-5 mt-10 flex items-center">
+              {firstName && lastName ? (
+                <h2 className="text-[25px] font-semibold">
+                  {firstName} {lastName} -{' '}
+                  {new Date().toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: '2-digit',
+                    year: 'numeric',
+                  })}
+                </h2>
+              ) : (
+                <Skeleton width="300px" height="35px" />
+              )}
+            </div>
 
             <p className="border-b border-[#959494] -ml-3 -mr-3 mb-7"></p>
 

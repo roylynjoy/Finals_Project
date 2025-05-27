@@ -36,7 +36,7 @@ function StudentDashboard() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
-          const res = await fetch(`${baseURL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/user?email=${user.email}`);
           const data = await res.json();
           if (data && data.firstName && data.lastName && data.company) {
             setFirstName(data.firstName);

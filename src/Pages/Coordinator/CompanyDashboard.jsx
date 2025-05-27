@@ -12,6 +12,7 @@ import Skeleton from "../../components/Skeleton";
 function CompanyDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [company, setCompany] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -27,10 +28,15 @@ function CompanyDashboard() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
-          const res = await fetch(`${baseURL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/user?email=${user.email}`);
           const data = await res.json();
-          setFirstName(data.firstName || "");
-          setCompany(data.company || "");
+          if (data && data.firstName && data.lastName && data.company) {
+            setFirstName(data.firstName);
+            setLastName(data.lastName); // 👈 add this
+            setCompany(data.company);
+          } else {
+            console.warn("User data not found or incomplete:", data);
+          }
         } catch (error) {
           console.error("Failed to fetch user info:", error);
         } finally {
@@ -38,6 +44,7 @@ function CompanyDashboard() {
         }
       }
     });
+
     return () => unsubscribe();
   }, []);
 

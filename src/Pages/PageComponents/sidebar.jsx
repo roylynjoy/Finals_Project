@@ -33,22 +33,35 @@ const Sidebar = ({ isExpanded, setIsExpanded }) => {
         return;
       }
 
-      const baseURL = import.meta.env.VITE_API_BASE_URL;
-      const res = await axios.get(`${baseURL}/journal/today`);
+      // ✅ Fetch user details first
+      const userRes = await axios.get(`${baseURL}/user?email=${user.email}`);
+      const { firstName, lastName } = userRes.data;
 
-      if (res.status === 200 && res.data?.content) {
+      if (!firstName || !lastName) {
+        navigate("/Journal"); // fallback
+        return;
+      }
+
+      // ✅ Now check for journal for this user
+      const res = await axios.get(
+        `${baseURL}/journal/today?firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}`
+      );
+
+      if (res.data?.exists && res.data?.content) {
         navigate("/ViewJournal");
       } else {
+        console.log("No journal for today — redirecting to Journal page.");
         navigate("/Journal");
       }
     } catch (err) {
-      if (err.response?.status === 204) {
-        navigate("/Journal");
-      } else {
-        console.error("Error checking journal:", err);
-      }
+      console.error("Error checking journal:", err);
+      navigate("/Journal");
     }
   };
+
+
+
+
 
   return (
     <div

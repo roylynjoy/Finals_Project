@@ -23,7 +23,7 @@ function AdminDashboard() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
-          const res = await fetch(`${baseURL}/users?email=${user.email}`);
+          const res = await fetch(`${baseURL}/user?email=${user.email}`);
           const data = await res.json();
 
           if (data?.firstName) {
@@ -50,10 +50,10 @@ function AdminDashboard() {
         } bg-white`}
       >
         {/* Header */}
-        <AdminHeader />
+        <AdminHeader isExpanded={isSidebarExpanded}/>
 
         {/* Welcome Section */}
-        <div className="px-8 pt-8">
+        <div className="px-8 pt-8 mt-[100px]">
           <div className="bg-[#F9FAFD] p-5 rounded-[10px] shadow flex items-center justify-between border-2 border-[#B9B9B9]">
             <div className="flex items-center gap-4 h-[118px]">
               <div className="flex items-center justify-center"><LuUser size={65} /></div>
