@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaCheckCircle } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 
 function ForgotPassword({ isOpen, onClose, email, setEmail }) {
   const [step, setStep] = useState("email");
@@ -103,8 +104,15 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
 
         {/* Back Button (only shown when not maxed out or on success) */}
         {step !== "reset" && step !== "success" && !maxedOut && (
-          <button onClick={handleBack} className="absolute top-4 left-4">
-            <FaArrowLeft size={23} />
+          <button
+            onClick={() => {
+              resetState();
+              onClose();
+            }}
+            className="absolute top-4 left-4 text-gray-500 hover:text-gray-900 transition-colors cursor-pointer"
+            aria-label="Close modal"
+          >
+            <IoMdClose size={30} />
           </button>
         )}
 
@@ -207,7 +215,7 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
           <button
             onClick={handleContinue}
             disabled={loading}
-            className={`mt-6 h-[56px] bg-[#1E3A8A] text-white text-[22px] font-bold px-4 py-2 rounded w-full flex items-center justify-center ${
+            className={`mt-6 h-[56px] bg-[#1E3A8A] text-white text-[22px] font-bold px-4 py-2 rounded w-full flex items-center justify-center cursor-pointer${
               loading ? "cursor-not-allowed opacity-70" : ""
             }`}
           >
@@ -237,7 +245,7 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
         {/* Close button if locked out */}
         {maxedOut && (
           <button
-            className="mt-6 px-6 py-3 bg-[#1E3A8A] text-white rounded text-[18px] font-semibold w-full"
+            className="mt-6 px-6 py-3 bg-[#1E3A8A] text-white rounded text-[18px] font-semibold w-full cursor-pointer"
             onClick={() => {
               resetState();
               onClose();
