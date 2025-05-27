@@ -19,8 +19,8 @@ export default function CreateAccount() {
   const [supervisorNumber, setSupervisorNumber] = useState("");
 
   // Step 2 fields
-  const [company, setCompany] = useState("Company");
-  const [arrangement, setArrangement] = useState("Workplace Arrangement");
+  const [company, setCompany] = useState("Company A"); // ✅ valid default
+  const [arrangement, setArrangement] = useState("On-site"); // ✅ valid default
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -35,14 +35,18 @@ export default function CreateAccount() {
       alert("Passwords do not match.");
       return;
     }
-  
+
+    if (!["On-site", "Remote", "Hybrid"].includes(arrangement)) {
+      alert("Please select a valid workplace arrangement.");
+      return;
+    }
+
     try {
       // Create Firebase user
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log("User created:", user);
-  
-      // Send user info to your backend (without token)
+
+      // Send user info to backend
       const res = await fetch(`${baseURL}/users/register`, {
         method: "POST",
         headers: {
@@ -59,22 +63,23 @@ export default function CreateAccount() {
           arrangement,
         }),
       });
-  
+
       const data = await res.json();
-      console.log("Backend response:", data);
-  
+
       if (!res.ok) {
+        // ❌ Clean up Firebase user if backend fails
+        await user.delete();
         throw new Error(data.message || "Failed to register user in backend.");
       }
-  
-      navigate("/SignIn"); // Navigate after successful signup
+
+      navigate("/SignIn");
     } catch (error) {
-      console.error("Signup error:", error);
+      console.error("Signup error:", error.message);
       alert(error.message);
     }
   };
 
-  const login = () => navigate('/SignIn');
+  const login = () => navigate("/SignIn");
 
   return (
     <div className="flex h-screen font-poppins">
@@ -101,7 +106,7 @@ export default function CreateAccount() {
             </div>
             <input type="email" placeholder="LV Email" value={email} onChange={e => setEmail(e.target.value)} className="border border-[#D3CECE] text-[#5F5454] text-[20px] rounded p-3 w-full" />
             <div className="relative">
-              <select value={role} placeholder="Role" onChange={e => setRole(e.target.value)} className="appearance-none border bg-[rgba(217,217,217,0.5)] text-[#5F5454] border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
+              <select value={role} onChange={e => setRole(e.target.value)} className="appearance-none border bg-[rgba(217,217,217,0.5)] text-[#5F5454] border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
                 <option>Student</option>
                 <option>Coordinator</option>
               </select>
@@ -119,14 +124,14 @@ export default function CreateAccount() {
             <h1 className="text-[50px] font-bold text-center mb-0">Create Account</h1>
             <p className="text-[20px] text-center font-poppins">Step 2 of 2</p>
             <div className="relative mt-20">
-              <select value={company} placeholder="Company Name" onChange={e => setCompany(e.target.value)} className="appearance-none border text-[#5F5454] bg-white border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
+              <select value={company} onChange={e => setCompany(e.target.value)} className="appearance-none border text-[#5F5454] bg-white border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
                 <option>Company A</option>
                 <option>Company B</option>
               </select>
               <FaChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#B3B3B3] pointer-events-none" />
             </div>
             <div className="relative">
-              <select value={arrangement} placeholder="Workplace Arrangement" onChange={e => setArrangement(e.target.value)} className="appearance-none border text-[#5F5454] bg-white border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
+              <select value={arrangement} onChange={e => setArrangement(e.target.value)} className="appearance-none border text-[#5F5454] bg-white border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
                 <option>On-site</option>
                 <option>Remote</option>
                 <option>Hybrid</option>

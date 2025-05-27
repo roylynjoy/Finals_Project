@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
+import { FaCheckCircle } from "react-icons/fa";
 
 function ForgotPassword({ isOpen, onClose, email, setEmail }) {
   const [step, setStep] = useState("email");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [attempts, setAttempts] = useState(0);
+  const [maxedOut, setMaxedOut] = useState(false);
+
   const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   if (!isOpen) return null;
@@ -16,7 +22,6 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
       const updatedOtp = [...otp];
       updatedOtp[index] = value;
       setOtp(updatedOtp);
-
       if (value && index < 5) {
         const nextInput = document.getElementById(`otp-${index + 1}`);
         if (nextInput) nextInput.focus();
@@ -24,50 +29,70 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
     }
   };
 
+  const resetState = () => {
+    setStep("email");
+    setOtp(["", "", "", "", "", ""]);
+    setNewPassword("");
+    setConfirmPassword("");
+    setMessage("");
+    setAttempts(0);
+    setMaxedOut(false);
+    setLoading(false);
+  };
+
   const handleContinue = async () => {
-    if (step === "email") {
-      try {
+    setLoading(true);
+    setMessage("");
+
+    try {
+      if (step === "email") {
         await axios.post(`${baseURL}/auth/request-otp`, { email });
         setStep("otp");
-      } catch (err) {
-        alert(err.response?.data?.message || "Failed to send OTP");
-      }
-    } else if (step === "otp") {
-      const enteredOtp = otp.join("");
-      if (enteredOtp.length < 6) {
-        alert("Please enter a 6-digit OTP.");
-        return;
-      }
-      try {
+      } else if (step === "otp") {
+        const enteredOtp = otp.join("");
+        if (enteredOtp.length < 6) {
+          setMessage("Please enter a 6-digit OTP.");
+          return;
+        }
+
         await axios.post(`${baseURL}/auth/verify-otp`, { email, otp: enteredOtp });
         setStep("reset");
-      } catch (err) {
-        alert(err.response?.data?.message || "Invalid OTP");
+      } else {
+        if (newPassword !== confirmPassword) {
+          setMessage("Passwords do not match.");
+          return;
+        }
+
+        await axios.post(`${baseURL}/auth/reset-password`, { email, newPassword });
+        setStep("success");
       }
-    } else {
-      if (newPassword !== confirmPassword) {
-        alert("Passwords do not match.");
-        return;
+    } catch (err) {
+      const serverMsg = err.response?.data?.message || "Something went wrong";
+
+      if (step === "otp") {
+        const newAttempts = attempts + 1;
+        setAttempts(newAttempts);
+
+        if (serverMsg.includes("Too many") || newAttempts >= 3) {
+          setMaxedOut(true);
+          setMessage("Maximum attempts reached. Please try again after 10 minutes.");
+        } else {
+          setMessage(serverMsg || "Incorrect OTP. Try again.");
+        }
+      } else {
+        setMessage(serverMsg);
       }
-      try {
-        await axios.post(`${baseURL}/auth/reset-password`, {
-          email,
-          newPassword,
-        });
-        alert("Password has been reset. You can now sign in.");
-        onClose();
-      } catch (err) {
-        alert(err.response?.data?.message || "Failed to reset password");
-      }
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleBack = () => {
-    if (step === "reset") {
-      setStep("otp");
-    } else if (step === "otp") {
-      setStep("email");
-    } else {
+    if (maxedOut || step === "success") return;
+    if (step === "reset") setStep("otp");
+    else if (step === "otp") setStep("email");
+    else {
+      resetState();
       onClose();
     }
   };
@@ -75,10 +100,15 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm w-screen h-screen m-0 p-0">
       <div className="bg-white p-6 rounded-lg w-full max-w-[647px] relative">
-        <button onClick={handleBack} className="absolute top-4 left-4">
-          <FaArrowLeft size={23} />
-        </button>
 
+        {/* Back Button (only shown when not maxed out or on success) */}
+        {step !== "reset" && step !== "success" && !maxedOut && (
+          <button onClick={handleBack} className="absolute top-4 left-4">
+            <FaArrowLeft size={23} />
+          </button>
+        )}
+
+        {/* Step 1: Email Input */}
         {step === "email" && (
           <>
             <h2 className="text-[50px] font-bold text-center pt-4">Forgot Password</h2>
@@ -95,6 +125,7 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
           </>
         )}
 
+        {/* Step 2: OTP Verification */}
         {step === "otp" && (
           <>
             <h2 className="text-[50px] font-bold mb-4 text-center pt-4">Verification</h2>
@@ -112,12 +143,19 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
                   value={value}
                   onChange={(e) => handleOtpChange(e.target.value, index)}
                   className="w-14 h-14 text-center text-[22px] border border-gray-300 rounded"
+                  disabled={maxedOut}
                 />
               ))}
             </div>
+            {!maxedOut && (
+              <p className="text-center text-sm text-gray-500 mb-2">
+                Attempt {attempts} of 3
+              </p>
+            )}
           </>
         )}
 
+        {/* Step 3: Reset Password */}
         {step === "reset" && (
           <>
             <h2 className="text-[50px] font-bold -mb-2 text-center pt-4">Reset Password</h2>
@@ -141,12 +179,73 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
           </>
         )}
 
-        <button
-          onClick={handleContinue}
-          className="bg-[#1E3A8A] text-white text-[22px] font-bold px-4 py-2 rounded w-full"
-        >
-          {step === "reset" ? "Reset Password" : step === "otp" ? "Verify" : "Continue"}
-        </button>
+        {/* Step 4: Success */}
+        {step === "success" && (
+          <div className="text-center">
+            <FaCheckCircle className="text-[#1E3A8A] mx-auto mt-5 border-10 border-[#1E3A8A] rounded-full px-1 " size={130} />
+            <h2 className="text-[40px] font-bold text-black mt-6">Successful!</h2>
+            <p className="text-[18px] mt-2 text-gray-700">You may now sign in using your new password.</p>
+            <button
+              className="mt-6 h-[56px] bg-[#1E3A8A] text-white text-[22px] font-semibold px-4 py-2 rounded w-full flex items-center justify-center cursor-pointer"
+              onClick={() => {
+                resetState();
+                onClose();
+              }}
+            >
+              Continue to Log In
+            </button>
+          </div>
+        )}
+
+        {/* Message Prompt */}
+        {message && step !== "success" && (
+          <p className="text-center text-red-600 font-medium text-[18px] mt-3">{message}</p>
+        )}
+
+        {/* Action Button */}
+        {step !== "success" && !maxedOut && (
+          <button
+            onClick={handleContinue}
+            disabled={loading}
+            className={`mt-6 h-[56px] bg-[#1E3A8A] text-white text-[22px] font-bold px-4 py-2 rounded w-full flex items-center justify-center ${
+              loading ? "cursor-not-allowed opacity-70" : ""
+            }`}
+          >
+            {loading ? (
+              <div className="flex gap-1 items-center h-[20px]">
+                <span
+                  className="w-2 h-2 bg-white rounded-full animate-bounce"
+                  style={{ animationDelay: "0ms" }}
+                ></span>
+                <span
+                  className="w-2 h-2 bg-white rounded-full animate-bounce"
+                  style={{ animationDelay: "150ms" }}
+                ></span>
+                <span
+                  className="w-2 h-2 bg-white rounded-full animate-bounce"
+                  style={{ animationDelay: "300ms" }}
+                ></span>
+              </div>
+            ) : step === "reset"
+              ? "Reset Password"
+              : step === "otp"
+              ? "Verify"
+              : "Send OTP"}
+          </button>
+        )}
+
+        {/* Close button if locked out */}
+        {maxedOut && (
+          <button
+            className="mt-6 px-6 py-3 bg-[#1E3A8A] text-white rounded text-[18px] font-semibold w-full"
+            onClick={() => {
+              resetState();
+              onClose();
+            }}
+          >
+            Close
+          </button>
+        )}
       </div>
     </div>
   );

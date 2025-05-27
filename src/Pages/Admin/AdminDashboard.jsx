@@ -5,12 +5,15 @@ import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
 import { LuUser, LuChevronDown, LuChevronUp } from "react-icons/lu";
 import Footer from '../PageComponents/footer';
+import Skeleton from '../../components/Skeleton';
 
 function AdminDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [showCoordinators, setShowCoordinators] = useState(false);
   const [selectedCoordinatorGroup, setSelectedCoordinatorGroup] = useState(null);
   const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [loading, setLoading] = useState(true);
   const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   const coordinatorGroups = {
@@ -25,14 +28,16 @@ function AdminDashboard() {
         try {
           const res = await fetch(`${baseURL}/user?email=${user.email}`);
           const data = await res.json();
-
-          if (data?.firstName) {
+          if (data && data.firstName && data.lastName) {
             setFirstName(data.firstName);
+            setLastName(data.lastName); 
           } else {
             console.warn("User data not found or incomplete:", data);
           }
         } catch (error) {
           console.error("Failed to fetch user info:", error);
+        } finally {
+          setLoading(false);
         }
       }
     });
@@ -50,7 +55,7 @@ function AdminDashboard() {
         } bg-white`}
       >
         {/* Header */}
-        <AdminHeader isExpanded={isSidebarExpanded}/>
+        <AdminHeader isExpanded={isSidebarExpanded} firstName={firstName}/>
 
         {/* Welcome Section */}
         <div className="px-8 pt-8 mt-[100px]">
@@ -58,7 +63,9 @@ function AdminDashboard() {
             <div className="flex items-center gap-4 h-[118px]">
               <div className="flex items-center justify-center"><LuUser size={65} /></div>
               <div>
-                <p className="text-[33px] font-semibold">Hello, {firstName}!</p>
+                <div className="text-[33px] font-semibold">
+                  {loading ? <Skeleton width="200px" height="36px" /> : `Hello, ${firstName || "Admin"}!`}
+                </div>
                 <p className="text-[20px]">Admin</p>
               </div>
             </div>
