@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../PageComponents/sidebar';
 import Header from '../PageComponents/header';
 import Footer from '../PageComponents/footer';
-import { FaRegCopy, FaArrowLeft } from 'react-icons/fa';
+import { FaRegCopy, FaArrowLeft, FaExternalLinkAlt } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
-import { FaExternalLinkAlt } from "react-icons/fa";
+
 
 function SQA() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
@@ -13,6 +13,10 @@ function SQA() {
   const arrowBack = () => {
     navigate(-1);
   };
+
+  useEffect(() => {
+    localStorage.setItem("recentRole", "/SQA");
+  }, []);
 
   const topics = [
     {

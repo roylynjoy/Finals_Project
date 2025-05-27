@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
 
 function ForgotPassword({ isOpen, onClose, email, setEmail }) {
@@ -6,6 +7,7 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   if (!isOpen) return null;
 
@@ -22,23 +24,41 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
     }
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (step === "email") {
-      setStep("otp");
+      try {
+        await axios.post(`${baseURL}/auth/request-otp`, { email });
+        setStep("otp");
+      } catch (err) {
+        alert(err.response?.data?.message || "Failed to send OTP");
+      }
     } else if (step === "otp") {
       const enteredOtp = otp.join("");
       if (enteredOtp.length < 6) {
         alert("Please enter a 6-digit OTP.");
         return;
       }
-      setStep("reset");
+      try {
+        await axios.post(`${baseURL}/auth/verify-otp`, { email, otp: enteredOtp });
+        setStep("reset");
+      } catch (err) {
+        alert(err.response?.data?.message || "Invalid OTP");
+      }
     } else {
       if (newPassword !== confirmPassword) {
         alert("Passwords do not match.");
         return;
       }
-      console.log("New Password:", newPassword);
-      onClose();
+      try {
+        await axios.post(`${baseURL}/auth/reset-password`, {
+          email,
+          newPassword,
+        });
+        alert("Password has been reset. You can now sign in.");
+        onClose();
+      } catch (err) {
+        alert(err.response?.data?.message || "Failed to reset password");
+      }
     }
   };
 
@@ -53,7 +73,7 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
   };
 
   return (
-    <div className="fixed inset-0 backdrop-blur-sm bg-opacity-40 flex items-center justify-center z-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm w-screen h-screen m-0 p-0">
       <div className="bg-white p-6 rounded-lg w-full max-w-[647px] relative">
         <button onClick={handleBack} className="absolute top-4 left-4">
           <FaArrowLeft size={23} />
@@ -82,7 +102,7 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
               Please enter the code sent to your email.
             </p>
             <p className="text-center text-[20px] mb-2">Enter OTP</p>
-            <div className="flex justify-center mb-4 font-bold">
+            <div className="flex justify-center mb-4 font-bold gap-2">
               {otp.map((value, index) => (
                 <input
                   key={index}
@@ -91,7 +111,7 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
                   maxLength={1}
                   value={value}
                   onChange={(e) => handleOtpChange(e.target.value, index)}
-                  className="w-20 h-20 text-center text-[22px] border border-gray-300 rounded"
+                  className="w-14 h-14 text-center text-[22px] border border-gray-300 rounded"
                 />
               ))}
             </div>

@@ -91,4 +91,4 @@ const CompanySidebar = ({ isExpanded, setIsExpanded }) => {
   );
 };
 
-export default CompanySidebar;
+export default CompanySidebar;  

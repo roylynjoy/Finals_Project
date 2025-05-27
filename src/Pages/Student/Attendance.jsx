@@ -5,7 +5,8 @@ import Header from '../PageComponents/header';
 import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import axios from 'axios';
-import LoadingOverlay from '../../components/loadingOverlay'; // ✅ Import the reusable spinner
+import LoadingOverlay from '../../components/loadingOverlay';
+import Skeleton from '../../components/Skeleton'; // ✅ Import Skeleton
 
 function AttendanceSubmission() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
@@ -18,9 +19,9 @@ function AttendanceSubmission() {
   const [canTimeOut, setCanTimeOut] = useState(false);
   const [attendanceSubmitted, setAttendanceSubmitted] = useState(false);
   const [submittedMessage, setSubmittedMessage] = useState(false);
-  const [loading, setLoading] = useState(true); // ✅ Spinner state
+  const [loading, setLoading] = useState(true);
   const baseURL = import.meta.env.VITE_API_BASE_URL;
-  
+
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
@@ -51,7 +52,7 @@ function AttendanceSubmission() {
       } finally {
         const elapsed = Date.now() - start;
         const delay = Math.max(300 - elapsed, 0);
-        setTimeout(() => setLoading(false), delay); // ✅ Delay spinner visibility
+        setTimeout(() => setLoading(false), delay);
       }
     };
 
@@ -64,9 +65,6 @@ function AttendanceSubmission() {
 
     return () => unsubscribe();
   }, []);
-
-  const formatTime = (date = new Date()) =>
-    date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
 
   const handleTimeClick = async () => {
     if (canTimeIn) {
@@ -110,9 +108,8 @@ function AttendanceSubmission() {
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
         } bg-[#FAFAFF]`}
       >
-        {loading && <LoadingOverlay />} 
-
         <Header />
+
         <div className='flex-1 flex items-center justify-center p-10'>
           <div className='flex gap-12 justify-center items-start'>
             {/* Clock Display */}
@@ -164,16 +161,26 @@ function AttendanceSubmission() {
                 <span className='text-[28px] mb-1'>Time</span>
               </div>
 
+              {/* Time In Row */}
               <div className='bg-[#F9FAFD] py-[59px] text-[25px] shadow border border-[#797979] rounded-[10px] mb-4 flex justify-evenly gap-15 text-[#2D0F7F] font-semibold items-center'>
                 <span className='text-black'>Time In</span>
-                <span className='text-[#556689]'>{timeIn ? new Date().toLocaleDateString() : 'MM/DD/YYYY'}</span>
-                <span className='text-[#556689]'>{timeIn || '00:00:00'}</span>
+                <span className='text-[#556689]'>
+                  {loading ? <Skeleton width="120px" height="28px" /> : (timeIn ? new Date().toLocaleDateString() : 'MM/DD/YYYY')}
+                </span>
+                <span className='text-[#556689]'>
+                  {loading ? <Skeleton width="100px" height="28px" /> : (timeIn || '00:00:00')}
+                </span>
               </div>
 
+              {/* Time Out Row */}
               <div className='bg-[#F9FAFD] py-[59px] text-[25px] shadow border border-[#797979] rounded-[10px] mb-4 flex justify-evenly gap-15 text-[#2D0F7F] font-semibold items-center'>
                 <span className='text-black'>Time Out</span>
-                <span className='text-[#556689]'>{timeOut ? new Date().toLocaleDateString() : 'MM/DD/YYYY'}</span>
-                <span className='text-[#556689]'>{timeOut || '00:00:00'}</span>
+                <span className='text-[#556689]'>
+                  {loading ? <Skeleton width="120px" height="28px" /> : (timeOut ? new Date().toLocaleDateString() : 'MM/DD/YYYY')}
+                </span>
+                <span className='text-[#556689]'>
+                  {loading ? <Skeleton width="100px" height="28px" /> : (timeOut || '00:00:00')}
+                </span>
               </div>
 
               {showSubmitButton && (

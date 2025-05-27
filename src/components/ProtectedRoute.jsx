@@ -1,38 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase/firebase"; // ✅ import from firebase.js
+import { auth } from "../firebase/firebase";
 
 const ProtectedRoute = ({ allowedRoles, children }) => {
-  const [status, setStatus] = useState("checking"); // start with 'checking'
-  const navigate = useNavigate();
+  const [status, setStatus] = useState("checking"); // 'checking' | 'authorized' | 'unauthorized'
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user?.email) {
-        try {
-          const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users?email=${user.email}`);
-          const data = await res.json();
-
-          if (data?.role && allowedRoles.includes(data.role)) {
-            setStatus("authorized");
-          } else {
-            setStatus("unauthorized");
-            setTimeout(() => navigate(-1), 3000);
-          }
-        } catch (err) {
-          console.error("Role check error:", err);
-          setStatus("unauthorized");
-          setTimeout(() => navigate(-1), 3000);
-        }
-      } else {
+      if (!user) {
         setStatus("unauthorized");
-        setTimeout(() => navigate(-1), 3000);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${baseURL}/user?email=${user.email}`);
+        if (!res.ok) throw new Error("Failed to fetch user");
+
+        const data = await res.json();
+
+        if (data?.role && allowedRoles.includes(data.role)) {
+          setStatus("authorized");
+        } else {
+          setStatus("unauthorized");
+        }
+      } catch (err) {
+        console.error("Role check error:", err);
+        setStatus("unauthorized");
       }
     });
 
     return () => unsubscribe();
-  }, [allowedRoles, navigate]);
+  }, [allowedRoles]);
 
   if (status === "checking") {
     return (
@@ -51,14 +51,14 @@ const ProtectedRoute = ({ allowedRoles, children }) => {
             You are not authorized or not logged in to access this page.
           </p>
           <p className="text-[18px] text-[#5F5454] mt-2">
-            Returning to the previous page...
+            Please log in again to continue.
           </p>
         </div>
       </div>
     );
   }
 
-  return status === "authorized" ? children : null;
+  return children;
 };
 
 export default ProtectedRoute;

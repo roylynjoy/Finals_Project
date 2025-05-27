@@ -78,7 +78,7 @@ function Journal() {
     content: "",
     editorProps: {
       attributes: {
-        class: "min-h-[764px] p-4 bg-white rounded-b-md outline-none text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-indigo-200",
+        class: "min-h-[50vh] p-4 bg-white rounded-b-md outline-none text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-indigo-200",
         placeholder: "Type here...",
       },
     },
@@ -112,31 +112,6 @@ function Journal() {
       alert("Please agree to the terms and write something.");
     }
   };
-
-
-  useEffect(() => {
-    const checkTodayEntry = async () => {
-      const user = auth.currentUser;
-      if (!user?.email) return;
-
-      try {
-        const response = await axios.get(`${baseURL}/journal/today`);
-        if (response.status === 200 && response.data?.content) {
-          navigate("/ViewJournal");
-        }
-      } catch (err) {
-        if (err.response?.status !== 204) {
-          console.error("Error checking for today's entry:", err);
-        }
-      }
-    };
-
-    const unsubscribe = onAuthStateChanged(auth, () => {
-      checkTodayEntry();
-    });
-
-    return () => unsubscribe();
-  }, [navigate]);
 
   return (
     <div>

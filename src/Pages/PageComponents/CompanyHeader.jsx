@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import UserProfileModal from "../PageComponents/UserProfileModal";
+import UserProfileModal from "./UserProfileModal";
 import Skeleton from "../../components/Skeleton";
 
-
-function AdminHeader({isExpanded}) {
+function CompanyHeader({ isExpanded }) {
   const location = useLocation();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -16,8 +15,9 @@ function AdminHeader({isExpanded}) {
   const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   const pageTitles = {
-    '/AdminDashboard': 'Admin Dashboard',
-    '/CompanyList': 'Company List',
+    '/CompanyDashboard': 'Company Dashboard',
+    '/CompanyAttendance': 'Attendance Tracking',
+    '/CompanyJournal': 'Journal Submission',
   };
 
   const title = pageTitles[location.pathname] || "Dashboard";
@@ -65,11 +65,6 @@ function AdminHeader({isExpanded}) {
     }
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => setShowShadow(window.scrollY > 0);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const getInitials = (name) =>
     name
@@ -77,7 +72,6 @@ function AdminHeader({isExpanded}) {
       .map((n) => n[0])
       .join("")
       .toUpperCase();
-
 
   return (
     <header
@@ -114,4 +108,4 @@ function AdminHeader({isExpanded}) {
   );
 }
 
-export default AdminHeader;
+export default CompanyHeader;
