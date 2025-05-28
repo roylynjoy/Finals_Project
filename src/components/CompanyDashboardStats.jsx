@@ -39,15 +39,16 @@ function CompanyDashboardStats({ onDataReady }) {
 
         const today = new Date().toISOString().split("T")[0]; // ISO: "2025-05-21"
 
-        const interns = users.filter(
-          (u) => u.role === "student" && u.company === company
-        );
+        const interns = Array.isArray(users)
+          ? users.filter((u) => u.role === "student" && u.company === company)
+          : [];
 
-        const todaysAttendances = attendances.filter(
-          (a) =>
-            a.company === company &&
-            normalizeToISODate(a.date) === today
-        );
+        const todaysAttendances = Array.isArray(attendances)
+          ? attendances.filter(
+              (a) => a.company === company && normalizeToISODate(a.date) === today
+            )
+          : [];
+
 
         const presentInterns = todaysAttendances.length;
 

@@ -28,7 +28,7 @@ const CompanySidebar = ({ isExpanded, setIsExpanded }) => {
       {/* Top Section with La Verdad Logo */}
       <div className="flex flex-col pt-4">
         <div className="flex items-center gap-3 px-4">
-          <img src="pictures/logo.png" alt="La Verdad Logo" className="h-[60px]" />
+          <img src="/pictures/logo.png" alt="La Verdad Logo" className="h-[60px]" />
           {isExpanded && (
             <div className="transition-opacity duration-500 whitespace-nowrap">
               <p className="text-[30px] font-custom">LA VERDAD</p>

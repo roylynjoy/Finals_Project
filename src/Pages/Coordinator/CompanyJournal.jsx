@@ -1,4 +1,3 @@
-// CompanyJournal.jsx
 import React, { useState, useEffect } from 'react';
 import { auth } from '../../firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -6,7 +5,9 @@ import axios from 'axios';
 import CompanySidebar from '../PageComponents/CompanySidebar';
 import CompanyHeader from '../PageComponents/CompanyHeader';
 import Footer from '../PageComponents/footer';
-import { FaEye, FaTrash } from 'react-icons/fa';
+import { FaRegTrashAlt } from 'react-icons/fa';
+import { BiEnvelope, BiEnvelopeOpen } from 'react-icons/bi';
+import { useNavigate } from 'react-router-dom';
 
 function getTodayDateString() {
   const today = new Date();
@@ -24,21 +25,27 @@ function CompanyJournal() {
   const [loading, setLoading] = useState(false);
 
   const baseURL = import.meta.env.VITE_API_BASE_URL;
+  const navigate = useNavigate();
+
+  const fetchJournals = async (email) => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`${baseURL}/journal/company?email=${email}`);
+      const data = Array.isArray(res.data) ? res.data : [];
+      const filtered = data.filter(journal => journal.removed !== true);
+      setAllJournals(filtered);
+    } catch (err) {
+      console.error('Failed to load journal entries:', err);
+      setAllJournals([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
-        try {
-          setLoading(true);
-          const res = await axios.get(`${baseURL}/journal/company?email=${user.email}`);
-          const data = Array.isArray(res.data) ? res.data : []; // ✅ Ensure it's always an array
-          setAllJournals(data);
-        } catch (err) {
-          console.error('Failed to load company journal entries:', err);
-          setAllJournals([]); // ✅ Fail-safe fallback
-        } finally {
-          setLoading(false);
-        }
+        await fetchJournals(user.email);
       }
     });
 
@@ -58,12 +65,39 @@ function CompanyJournal() {
     setFilteredJournals(filtered);
   }, [selectedDate, allJournals]);
 
+  const toggleViewed = async (id, currentViewed) => {
+    try {
+      await axios.patch(`${baseURL}/journal/${id}/viewed`, { viewed: !currentViewed });
+      setAllJournals(prev =>
+        prev.map(j => j._id === id ? { ...j, viewed: !currentViewed } : j)
+      );
+    } catch (err) {
+      console.error('Failed to toggle viewed:', err);
+    }
+  };
+
+  const handleView = async (entry) => {
+    if (!entry.viewed) {
+      await toggleViewed(entry._id, false);
+    }
+    navigate(`/CompanyViewJournal/${entry._id}`);
+  };
+
+  const handleRemove = async (id) => {
+    try {
+      await axios.patch(`${baseURL}/journal/${id}/remove`, { removed: true });
+      setAllJournals(prev => prev.filter(j => j._id !== id));
+    } catch (err) {
+      console.error('Failed to remove journal:', err);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <CompanySidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
       <div className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'} bg-white min-h-screen`}>
-        <CompanyHeader />
-        <div className="mt-20  py-12 px-30">
+        <CompanyHeader isExpanded={isSidebarExpanded} />
+        <div className="py-12 px-30 mt-[100px]">
           <div className="mb-6">
             <input
               type="date"
@@ -85,7 +119,7 @@ function CompanyJournal() {
                 {filteredJournals.map((entry, index) => (
                   <div key={index} className="bg-[#F9FAFD] shadow rounded border border-[#C2C2C2] p-4 flex flex-col justify-between w-full h-[370px]">
                     <div className="flex-1 mb-6">
-                      <p className="text-[20px] font-medium leading-snug">
+                      <p className={`text-[20px] leading-snug ${entry.viewed ? 'font-normal' : 'font-bold'}`}>
                         {entry.firstName} {entry.lastName}<br />
                         <span className="text-gray-500 text-xs">
                           {new Date(entry.createdAt).toLocaleDateString('en-US', {
@@ -97,11 +131,34 @@ function CompanyJournal() {
                       </p>
                     </div>
                     <div className="flex justify-between items-center border-t-3 border-[#959494] pt-3">
-                      <button className="flex items-center gap-2 px-3 py-1 text-white bg-[#0385FF] rounded text-sm hover:bg-[#1F3463]">
-                        <FaEye size={14} /> View
+                    <button
+                      onClick={() => toggleViewed(entry._id, entry.viewed)}
+                      title={entry.viewed ? 'Mark as unread' : 'Mark as read'}
+                    >
+                      {entry.viewed ? (
+                        <BiEnvelopeOpen size={30} className="text-black hover:text-gray-700" />
+                      ) : (
+                        <BiEnvelope size={30} className="text-[#0060F0] hover:text-blue-700" />
+                      )}
+                    </button>
+
+                      { entry.viewed ? (<button
+                        onClick={() => handleView(entry)}
+                        className="flex items-center gap-2 px-7 py-1 text-black bg-[#D9D9D9] border-1 rounded text-[20px] hover:bg-[#006ad1]"
+                      >
+                        View
+                      </button>) : (
+                      <button
+                        onClick={() => handleView(entry)}
+                        className="flex items-center gap-2 px-7 py-1 text-white bg-[#0385FF] rounded text-[20px] hover:bg-[#006ad1]">
+                        View
                       </button>
-                      <button className="text-gray-500 hover:text-red-600">
-                        <FaTrash size={16} />
+                      )}
+                      <button
+                        className="text-[#1D1B20] hover:text-red-600"
+                        onClick={() => handleRemove(entry._id)}
+                      >
+                        <FaRegTrashAlt size={28} />
                       </button>
                     </div>
                   </div>

@@ -66,7 +66,7 @@ function StudentDashboard() {
       >
         <Header isExpanded={isSidebarExpanded} firstName={firstName} />
 
-        <div className="p-8 grid grid-cols-3 gap-6 mt-[100px]">
+        <div className="px-8 grid grid-cols-3 gap-6 mt-[100px]">
           {/* Left Column */}
           <div className="col-span-2 space-y-6">
             {/* Welcome Card */}
@@ -89,7 +89,7 @@ function StudentDashboard() {
 
             {/* Attendance Summary */}
             <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9]">
-              <div className="text-[30px] font-semibold text-[#3F3F46] mb-4">
+              <div className="text-[25px] font-semibold text-[#3F3F46] mb-4">
                 Attendance Summary
               </div>
               <div className="grid grid-cols-3 gap-4">
@@ -146,7 +146,7 @@ function StudentDashboard() {
             {/* Time Remaining & Recently Accessed */}
             <div className="grid grid-cols-2 gap-6">
             <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9]">
-              <h1 className="text-[30px] text-center font-semibold mb-4 text-[#3F3F46]">
+              <h1 className="text-[25px] text-center font-semibold mb-4 text-[#3F3F46]">
                 Time Remaining
               </h1>
               <div className="flex justify-around">
@@ -255,7 +255,7 @@ function StudentDashboard() {
           {/* Right Column */}
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-[10px] shadow text-center border-2 border-[#B9B9B9]">
-              <h1 className="text-[26px] font-semibold mb-4 text-[#3F3F46]">Journal Submission</h1>
+              <h1 className="text-[25px] font-semibold mb-4 text-[#3F3F46]">Journal Submission</h1>
               <div
                 onClick={() => navigate('/ViewJournal')}
                 className="relative flex justify-center border-2 border-[#B9B9B9] rounded-[10px] text-gray-700 bg-[#F1F1F1] h-[160px] p-5 text-[20px] cursor-pointer group hover:border-transparent hover:bg-[#E0E0E0] transition-colors duration-300"
@@ -279,7 +279,7 @@ function StudentDashboard() {
             </div>
 
             <div>
-              <Calendar className="w-[500px] h-[550px] border-2 border-[#B9B9B9] rounded-[5px]" />
+              <Calendar className="w-[500px] h-[545px] border-2 border-[#B9B9B9] rounded-[10px]" />
             </div>
           </div>
         </div>

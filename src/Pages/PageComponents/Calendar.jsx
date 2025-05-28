@@ -42,20 +42,20 @@ const Calendar = ({ className = '' }) => {
     <div className={`bg-white p-10 rounded shadow w-full ${className}`}>
       {/* Header */}
       <div className="flex justify-between items-center mb-4 ml-10 mr-10">
-        <button onClick={prevMonth} className="px-2 text-[25px]">&lt;</button>
-        <p className="font-semibold text-center text-[25px]">{monthNames[month]} {year}</p>
-        <button onClick={nextMonth} className="px-2 text-[25px]">&gt;</button>
+        <button onClick={prevMonth} className="px-2 text-[23px]">&lt;</button>
+        <p className="font-semibold text-center text-[23px]">{monthNames[month]} {year}</p>
+        <button onClick={nextMonth} className="px-2 text-[23px]">&gt;</button>
       </div>
 
       {/* Weekdays */}
-      <div className="grid grid-cols-7 text-[20px] gap-2 text-center text-gray-500 mb-4">
+      <div className="grid grid-cols-7 text-[23px] gap-2 text-center text-gray-500 mb-4">
         {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d, i) => (
           <div key={i} className="font-bold">{d}</div>
         ))}
       </div>
 
       {/* Days */}
-      <div className="grid grid-cols-7 text-[25px] gap-2 text-center">
+      <div className="grid grid-cols-7 text-[23px] gap-2 text-center">
         {Array.from({ length: offset + days }).map((_, i) => {
           const day = i - offset + 1;
           const dateObj = new Date(year, month, day);

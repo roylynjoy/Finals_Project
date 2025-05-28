@@ -78,7 +78,7 @@ function CompanyDashboard() {
           }}
         />
 
-        <div className="mt-20 p-8 grid grid-cols-3 gap-6">
+        <div className="mt-25 px-8 grid grid-cols-3 gap-6">
           <div className="col-span-2 space-y-6">
             {/* Company Info */}
             <div className="bg-white p-5 rounded-[10px] shadow flex items-center justify-between border-2 border-[#B9B9B9]">
@@ -100,7 +100,7 @@ function CompanyDashboard() {
 
             {/* Attendance Summary */}
             <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9]">
-              <div className="text-[30px] font-semibold text-[#3F3F46] mb-4">Daily Attendance Summary</div>
+              <div className="text-[25px] font-semibold text-[#3F3F46] mb-4">Daily Attendance Summary</div>
               <div className="grid grid-cols-3 gap-4">
                 {/* Present */}
                 <div className="bg-[#F9FAFD] p-4 rounded-[10px] border-3 border-[#6BD37C]">
@@ -167,9 +167,9 @@ function CompanyDashboard() {
 
           {/* Calendar and Interns Overview */}
           <div className="space-y-6">
-            <div className="bg-white p-6 rounded-[5px] shadow text-center h-[287px] border-2 border-[#B9B9B9] group">
+            <div className="bg-white p-6 rounded-[10px] shadow text-center h-[287px] border-2 border-[#B9B9B9] group">
               <p className="text-[30px] text-start font-semibold text-[#3F3F46]">Interns Overview</p>
-              <div className="border-2 border-[#0385FF] h-[183px] rounded mt-2 flex items-center justify-center relative overflow-hidden transition-colors duration-300 group-hover:bg-[#0385FF]">
+              <div className="border-2 border-[#0385FF] h-[183px] rounded-[10px] mt-2 flex items-center justify-center relative overflow-hidden transition-colors duration-300 group-hover:bg-[#0385FF]">
                 <div className="flex flex-col items-center justify-center transition-opacity duration-300 group-hover:opacity-0 absolute">
                   <p className="text-[90px] font-bold text-[#2D0F7F]">10</p>
                   <p className="text-[20px] text-[#0059AB] font-medium -mt-6">Current Committed Interns</p>
@@ -180,7 +180,7 @@ function CompanyDashboard() {
               </div>
             </div>
 
-            <Calendar className="w-[500px] h-[575px] border-2 border-[#B9B9B9] rounded-[5px]" />
+            <Calendar className="w-[500px] h-[520px] border-2 border-[#B9B9B9] rounded-[10px]" />
           </div>
         </div>
       </div>
@@ -192,16 +192,16 @@ function CompanyDashboard() {
   const TrackingCard = ({ title, count, color, buttonLabel, onClick }) => (
     <div className="bg-white p-6 rounded-[10px] shadow text-center border-2 border-[#B9B9B9]">
       <div>
-        <p className="text-[30px] font-semibold mb-4 text-[#3F3F46]">{title}</p>
-        <h1 className="flex justify-center font-bold text-[90px]" style={{ color }}>
-          {count !== null ? count : <Skeleton width="60px" />}
+        <p className="text-[25px] font-semibold text-[#3F3F46]">{title}</p>
+        <h1 className="flex justify-center font-bold text-[80px]" style={{ color }}>
+          {count !== null ? count : <Skeleton width="70px" height="110px"/>}
         </h1>
         <p className={`text-[20px]`} style={{ color }}>
           {title.includes("Attendance") ? "Pending Attendance" : "Unread Journal Submissions"}
         </p>
       </div>
       <button
-        className="bg-[#0385FF] text-white mt-4 py-4 px-6 text-[20px] rounded-[10px] transition"
+        className="bg-[#0385FF] text-white mt-4 py-2 px-6 text-[20px] rounded-[10px] transition"
         onClick={() => onClick(buttonLabel)}
       >
         {buttonLabel}

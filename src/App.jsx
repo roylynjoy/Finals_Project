@@ -25,6 +25,7 @@ const SQA = lazy(() => import('./Pages/Student/SQA'));
 const CompanyDashboard = lazy(() => import('./Pages/Coordinator/CompanyDashboard'));
 const CompanyAttendance = lazy(() => import('./Pages/Coordinator/CompanyAttendance'));
 const CompanyJournal = lazy(() => import('./Pages/Coordinator/CompanyJournal'));
+const CompanyViewJournal = lazy(() => import('./Pages/Coordinator/CompanyViewJournal'));
 
 // Admin
 const AdminDashboard = lazy(() => import('./Pages/Admin/AdminDashboard'));
@@ -111,6 +112,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={["Coordinator"]}>
                   <CompanyJournal />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/CompanyViewJournal/:id"
+              element={
+                <ProtectedRoute allowedRoles={["Coordinator"]}>
+                  <CompanyViewJournal />
                 </ProtectedRoute>
               }
             />
