@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -11,21 +11,36 @@ export default function CreateAccount() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Step 1 fields
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("Student");
   const [supervisorNumber, setSupervisorNumber] = useState("");
 
-  // Step 2 fields
-  const [company, setCompany] = useState("Company A"); // ✅ valid default
-  const [arrangement, setArrangement] = useState("On-site"); // ✅ valid default
+  const [company, setCompany] = useState("");
+  const [arrangement, setArrangement] = useState("On-site");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [companies, setCompanies] = useState([]);
 
   const navigate = useNavigate();
   const baseURL = import.meta.env.VITE_API_BASE_URL;
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const res = await fetch(`${baseURL}/companies`);
+        const data = await res.json();
+        setCompanies(data);
+        if (data.length > 0) {
+          setCompany(data[0].name); // Default to first company
+        }
+      } catch (err) {
+        console.error("Error fetching companies:", err);
+      }
+    };
+    fetchCompanies();
+  }, [baseURL]);
 
   const handleContinue = () => setStep(2);
   const handleBack = () => setStep(1);
@@ -42,11 +57,9 @@ export default function CreateAccount() {
     }
 
     try {
-      // Create Firebase user
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Send user info to backend
       const res = await fetch(`${baseURL}/users/register`, {
         method: "POST",
         headers: {
@@ -58,7 +71,7 @@ export default function CreateAccount() {
           lastName,
           email,
           role,
-          supervisorNumber,
+          supervisorNumber: role === "Coordinator" ? supervisorNumber : "",
           company,
           arrangement,
         }),
@@ -67,8 +80,7 @@ export default function CreateAccount() {
       const data = await res.json();
 
       if (!res.ok) {
-        // ❌ Clean up Firebase user if backend fails
-        await user.delete();
+        await user.delete(); // Cleanup on failure
         throw new Error(data.message || "Failed to register user in backend.");
       }
 
@@ -83,7 +95,7 @@ export default function CreateAccount() {
 
   return (
     <div className="flex h-screen font-poppins">
-      {/* Left Side */}
+      {/* Left */}
       <div className="w-1/2 flex flex-col justify-center items-center bg-white p-12 relative">
         <div className="absolute top-6 left-6 flex items-center space-x-4">
           <FaArrowLeft
@@ -95,7 +107,6 @@ export default function CreateAccount() {
           <img src="/pictures/logo.png" alt="Logo" className="w-14 h-14" />
         </div>
 
-        {/* Step 1 */}
         {step === 1 && (
           <div className="w-full max-w-md space-y-4">
             <h1 className="text-[50px] font-bold text-center mb-0">Create Account</h1>
@@ -105,6 +116,7 @@ export default function CreateAccount() {
               <input type="text" placeholder="Last Name" value={lastName} onChange={e => setLastName(e.target.value)} className="border border-[#D3CECE] text-[#5F5454] text-[20px] rounded p-3 w-1/2" />
             </div>
             <input type="email" placeholder="LV Email" value={email} onChange={e => setEmail(e.target.value)} className="border border-[#D3CECE] text-[#5F5454] text-[20px] rounded p-3 w-full" />
+
             <div className="relative">
               <select value={role} onChange={e => setRole(e.target.value)} className="appearance-none border bg-[rgba(217,217,217,0.5)] text-[#5F5454] border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
                 <option>Student</option>
@@ -112,24 +124,38 @@ export default function CreateAccount() {
               </select>
               <FaChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#B3B3B3] pointer-events-none" />
             </div>
-            <input type="text" placeholder="Supervisor Number" value={supervisorNumber} onChange={e => setSupervisorNumber(e.target.value)} className="border border-[#D3CECE] mb-10 text-[#5F5454] text-[20px] rounded p-3 w-full" />
+
+            {role === "Coordinator" && (
+              <input
+                type="text"
+                placeholder="Admin Code"
+                value={supervisorNumber}
+                onChange={e => setSupervisorNumber(e.target.value)}
+                className="border border-[#D3CECE] mb-10 text-[#5F5454] text-[20px] rounded p-3 w-full"
+              />
+            )}
+
             <button onClick={handleContinue} className="w-full bg-[#240F8C] text-white py-3 rounded text-[18px] font-bold">Continue</button>
-            <p className="text-center text-[18px]">Already have an Account? <span className="text-[#005CFA] cursor-pointer font-medium" onClick={login}>Log In</span></p>
+            <p className="text-center text-[18px]">
+              Already have an Account? <span className="text-[#005CFA] cursor-pointer font-medium" onClick={login}>Log In</span>
+            </p>
           </div>
         )}
 
-        {/* Step 2 */}
         {step === 2 && (
           <div className="w-full max-w-md space-y-4">
             <h1 className="text-[50px] font-bold text-center mb-0">Create Account</h1>
             <p className="text-[20px] text-center font-poppins">Step 2 of 2</p>
+
             <div className="relative mt-20">
               <select value={company} onChange={e => setCompany(e.target.value)} className="appearance-none border text-[#5F5454] bg-white border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
-                <option>Company A</option>
-                <option>Company B</option>
+                {companies.map((comp) => (
+                  <option key={comp._id} value={comp.name}>{comp.name}</option>
+                ))}
               </select>
               <FaChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#B3B3B3] pointer-events-none" />
             </div>
+
             <div className="relative">
               <select value={arrangement} onChange={e => setArrangement(e.target.value)} className="appearance-none border text-[#5F5454] bg-white border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
                 <option>On-site</option>
@@ -185,7 +211,7 @@ export default function CreateAccount() {
         )}
       </div>
 
-      {/* Right Side */}
+      {/* Right */}
       <div className="w-1/2">
         <img src="/pictures/SIGNUP.png" alt="School Gate" className="w-full h-full object-cover" />
       </div>

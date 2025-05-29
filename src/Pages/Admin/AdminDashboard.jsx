@@ -14,30 +14,24 @@ function AdminDashboard() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(true);
-  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
-  const coordinatorGroups = {
-    'ABC': ['Roylyn Didican', 'Rizalyne Asaldo'],
-    'DEF': ['Shaina Karilyn Pagarigan', 'Lorenz Genesis Reyes'],
-    'GHI': ['Christian Eliseo Isip', 'Kristel Magpaayo'],
-  };
+  const [companies, setCompanies] = useState([]);
+  const [coordinators, setCoordinators] = useState([]);
+
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user?.email) {
         try {
-          const res = await fetch(`${baseURL}/user?email=${user.email}`);
-          const data = await res.json();
-          if (data && data.firstName && data.lastName) {
-            setFirstName(data.firstName);
-            setLastName(data.lastName); 
-          } else {
-            console.warn("User data not found or incomplete:", data);
+          const userRes = await fetch(`${baseURL}/user?email=${user.email}`);
+          const userData = await userRes.json();
+          if (userData?.firstName && userData?.lastName) {
+            setFirstName(userData.firstName);
+            setLastName(userData.lastName);
           }
-        } catch (error) {
-          console.error("Failed to fetch user info:", error);
-        } finally {
-          setLoading(false);
+        } catch (err) {
+          console.error("Failed to fetch admin info:", err);
         }
       }
     });
@@ -45,99 +39,141 @@ function AdminDashboard() {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const fetchDashboardStats = async () => {
+      try {
+        const [companiesRes, usersRes] = await Promise.all([
+          fetch(`${baseURL}/companies`),
+          fetch(`${baseURL}/users`)
+        ]);
+
+        const companiesData = await companiesRes.json();
+        const usersData = await usersRes.json();
+
+        setCompanies(companiesData);
+        setCoordinators(usersData.filter(user => user.role === 'Coordinator'));
+      } catch (err) {
+        console.error("Failed to fetch dashboard stats:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardStats();
+  }, []);
+
+  const groupedCoordinators = coordinators.reduce((acc, coordinator) => {
+    const company = coordinator.company || "Unassigned";
+    if (!acc[company]) acc[company] = [];
+    acc[company].push(`${coordinator.firstName} ${coordinator.lastName}`);
+    return acc;
+  }, {});
+
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen">
       <AdminSidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
 
       <div
-        className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
+        className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
         } bg-white`}
       >
-        {/* Header */}
-        <AdminHeader isExpanded={isSidebarExpanded} firstName={firstName}/>
+        <AdminHeader isExpanded={isSidebarExpanded} firstName={firstName} />
 
-        {/* Welcome Section */}
-        <div className="px-8 pt-8 mt-[100px]">
-          <div className="bg-[#F9FAFD] p-5 rounded-[10px] shadow flex items-center justify-between border-2 border-[#B9B9B9]">
-            <div className="flex items-center gap-4 h-[118px]">
-              <div className="flex items-center justify-center"><LuUser size={65} /></div>
-              <div>
-                <div className="text-[33px] font-semibold">
-                  {loading ? <Skeleton width="200px" height="36px" /> : `Hello, ${firstName || "Admin"}!`}
+        {/* Main content that grows */}
+        <div className="flex-1 flex flex-col">
+          {/* Welcome Box */}
+          <div className="mt-25 px-5">
+            <div className="bg-[#F9FAFD] p-5 rounded-[10px] shadow flex items-center justify-between border-2 border-[#B9B9B9]">
+              <div className="flex items-center gap-4 h-[118px]">
+                <div className="flex items-center justify-center"><LuUser size={65} /></div>
+                <div>
+                  <div className="text-[33px] font-semibold">
+                    {loading ? <Skeleton width="200px" height="36px" /> : `Hello, ${firstName || "Admin"}!`}
+                  </div>
+                  <p className="text-[20px]">Admin</p>
                 </div>
-                <p className="text-[20px]">Admin</p>
+              </div>
+              <div className="w-[20px] h-[20px] rounded-full bg-[#3BC651]" />
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="p-5 grid grid-cols-3 gap-6">
+            {/* Summary */}
+            <div className="space-y-6">
+              <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9] text-center bg-[#F9FAFD]">
+                <p className="text-[25px] font-semibold text-gray-700">Total Number of Companies</p>
+                <div className="flex justify-center items-center h-[200px] text-[140px] font-bold text-[#0059AB] mt-4 bg-white rounded-[8px] border border-[#C2C2C2]">
+                  {loading ? <Skeleton width="120px" height="150px" /> : companies.length}
+                </div>
+
+              </div>
+
+              <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9] text-center bg-[#F9FAFD]">
+                <p className="text-[25px] font-semibold text-gray-700">Total Number of Company Coordinators</p>
+                <div className="flex justify-center items-center h-[200px] text-[140px] font-bold text-[#0059AB] mt-4 bg-white rounded-[8px] border border-[#C2C2C2]">
+                  {loading ? <Skeleton width="120px" height="150px" /> : coordinators.length}
+                </div>
+
               </div>
             </div>
-            <div className="w-[20px] h-[20px] rounded-full bg-[#3BC651]" />
-          </div>
-        </div>
 
-        {/* Main Content */}
-        <div className="p-8 grid grid-cols-3 gap-6">
-          {/* Left Column - Summary Stats */}
-          <div className="space-y-6">
-            <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9] text-center bg-[#F9FAFD]">
-              <p className="text-[25px] font-semibold text-gray-700">Total Number of Companies</p>
-              <div className="text-[140px] font-bold text-[#0059AB] mt-4 bg-white rounded-[8px] border border-[#C2C2C2]">9</div>
-            </div>
-            <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9] text-center bg-[#F9FAFD]">
-              <p className="text-[25px] font-semibold text-gray-700">Total Number of Company Coordinators</p>
-              <div className="text-[140px] font-bold text-[#0059AB] mt-4 bg-white rounded-[8px] border border-[#C2C2C2]">6</div>
-            </div>
-          </div>
-
-          {/* Middle Column - Company List */}
-          <div className="bg-[#F9FAFD] p-4 rounded-[10px] shadow border-2 border-[#B9B9B9] h-full">
-            <p className="bg-[#243D73] text-white text-[25px] font-semibold p-4 rounded mb-4">Company List</p>
-            <ul className="space-y-2 text-[30px] text-gray-700 pl-4">
-              {['ABC', 'DEF', 'GHI', 'JKL', 'MNO', 'PQR', 'STU', 'VWX', 'YZ'].map((name, idx) => (
-                <li key={idx}>{idx + 1}. {name} Company</li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Right Column - Company Coordinator Info */}
-          <div className="bg-[#F9FAFD] rounded-[10px] shadow border-2 border-[#B9B9B9]">
-            <div
-              className="flex justify-between bg-[#F4F4F4] items-center cursor-pointer border-b"
-              onClick={() => setShowCoordinators(!showCoordinators)}
-            >
-              <p className="text-[25px] font-semibold text-[#3F3F46] p-6">
-                {selectedCoordinatorGroup ? `${selectedCoordinatorGroup} Company Coordinator` : 'Company Coordinator'}
-              </p>
-              {showCoordinators ? <LuChevronUp size={30} className="mr-6" /> : <LuChevronDown size={30} className="mr-6" />}
-            </div>
-
-            {showCoordinators && (
-              <ul className="text-[24px] text-[#525252]">
-                {Object.keys(coordinatorGroups).map((group, idx) => (
-                  <li
-                    key={idx}
-                    className="border-b-2 px-3 py-4 rounded bg-[#F4F4F4] cursor-pointer"
-                    onClick={() => {
-                      setSelectedCoordinatorGroup(group);
-                      setShowCoordinators(false);
-                    }}
-                  >
-                    {group} Company Coordinator
-                  </li>
-                ))}
+            {/* Company List */}
+            <div className="bg-[#F9FAFD] p-4 rounded-[10px] shadow border-2 border-[#B9B9B9]">
+              <p className="bg-[#243D73] text-white text-[25px] font-semibold p-4 rounded mb-4">Company List</p>
+              <ul className="space-y-2 text-[25px] text-gray-700">
+                {loading
+                  ? <Skeleton width="90%" height="300px" />
+                  : companies.map((c, idx) => (
+                    <li className="mx-4 pb-2 border-b-2 border-gray-300" key={c._id}>{idx + 1}. {c.name}</li>
+                  ))}
               </ul>
-            )}
+            </div>
 
-            {selectedCoordinatorGroup && (
-              <div className="p-4 pl-8 text-[22px] space-y-2 bg-white border-t border-gray-300">
-                {coordinatorGroups[selectedCoordinatorGroup].map((name, idx) => (
-                  <p key={idx}>{idx + 1}. {name}</p>
-                ))}
+            {/* Company Coordinator */}
+            <div className="bg-[#F9FAFD] rounded-[10px] shadow border-2 border-[#B9B9B9]">
+              <div
+                className="flex rounded-tr-lg rounded-tl-lg justify-between bg-[#F4F4F4] items-center cursor-pointer border-b"
+                onClick={() => setShowCoordinators(!showCoordinators)}
+              >
+                <p className="text-[25px] font-semibold text-[#3F3F46] p-6">
+                  {selectedCoordinatorGroup ? `${selectedCoordinatorGroup} Company Coordinator` : 'Company Coordinator'}
+                </p>
+                {showCoordinators ? <LuChevronUp size={30} className="mr-6" /> : <LuChevronDown size={30} className="mr-6" />}
               </div>
-            )}
+
+              {showCoordinators && (
+                <ul className="text-[24px] text-[#525252]">
+                  {Object.keys(groupedCoordinators).map((group, idx) => (
+                    <li
+                      key={idx}
+                      className="border-b-2 px-3 py-4 rounded bg-[#F4F4F4] cursor-pointer"
+                      onClick={() => {
+                        setSelectedCoordinatorGroup(group);
+                        setShowCoordinators(false);
+                      }}
+                    >
+                      {group} Company Coordinator
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {selectedCoordinatorGroup && (
+                <div className="p-4 pl-8 text-[22px] space-y-2 bg-white border-t border-gray-300">
+                  {groupedCoordinators[selectedCoordinatorGroup].map((name, idx) => (
+                    <p key={idx}>{idx + 1}. {name}</p>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      <Footer />
+        {/* Footer - stays at bottom */}
+        <Footer />
+      </div>
     </div>
   );
 }

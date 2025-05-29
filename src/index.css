@@ -44,12 +44,13 @@ body {
 
 @keyframes loadingSkeleton {
   0% {
-    background-position: 200% 0;
+    background-position: 100% 0;
   }
   100% {
-    background-position: -200% 0;
+    background-position: -100% 0;
   }
 }
+
 
 @keyframes bounce {
   0%, 100% {
