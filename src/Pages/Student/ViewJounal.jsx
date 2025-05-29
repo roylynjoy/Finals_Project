@@ -1,62 +1,20 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { auth } from '../../firebase/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React from 'react';
 import Header from '../PageComponents/header';
 import Sidebar from '../PageComponents/sidebar';
 import Footer from '../PageComponents/footer';
 import Skeleton from '../../components/Skeleton';
+import useJournalData from '../../services/student/useJournalData';
 
 function ViewJournal() {
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [journalContent, setJournalContent] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const journalContentRef = useRef(null);
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const baseURL = import.meta.env.VITE_API_BASE_URL;
-
-  // Fetch user info first
-  useEffect(() => {
-    const fetchUserAndJournal = async () => {
-      const user = auth.currentUser;
-      if (!user?.email) return;
-
-      try {
-        // 1. Get user details
-        const userRes = await fetch(`${baseURL}/user?email=${user.email}`);
-        const userData = await userRes.json();
-
-        if (!userData.firstName || !userData.lastName) {
-          throw new Error("Incomplete user data");
-        }
-
-        setFirstName(userData.firstName);
-        setLastName(userData.lastName);
-
-        // 2. Get journal for this user
-        const response = await axios.get(
-          `${baseURL}/journal/today?firstName=${encodeURIComponent(userData.firstName)}&lastName=${encodeURIComponent(userData.lastName)}`
-        );
-
-        if (response.status === 200 && response.data?.content) {
-          setJournalContent(response.data.content);
-        } else {
-          navigate('/Journal'); // No journal for today
-        }
-      } catch (error) {
-        console.error("Error fetching journal:", error);
-        navigate('/Journal');
-      } finally {
-        setTimeout(() => setLoading(false), 500); // Simulate consistent loading
-      }
-    };
-
-    const unsubscribe = onAuthStateChanged(auth, fetchUserAndJournal);
-    return () => unsubscribe();
-  }, [navigate, baseURL]);
+  const {
+    isSidebarExpanded,
+    setIsSidebarExpanded,
+    journalContent,
+    firstName,
+    lastName,
+    journalContentRef,
+    loading,
+  } = useJournalData();
 
   const isDataLoaded = !loading && firstName && lastName && journalContent;
 

@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { auth } from "../../firebase/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../PageComponents/sidebar";
 import Header from "../PageComponents/header";
@@ -10,16 +8,15 @@ import Calendar from "../PageComponents/Calendar";
 import Skeleton from "../../components/Skeleton";
 import useAttendanceSummaryStats from "../../components/AttendanceSummaryStats";
 import RecentlyAccessedRole from "../../components/RecentlyAccessedRole";
-
+import userInfo from "../../services/userInfo";
 
 function StudentDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [company, setCompany] = useState("");
-  const [loading, setLoading] = useState(true); // ✅ loading state
-  const [lastName, setLastName] = useState(""); // new line
-  const summary = useAttendanceSummaryStats(firstName, lastName);
   const baseURL = import.meta.env.VITE_API_BASE_URL;
+
+  const { firstName, lastName, company, loading } = userInfo(baseURL);
+  const summary = useAttendanceSummaryStats(firstName, lastName);
+
   const today = new Date();
   const currentYear = today.getFullYear();
   const currentMonth = today.getMonth();
@@ -31,30 +28,6 @@ function StudentDashboard() {
   const daysArray = [];
   for (let i = 0; i < firstDay; i++) daysArray.push(null);
   for (let i = 1; i <= daysInMonth; i++) daysArray.push(i);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user?.email) {
-        try {
-          const res = await fetch(`${baseURL}/user?email=${user.email}`);
-          const data = await res.json();
-          if (data && data.firstName && data.lastName && data.company) {
-            setFirstName(data.firstName);
-            setLastName(data.lastName); // 👈 add this
-            setCompany(data.company);
-          } else {
-            console.warn("User data not found or incomplete:", data);
-          }
-        } catch (error) {
-          console.error("Failed to fetch user info:", error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
 
  return (
     <div className="flex flex-col min-h-screen relative">

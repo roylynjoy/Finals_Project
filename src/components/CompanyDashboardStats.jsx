@@ -9,11 +9,16 @@ function CompanyDashboardStats({ onDataReady }) {
   // Helper to normalize dates like "5/21/2025" into "2025-05-21"
   const normalizeToISODate = (dateStr) => {
     if (!dateStr) return "";
+    // Handle ISO dates like "2025-05-30"
+    if (dateStr.includes("-")) return dateStr;
+
+    // Handle MM/DD/YYYY
     const [month, day, year] = dateStr.split("/");
     if (!month || !day || !year) return "";
     const isoDate = new Date(`${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`);
-    return isoDate.toISOString().split("T")[0];
+    return isoDate.toLocaleDateString("en-CA"); // "YYYY-MM-DD"
   };
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,7 +42,7 @@ function CompanyDashboardStats({ onDataReady }) {
           usersRes.json(),
         ]);
 
-        const today = new Date().toISOString().split("T")[0]; // ISO: "2025-05-21"
+        const today = new Date().toLocaleDateString("en-CA"); 
 
         const interns = Array.isArray(users)
           ? users.filter((u) => u.role === "student" && u.company === company)
@@ -61,26 +66,19 @@ function CompanyDashboardStats({ onDataReady }) {
           return hours > 8 || (hours === 8 && minutes >= 15);
         }).length;
 
-        const presentNames = todaysAttendances.map(
-          (a) => `${a.firstName} ${a.lastName}`
-        );
-
-        const absentInterns = interns.filter(
-          (i) => !presentNames.includes(`${i.firstName} ${i.lastName}`)
-        ).length;
+        const presentEmails = todaysAttendances.map((a) => a.email);
 
         const pendingAttendance = attendances.filter(
           (a) => a.company === company && !a.approved && !a.denied
         ).length;
 
         const unreadJournals = journals.filter(
-          (j) => j.company === company && j.removed !== true
+          (j) => j.company === company && j.removed !== true && j.viewed !== true
         ).length;
 
         onDataReady({
           presentInterns,
           lateInterns,
-          absentInterns,
           pendingAttendance,
           unreadJournals,
         });

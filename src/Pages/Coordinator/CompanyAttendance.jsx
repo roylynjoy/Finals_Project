@@ -1,91 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import CompanySidebar from '../PageComponents/CompanySidebar';
 import CompanyHeader from '../PageComponents/CompanyHeader';
-
 import Footer from '../PageComponents/footer';
-import { auth } from '../../firebase/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-import axios from 'axios';
+
+import useCompanyAttendance from '../../services/coordinator/useCompanyAttendance';
 
 function CompanyAttendance() {
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [allAttendances, setAllAttendances] = useState([]);
-  const [filteredAttendances, setFilteredAttendances] = useState([]);
-  const [userEmail, setUserEmail] = useState('');
-  const baseURL = import.meta.env.VITE_API_BASE_URL;
-  const [selectedDate, setSelectedDate] = useState(() => {
-    const today = new Date();
-    return today.toISOString().split('T')[0]; // YYYY-MM-DD
-  });
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalAction, setModalAction] = useState('');
-  const [modalRecordId, setModalRecordId] = useState(null);
-
-  const fetchUserAndAttendance = async (email) => {
-    try {
-      const userRes = await axios.get(`${baseURL}/users?email=${email}`);
-      const { company } = userRes.data;
-
-      const attendanceRes = await axios.get(`${baseURL}/attendance/company?email=${email}`);
-      const all = attendanceRes.data || [];
-
-      setAllAttendances(all);
-      filterByDate(all, selectedDate);
-    } catch (err) {
-      console.error('Error fetching company attendance:', err);
-    }
-  };
-
-  const filterByDate = (data, dateStr) => {
-    const formatted = new Date(dateStr).toLocaleDateString();
-    const filtered = data.filter(record => record.date === formatted);
-    setFilteredAttendances(filtered);
-  };
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user?.email) {
-        setUserEmail(user.email);
-        fetchUserAndAttendance(user.email);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (selectedDate && allAttendances.length > 0) {
-      filterByDate(allAttendances, selectedDate);
-    }
-  }, [selectedDate]);
-
-  const confirmAction = (id, action) => {
-    setModalRecordId(id);
-    setModalAction(action);
-    setModalVisible(true);
-  };
-
-  const handleModalConfirm = async () => {
-    try {
-      await axios.put(`${baseURL}/attendance/${modalAction}/${modalRecordId}`);
-      setAllAttendances(prev => prev.filter(record => record._id !== modalRecordId));
-      setFilteredAttendances(prev => prev.filter(record => record._id !== modalRecordId));
-    } catch (err) {
-      console.error(`Failed to ${modalAction} record:`, err);
-    } finally {
-      setModalVisible(false);
-      setModalRecordId(null);
-      setModalAction('');
-    }
-  };
-
-  const handleModalCancel = () => {
-    setModalVisible(false);
-    setModalRecordId(null);
-    setModalAction('');
-  };
+  const {
+    isSidebarExpanded,
+    setIsSidebarExpanded,
+    selectedRow,
+    setSelectedRow,
+    filteredAttendances,
+    selectedDate,
+    setSelectedDate,
+    modalVisible,
+    modalAction,
+    confirmAction,
+    handleModalConfirm,
+    handleModalCancel,
+  } = useCompanyAttendance();
 
   return (
     <div className="flex flex-col">

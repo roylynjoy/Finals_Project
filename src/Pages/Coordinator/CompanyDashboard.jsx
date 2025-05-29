@@ -1,78 +1,69 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "../../firebase/firebase";
-import { onAuthStateChanged } from "firebase/auth";
 import CompanySidebar from "../PageComponents/CompanySidebar";
 import CompanyHeader from "../PageComponents/CompanyHeader";
 import Footer from "../PageComponents/footer";
 import Calendar from "../PageComponents/Calendar";
 import { LuUser } from "react-icons/lu";
+import { FaArrowLeft } from "react-icons/fa";
+import { MdArrowBackIos } from "react-icons/md";
+import { MdArrowForwardIos } from "react-icons/md";
 import CompanyDashboardStats from "../../components/CompanyDashboardStats";
 import Skeleton from "../../components/Skeleton";
 import { useNavigate } from "react-router-dom";
+import userInfo from "../../services/userInfo";
 
 function CompanyDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [company, setCompany] = useState("");
-  const [loading, setLoading] = useState(true);
-
   const [present, setPresent] = useState(null);
   const [late, setLate] = useState(null);
   const [absent, setAbsent] = useState(null);
   const [pendingAttendance, setPendingAttendance] = useState(null);
   const [unreadJournals, setUnreadJournals] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [interns, setInterns] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const internsPerPage = 5;
 
   const navigate = useNavigate();
   const baseURL = import.meta.env.VITE_API_BASE_URL;
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user?.email) {
-        try {
-          const res = await fetch(`${baseURL}/user?email=${user.email}`);
-          const data = await res.json();
-          if (data && data.firstName && data.lastName && data.company) {
-            setFirstName(data.firstName);
-            setLastName(data.lastName);
-            setCompany(data.company);
-          } else {
-            console.warn("User data not found or incomplete:", data);
-          }
-        } catch (error) {
-          console.error("Failed to fetch user info:", error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
+  const { firstName, lastName, company, loading } = userInfo(baseURL);
 
   const handleCardNavigation = (buttonLabel) => {
-    if (buttonLabel === "Go to Attendance Tracking") {
-      navigate("/CompanyAttendance");
-    } else if (buttonLabel === "Go to Journal Submissions") {
-      navigate("/CompanyJournal");
-    }
+    if (buttonLabel === "Go to Attendance Tracking") navigate("/CompanyAttendance");
+    else if (buttonLabel === "Go to Journal Submissions") navigate("/CompanyJournal");
   };
+
+  useEffect(() => {
+    if (showModal || company) {
+      fetch(`${baseURL}/users`)
+        .then(res => res.json())
+        .then(data => {
+          const filtered = data.filter(user => user.role === "Student" && user.company === company);
+          setInterns(filtered);
+          console.log("Fetched interns:", filtered);
+        })
+        .catch(err => console.error("Error fetching interns:", err));
+    }
+  }, [showModal, company]);
+
+  const totalPages = Math.ceil(interns.length / internsPerPage);
+  const paginatedInterns = interns.slice(
+    (currentPage - 1) * internsPerPage,
+    currentPage * internsPerPage
+  );
+
+  const absentInterns = present !== null ? interns.length - present : null;
 
   return (
     <div className="flex flex-col min-h-screen">
       <CompanySidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
-      <div
-        className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
-          isSidebarExpanded ? "ml-[400px]" : "ml-[106px]"
-        } bg-white`}
-      >
+      <div className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${isSidebarExpanded ? "ml-[400px]" : "ml-[106px]"} bg-white`}>
         <CompanyHeader isExpanded={isSidebarExpanded} firstName={firstName} />
 
         <CompanyDashboardStats
-          onDataReady={({ presentInterns, lateInterns, absentInterns, pendingAttendance, unreadJournals }) => {
+          onDataReady={({ presentInterns, lateInterns, pendingAttendance, unreadJournals }) => {
             setPresent(presentInterns);
             setLate(lateInterns);
-            setAbsent(absentInterns);
             setPendingAttendance(pendingAttendance);
             setUnreadJournals(unreadJournals);
           }}
@@ -83,9 +74,7 @@ function CompanyDashboard() {
             {/* Company Info */}
             <div className="bg-white p-5 rounded-[10px] shadow flex items-center justify-between border-2 border-[#B9B9B9]">
               <div className="flex items-center gap-4 h-[118px]">
-                <div className="flex items-center justify-center">
-                  <LuUser size={65} />
-                </div>
+                <LuUser size={65} />
                 <div>
                   <div className="text-[33px] font-semibold">
                     {loading ? <Skeleton width="200px" height="36px" /> : `Hello, ${firstName || "Intern"}!`}
@@ -102,80 +91,38 @@ function CompanyDashboard() {
             <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9]">
               <div className="text-[25px] font-semibold text-[#3F3F46] mb-4">Daily Attendance Summary</div>
               <div className="grid grid-cols-3 gap-4">
-                {/* Present */}
-                <div className="bg-[#F9FAFD] p-4 rounded-[10px] border-3 border-[#6BD37C]">
-                  <div className="flex justify-between items-center mt-7">
-                    <div>
-                      <div className="text-[40px] font-bold text-[#6BD37C]">
-                        {present !== null ? present : <Skeleton width="40px" />}
-                      </div>
-                      <p className="text-[20px] text-[#6BD37C]">Interns</p>
-                    </div>
-                    <img src="/pictures/Green.png" alt="Present Icon" className="w-[85px] mr-5" />
-                  </div>
-                  <p className="text-start text-[25px] font-semibold mt-5 text-[#6BD37C]">Present</p>
-                </div>
-
-                {/* Late */}
-                <div className="bg-[#F9FAFD] p-4 rounded-[10px] border-3 border-[#F38A40]">
-                  <div className="flex justify-between items-center mt-7">
-                    <div>
-                      <div className="text-[40px] font-bold text-[#F38A40]">
-                        {late !== null ? late : <Skeleton width="40px" />}
-                      </div>
-                      <p className="text-[20px] text-[#F38A40]">Interns</p>
-                    </div>
-                    <img src="/pictures/Orange.png" alt="Late Icon" className="w-[85px] mr-5" />
-                  </div>
-                  <p className="text-start text-[25px] font-semibold mt-5 text-[#F38A40]">Late</p>
-                </div>
-
-                {/* Absent */}
-                <div className="bg-[#F9FAFD] p-4 rounded-[10px] border-3 border-[#9B3F62]">
-                  <div className="flex justify-between items-center mt-7">
-                    <div>
-                      <div className="text-[40px] font-bold text-[#9B3F62]">
-                        {absent !== null ? absent : <Skeleton width="40px" />}
-                      </div>
-                      <p className="text-[20px] text-[#9B3F62]">Interns</p>
-                    </div>
-                    <img src="/pictures/Pink.png" alt="Absent Icon" className="w-[85px] mr-5" />
-                  </div>
-                  <p className="text-start text-[25px] font-semibold mt-5 text-[#9B3F62]">Absent</p>
-                </div>
+                <SummaryCard label="Present" interns={present} color="green" icon="/pictures/Green.png" />
+                <SummaryCard label="Late" interns={late} color="yellow" icon="/pictures/Orange.png" />
+                <SummaryCard label="Absent" interns={absentInterns} color="red" icon="/pictures/Pink.png" />
               </div>
             </div>
 
             {/* Tracking & Journal */}
             <div className="grid grid-cols-2 gap-6">
-              <TrackingCard
-                title="Attendance Tracking"
-                count={pendingAttendance}
-                color="#FF4400"
-                buttonLabel="Go to Attendance Tracking"
-                onClick={handleCardNavigation}
-              />
-              <TrackingCard
-                title="Journal Submission"
-                count={unreadJournals}
-                color="#FF4400"
-                buttonLabel="Go to Journal Submissions"
-                onClick={handleCardNavigation}
-              />
+              <TrackingCard title="Attendance Tracking" count={pendingAttendance} color="#FF4400" buttonLabel="Go to Attendance Tracking" onClick={handleCardNavigation} />
+              <TrackingCard title="Journal Submission" count={unreadJournals} color="#FF4400" buttonLabel="Go to Journal Submissions" onClick={handleCardNavigation} />
             </div>
           </div>
 
-          {/* Calendar and Interns Overview */}
+          {/* Right Panel */}
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-[10px] shadow text-center h-[287px] border-2 border-[#B9B9B9] group">
               <p className="text-[30px] text-start font-semibold text-[#3F3F46]">Interns Overview</p>
-              <div className="border-2 border-[#0385FF] h-[183px] rounded-[10px] mt-2 flex items-center justify-center relative overflow-hidden transition-colors duration-300 group-hover:bg-[#0385FF]">
-                <div className="flex flex-col items-center justify-center transition-opacity duration-300 group-hover:opacity-0 absolute">
-                  <p className="text-[90px] font-bold text-[#2D0F7F]">10</p>
-                  <p className="text-[20px] text-[#0059AB] font-medium -mt-6">Current Committed Interns</p>
+              <div
+                className="border-2 border-[#0385FF] h-[183px] rounded-[10px] mt-2 flex items-center justify-center relative overflow-hidden cursor-pointer group hover:bg-white transition-colors duration-300"
+                onClick={() => {
+                  setShowModal(true);
+                  setCurrentPage(1);
+                }}
+              >
+                <div className="flex flex-col items-center justify-center transition-opacity duration-300 group-hover:opacity-0 absolute cursor-pointer">
+                  <div className="text-[90px] font-bold text-[#2D0F7F]">
+                    {loading ? <Skeleton width="150px" height="90px" className="mt-10" /> : `${interns.length}`}
+                  </div>
+                  <p className="text-[20px] text-[#0059AB] font-medium mb-5">Current Committed Interns</p>
                 </div>
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 absolute">
-                  <button className="text-white underline text-[20px] font-medium">Interns List</button>
+                  <button className="text-[#0059AB] text-[20px] font-medium cursor-pointer">View Interns List</button>
                 </div>
               </div>
             </div>
@@ -183,31 +130,101 @@ function CompanyDashboard() {
             <Calendar className="w-[500px] h-[520px] border-2 border-[#B9B9B9] rounded-[10px]" />
           </div>
         </div>
+
+        {/* Modal */}
+        {showModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+            <div className="bg-white w-[600px] p-6 rounded-xl relative">
+              <button onClick={() => setShowModal(false)} className="text-black text-xl mb-4">
+                <FaArrowLeft />
+              </button>
+              <div className="bg-[#2D0F7F] text-white text-[40px] font-semibold text-center py-3 rounded-[10px] mb-4">
+                {company} Interns
+              </div>
+              <ul className="text-[25px]">
+                {paginatedInterns.map((user, index) => (
+                  <li key={user._id} className="flex items-center gap-4">
+                    <div className="w-[55px] h-[55px] bg-[#2D0F7F] text-white font-bold flex items-center justify-center rounded">
+                      {`${user.firstName[0] ?? ""}${user.lastName[0] ?? ""}`.toUpperCase()}
+                    </div>
+                    <div className="flex-1 pl-[25%] border-b-2 border-t-2 border-black/15 py-5">
+                      <span className="font-semibold">
+                        {user.firstName} {user.lastName}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Pagination */}
+            {interns.length >= internsPerPage && (
+              <div className="mt-6 flex justify-center space-x-4 text-[25px]">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => p - 1)}
+                  className="text-[#2D0F7F] disabled:opacity-30"
+                >
+                  <MdArrowBackIos />
+                </button>
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                  className="text-[#2D0F7F] disabled:opacity-30"
+                >
+                  <MdArrowForwardIos />
+                </button>
+              </div>
+            )}
+
+            </div>
+          </div>
+        )}
       </div>
       <Footer />
     </div>
   );
 }
 
-  const TrackingCard = ({ title, count, color, buttonLabel, onClick }) => (
-    <div className="bg-white p-6 rounded-[10px] shadow text-center border-2 border-[#B9B9B9]">
-      <div>
-        <p className="text-[25px] font-semibold text-[#3F3F46]">{title}</p>
-        <h1 className="flex justify-center font-bold text-[80px]" style={{ color }}>
-          {count !== null ? count : <Skeleton width="70px" height="110px"/>}
-        </h1>
-        <p className={`text-[20px]`} style={{ color }}>
-          {title.includes("Attendance") ? "Pending Attendance" : "Unread Journal Submissions"}
-        </p>
+const SummaryCard = ({ label, interns, color, icon }) => {
+  const colorMap = {
+    green: "text-green-700",
+    yellow: "text-yellow-700",
+    red: "text-red-700",
+  };
+
+  return (
+    <div className="bg-[#F9FAFD] p-4 rounded border-2 border-[#B9B9B9]">
+      <div className="flex justify-between items-center mt-7">
+        <div>
+          <div className="text-[40px] font-bold text-[#3F3F46]">
+            {interns !== null ? interns : <Skeleton width="40px" />}
+          </div>
+          <p className="text-[20px] text-[#3F3F46]">Interns</p>
+        </div>
+        <img src={icon} alt={`${label} Icon`} className="w-[85px] mr-5" />
       </div>
-      <button
-        className="bg-[#0385FF] text-white mt-4 py-2 px-6 text-[20px] rounded-[10px] transition"
-        onClick={() => onClick(buttonLabel)}
-      >
-        {buttonLabel}
-      </button>
+      <p className={`text-start text-[25px] font-semibold mt-5 ${colorMap[color]}`}>
+        {label}
+      </p>
     </div>
   );
+};
 
+const TrackingCard = ({ title, count, color, buttonLabel, onClick }) => (
+  <div className="bg-white p-6 rounded-[10px] shadow text-center border-2 border-[#B9B9B9]">
+    <div>
+      <p className="text-[25px] font-semibold text-[#3F3F46]">{title}</p>
+      <h1 className="flex justify-center font-bold text-[80px]" style={{ color }}>
+        {count !== null ? count : <Skeleton width="70px" height="110px" />}
+      </h1>
+      <p className={`text-[20px]`} style={{ color }}>
+        {title.includes("Attendance") ? "Pending Attendance" : "Unread Journal Submissions"}
+      </p>
+    </div>
+    <button className="bg-[#0385FF] text-white mt-4 py-2 px-6 text-[20px] rounded-[10px]" onClick={() => onClick(buttonLabel)}>
+      {buttonLabel}
+    </button>
+  </div>
+);
 
 export default CompanyDashboard;

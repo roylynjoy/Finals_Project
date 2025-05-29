@@ -65,13 +65,15 @@ function CompanyHeader({ isExpanded }) {
     }
   }, []);
 
+  const getInitials = (firstName, lastName) => {
+    const getFirstInitial = (str) => {
+      const firstWord = str?.trim().split(" ")[0] || "";
+      return firstWord.charAt(0).toUpperCase();
+    };
 
-  const getInitials = (name) =>
-    name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
+    return `${getFirstInitial(firstName)}${getFirstInitial(lastName)}`;
+  };
+
 
   return (
     <header
@@ -98,7 +100,7 @@ function CompanyHeader({ isExpanded }) {
           loading ? (
             <Skeleton width="24px" height="24px" />
           ) : (
-            getInitials(`${firstName} ${lastName}`)
+            getInitials(firstName, lastName)
           )
         }
       />

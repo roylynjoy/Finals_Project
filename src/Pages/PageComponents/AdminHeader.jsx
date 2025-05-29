@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import UserProfileModal from "../PageComponents/UserProfileModal";
+import UserProfileModal from "./UserProfileModal";
 import Skeleton from "../../components/Skeleton";
 
 

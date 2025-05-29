@@ -2,7 +2,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import LoadingOverlay from './components/loadingOverlay'; // ✅ Spinner used while lazy loading
-import LoadingPage from './components/LoadingPage';
+import LoadingPage from './Pages/LoadingPage';
 
 // Public
 const Homepage = lazy(() => import('./Pages/homepage'));
@@ -34,6 +34,8 @@ const CompanyList = lazy(() => import('./Pages/Admin/CompanyList'));
 
 // Route Protection
 import ProtectedRoute from './components/ProtectedRoute';
+
+//For Recently Accessed Role
 import TrackRoleVisit from "./components/TrackRoleVisit";
 
 function App() {

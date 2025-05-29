@@ -1,18 +1,6 @@
-
-import React, { useState, useEffect } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import TextAlign from "@tiptap/extension-text-align";
-import TextStyle from "@tiptap/extension-text-style";
-import { Extension } from "@tiptap/core";
-import axios from "axios";
-import { auth } from "../../firebase/firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import Header from "../PageComponents/header";
-import Footer from "../PageComponents/footer";
-import Sidebar from "../PageComponents/sidebar";
+import React from "react";
+import useJournalEditor from "../../services/student/useJournalEditor";
+import { EditorContent } from "@tiptap/react";
 import {
   Bold,
   Italic,
@@ -25,93 +13,21 @@ import {
   Undo,
   Redo,
 } from "lucide-react";
-
-
-
-const FontSize = Extension.create({
-  name: "fontSize",
-  addOptions() {
-    return {
-      types: ["textStyle"],
-    };
-  },
-  addGlobalAttributes() {
-    return [
-      {
-        types: ["textStyle"],
-        attributes: {
-          fontSize: {
-            default: null,
-            renderHTML: attributes => {
-              if (!attributes.fontSize) return {};
-              return {
-                style: `font-size: ${attributes.fontSize}px`,
-              };
-            },
-            parseHTML: element => ({
-              fontSize: element.style.fontSize?.replace("px", ""),
-            }),
-          },
-        },
-      },
-    ];
-  },
-});
+import Header from "../PageComponents/header";
+import Footer from "../PageComponents/footer";
+import Sidebar from "../PageComponents/sidebar";
 
 function Journal() {
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
-  const [fontSize, setFontSize] = useState(14);
-  const navigate = useNavigate();
-  const baseURL = import.meta.env.VITE_API_BASE_URL;
-
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      TextStyle,
-      FontSize,
-      TextAlign.configure({
-        types: ["heading", "paragraph"],
-      }),
-    ],
-    content: "",
-    editorProps: {
-      attributes: {
-        class: "min-h-[50vh] p-4 bg-white rounded-b-md outline-none text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-indigo-200",
-        placeholder: "Type here...",
-      },
-    },
-  });
-  
-  const handleFormat = (command, value = null) => {
-    document.execCommand(command, false, value);
-  };
-
-  const handleSubmit = async () => {
-    const user = auth.currentUser;
-    if (!user || !user.email) {
-      alert("You must be logged in to submit a journal.");
-      return;
-    }
-
-    const content = editor?.getHTML();
-    if (isChecked && content?.trim()) {
-      try {
-        const response = await axios.post(`${baseURL}/journal`, {
-          content: content,
-          email: user.email,
-        });
-        console.log(response.data);
-        navigate("/ViewJournal");
-      } catch (err) {
-        console.error(err);
-        alert("Failed to submit journal.");
-      }
-    } else {
-      alert("Please agree to the terms and write something.");
-    }
-  };
+  const {
+    editor,
+    fontSize,
+    setFontSize,
+    isChecked,
+    setIsChecked,
+    isSidebarExpanded,
+    setIsSidebarExpanded,
+    handleSubmit,
+  } = useJournalEditor();
 
   return (
     <div>

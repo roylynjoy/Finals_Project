@@ -13,6 +13,11 @@ function Homepage() {
   const [activeSection, setActiveSection] = useState("home");
   const [scrolled, setScrolled] = useState(false);
   const [selected, setSelected] = useState("lvcc");
+  const [fadeIn, setFadeIn] = useState(false);
+
+  useEffect(() => {
+    setFadeIn(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,7 +76,11 @@ function Homepage() {
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-white">
+      <div
+        className={`relative w-full min-h-screen bg-white transition-opacity duration-1000 ease-in ${
+          fadeIn ? "opacity-100" : "opacity-0"
+        }`}
+      >
       <header
         className={`w-full top-0 z-50 p-5 fixed transition-colors duration-300 ${
           scrolled ? "bg-white shadow-md" : "bg-transparent"

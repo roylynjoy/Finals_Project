@@ -1,51 +1,23 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React from 'react';
 import CompanySidebar from '../PageComponents/CompanySidebar';
 import CompanyHeader from '../PageComponents/CompanyHeader';
 import Footer from '../PageComponents/footer';
 import Skeleton from '../../components/Skeleton';
 import { IoArrowBackOutline } from "react-icons/io5";
+import useCompanyViewJournal from '../../services/coordinator/useCompanyViewJournal';
 
 function CompanyViewJournal() {
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [journalContent, setJournalContent] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [createdAt, setCreatedAt] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const journalContentRef = useRef(null);
-  const { id } = useParams();
-  const baseURL = import.meta.env.VITE_API_BASE_URL;
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchJournalById = async () => {
-      try {
-        const res = await axios.get(`${baseURL}/journal/${id}`);
-        if (res.status === 200) {
-          const journal = res.data;
-          setFirstName(journal.firstName);
-          setLastName(journal.lastName);
-          setJournalContent(journal.content);
-          setCreatedAt(journal.createdAt);
-        } else {
-          navigate('/CompanyJournal'); // fallback
-        }
-      } catch (error) {
-        console.error('Error fetching journal by ID:', error);
-        navigate('/CompanyJournal');
-      } finally {
-        setTimeout(() => setLoading(false), 400);
-      }
-    };
-
-    fetchJournalById();
-  }, [id, baseURL, navigate]);
-
-  const handleBackClick = () => {
-    navigate('/CompanyJournal');
-  }
+  const {
+    isSidebarExpanded,
+    setIsSidebarExpanded,
+    journalContent,
+    firstName,
+    lastName,
+    createdAt,
+    loading,
+    journalContentRef,
+    handleBackClick,
+  } = useCompanyViewJournal();
 
   return (
     <div className="flex min-h-screen">

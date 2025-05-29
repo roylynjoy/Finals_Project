@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 
 function LoadingPage() {
   const [progress, setProgress] = useState(0);
+  const [fadeOut, setFadeOut] = useState(false); // for triggering fade-out
   const navigate = useNavigate();
 
+  // Simulate loading progress
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress(prev => {
@@ -14,27 +16,40 @@ function LoadingPage() {
         }
         return prev + 10;
       });
-    }, 400); 
+    }, 400);
   }, []);
 
-  //Navigate to homepage after loading
+  // When loading reaches 100%, start fade-out
   useEffect(() => {
     if (progress === 100) {
       setTimeout(() => {
-        navigate('/homepage');
-      }, 500); // Delay before navigating to homepage
+        setFadeOut(true); // trigger fade-out animation
+      }, 500);
     }
-  }, [progress, navigate]);
+  }, [progress]);
+
+  // After fade-out animation ends, navigate to homepage
+  useEffect(() => {
+    if (fadeOut) {
+      const timeout = setTimeout(() => {
+        navigate('/homepage');
+      }, 800); // wait for fade-out to complete before navigating
+      return () => clearTimeout(timeout);
+    }
+  }, [fadeOut, navigate]);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div
+      className={`relative h-screen w-full overflow-hidden transition-opacity duration-700 ${
+        fadeOut ? 'opacity-0' : 'opacity-100'
+      }`}
+    >
       <img
         src="pictures/LVBG.jpg"
         alt="Background"
         className="absolute w-full h-full object-cover opacity-40 brightness-75"
       />
 
-      {/* Overlay and content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <img
           src="pictures/logo.png"

@@ -1,80 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { auth } from '../../firebase/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-import axios from 'axios';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaRegTrashAlt } from 'react-icons/fa';
+import { BiEnvelope, BiEnvelopeOpen } from 'react-icons/bi';
 import CompanySidebar from '../PageComponents/CompanySidebar';
 import CompanyHeader from '../PageComponents/CompanyHeader';
 import Footer from '../PageComponents/footer';
-import { FaRegTrashAlt } from 'react-icons/fa';
-import { BiEnvelope, BiEnvelopeOpen } from 'react-icons/bi';
-import { useNavigate } from 'react-router-dom';
-
-function getTodayDateString() {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const day = String(today.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
+import { useCompanyJournal } from '../../services/coordinator/useCompanyJournal';
 
 function CompanyJournal() {
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [allJournals, setAllJournals] = useState([]);
-  const [filteredJournals, setFilteredJournals] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(getTodayDateString());
-  const [loading, setLoading] = useState(false);
+  const {
+    isSidebarExpanded,
+    setIsSidebarExpanded,
+    filteredJournals,
+    selectedDate,
+    setSelectedDate,
+    loading,
+    toggleViewed,
+    handleRemove,
+  } = useCompanyJournal();
 
-  const baseURL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
-
-  const fetchJournals = async (email) => {
-    try {
-      setLoading(true);
-      const res = await axios.get(`${baseURL}/journal/company?email=${email}`);
-      const data = Array.isArray(res.data) ? res.data : [];
-      const filtered = data.filter(journal => journal.removed !== true);
-      setAllJournals(filtered);
-    } catch (err) {
-      console.error('Failed to load journal entries:', err);
-      setAllJournals([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user?.email) {
-        await fetchJournals(user.email);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (!selectedDate) {
-      setFilteredJournals([]);
-      return;
-    }
-
-    const formatted = new Date(selectedDate).toLocaleDateString();
-    const filtered = allJournals.filter(journal =>
-      new Date(journal.createdAt).toLocaleDateString() === formatted
-    );
-    setFilteredJournals(filtered);
-  }, [selectedDate, allJournals]);
-
-  const toggleViewed = async (id, currentViewed) => {
-    try {
-      await axios.patch(`${baseURL}/journal/${id}/viewed`, { viewed: !currentViewed });
-      setAllJournals(prev =>
-        prev.map(j => j._id === id ? { ...j, viewed: !currentViewed } : j)
-      );
-    } catch (err) {
-      console.error('Failed to toggle viewed:', err);
-    }
-  };
 
   const handleView = async (entry) => {
     if (!entry.viewed) {
@@ -83,21 +28,12 @@ function CompanyJournal() {
     navigate(`/CompanyViewJournal/${entry._id}`);
   };
 
-  const handleRemove = async (id) => {
-    try {
-      await axios.patch(`${baseURL}/journal/${id}/remove`, { removed: true });
-      setAllJournals(prev => prev.filter(j => j._id !== id));
-    } catch (err) {
-      console.error('Failed to remove journal:', err);
-    }
-  };
-
   return (
     <div className="flex flex-col min-h-screen">
       <CompanySidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
       <div className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'} bg-white min-h-screen`}>
         <CompanyHeader isExpanded={isSidebarExpanded} />
-        <div className="py-12 px-30 mt-[100px]">
+        <div className="mt-20 py-12 px-30">
           <div className="mb-6">
             <input
               type="date"

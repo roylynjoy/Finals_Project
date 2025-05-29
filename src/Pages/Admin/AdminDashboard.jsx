@@ -1,88 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { auth } from '../../firebase/firebase';
-import { onAuthStateChanged } from "firebase/auth";
-import AdminSidebar from './AdminSidebar';
-import AdminHeader from './AdminHeader';
+import React, { useState } from 'react';
+import AdminSidebar from '../PageComponents/AdminSidebar';
+import AdminHeader from '../PageComponents/AdminHeader';
 import { LuUser, LuChevronDown, LuChevronUp } from "react-icons/lu";
 import Footer from '../PageComponents/footer';
 import Skeleton from '../../components/Skeleton';
+import useAdminInfo from '../../services/admin/useAdminInfo';
+import useDashboardStats from '../../services/admin/useDashboardStats';
+import groupCoordinatorsByCompany from '../../services/admin/groupCoordinatorsByCompany';
 
 function AdminDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [showCoordinators, setShowCoordinators] = useState(false);
   const [selectedCoordinatorGroup, setSelectedCoordinatorGroup] = useState(null);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  const [companies, setCompanies] = useState([]);
-  const [coordinators, setCoordinators] = useState([]);
 
   const baseURL = import.meta.env.VITE_API_BASE_URL;
+  const { firstName, lastName } = useAdminInfo(baseURL);
+  const { companies, coordinators, loading } = useDashboardStats(baseURL);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user?.email) {
-        try {
-          const userRes = await fetch(`${baseURL}/user?email=${user.email}`);
-          const userData = await userRes.json();
-          if (userData?.firstName && userData?.lastName) {
-            setFirstName(userData.firstName);
-            setLastName(userData.lastName);
-          }
-        } catch (err) {
-          console.error("Failed to fetch admin info:", err);
-        }
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    const fetchDashboardStats = async () => {
-      try {
-        const [companiesRes, usersRes] = await Promise.all([
-          fetch(`${baseURL}/companies`),
-          fetch(`${baseURL}/users`)
-        ]);
-
-        const companiesData = await companiesRes.json();
-        const usersData = await usersRes.json();
-
-        setCompanies(companiesData);
-        setCoordinators(usersData.filter(user => user.role === 'Coordinator'));
-      } catch (err) {
-        console.error("Failed to fetch dashboard stats:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDashboardStats();
-  }, []);
-
-  const groupedCoordinators = coordinators.reduce((acc, coordinator) => {
-    const company = coordinator.company || "Unassigned";
-    if (!acc[company]) acc[company] = [];
-    acc[company].push(`${coordinator.firstName} ${coordinator.lastName}`);
-    return acc;
-  }, {});
+  const groupedCoordinators = groupCoordinatorsByCompany(coordinators);
 
   return (
     <div className="flex min-h-screen">
       <AdminSidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
-
       <div
         className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
         } bg-white`}
       >
         <AdminHeader isExpanded={isSidebarExpanded} firstName={firstName} />
-
-        {/* Main content that grows */}
         <div className="flex-1 flex flex-col">
-          {/* Welcome Box */}
           <div className="mt-25 px-5">
             <div className="bg-[#F9FAFD] p-5 rounded-[10px] shadow flex items-center justify-between border-2 border-[#B9B9B9]">
               <div className="flex items-center gap-4 h-[118px]">
@@ -98,16 +44,13 @@ function AdminDashboard() {
             </div>
           </div>
 
-          {/* Stats */}
           <div className="p-5 grid grid-cols-3 gap-6">
-            {/* Summary */}
             <div className="space-y-6">
               <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9] text-center bg-[#F9FAFD]">
                 <p className="text-[25px] font-semibold text-gray-700">Total Number of Companies</p>
                 <div className="flex justify-center items-center h-[200px] text-[140px] font-bold text-[#0059AB] mt-4 bg-white rounded-[8px] border border-[#C2C2C2]">
                   {loading ? <Skeleton width="120px" height="150px" /> : companies.length}
                 </div>
-
               </div>
 
               <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9] text-center bg-[#F9FAFD]">
@@ -115,11 +58,9 @@ function AdminDashboard() {
                 <div className="flex justify-center items-center h-[200px] text-[140px] font-bold text-[#0059AB] mt-4 bg-white rounded-[8px] border border-[#C2C2C2]">
                   {loading ? <Skeleton width="120px" height="150px" /> : coordinators.length}
                 </div>
-
               </div>
             </div>
 
-            {/* Company List */}
             <div className="bg-[#F9FAFD] p-4 rounded-[10px] shadow border-2 border-[#B9B9B9]">
               <p className="bg-[#243D73] text-white text-[25px] font-semibold p-4 rounded mb-4">Company List</p>
               <ul className="space-y-2 text-[25px] text-gray-700">
@@ -131,7 +72,6 @@ function AdminDashboard() {
               </ul>
             </div>
 
-            {/* Company Coordinator */}
             <div className="bg-[#F9FAFD] rounded-[10px] shadow border-2 border-[#B9B9B9]">
               <div
                 className="flex rounded-tr-lg rounded-tl-lg justify-between bg-[#F4F4F4] items-center cursor-pointer border-b"
@@ -171,7 +111,6 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* Footer - stays at bottom */}
         <Footer />
       </div>
     </div>

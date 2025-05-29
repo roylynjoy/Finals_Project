@@ -2,14 +2,8 @@ import React, { useState } from "react";
 import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
-import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
-  sendPasswordResetEmail,
-} from "firebase/auth";
-import { auth, googleProvider } from "../firebase/firebase";
 import ForgotPassword from "../Pages/PageComponents/ForgotPassword";
+import { loginWithEmail, loginWithGoogle, resetPassword } from "../services/authService";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,33 +12,14 @@ export default function LoginPage() {
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const navigate = useNavigate();
-  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   const handleLogin = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      if (!user || !user.email) throw new Error("Invalid user");
-
-      const res = await fetch(`${baseURL}/users/checkUserExists`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: user.email }),
-      });
-
-      const data = await res.json();
-
-      if (data.exists && data.user) {
-        const role = data.user.role;
-        if (role === "Student") navigate("/StudentDashboard");
-        else if (role === "Coordinator") navigate("/CompanyDashboard");
-        else if (role === "Admin") navigate("/AdminDashboard");
-        else alert("Unknown role.");
-      } else {
-        await signOut(auth);
-        alert("This email is not registered in our system.");
-      }
+      const role = await loginWithEmail(email, password);
+      if (role === "Student") navigate("/StudentDashboard");
+      else if (role === "Coordinator") navigate("/CompanyDashboard");
+      else if (role === "Admin") navigate("/AdminDashboard");
+      else alert("Unknown role.");
     } catch (error) {
       alert(error.message);
     }
@@ -52,30 +27,11 @@ export default function LoginPage() {
 
   const handleGoogleSignIn = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-
-      if (!user || !user.email) throw new Error("Invalid Google user");
-
-      const res = await fetch(`${baseURL}/users/checkUserExists`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: user.email }),
-      });
-
-      const data = await res.json();
-
-      if (data.exists && data.user) {
-        const role = data.user.role;
-        if (role === "Student") navigate("/StudentDashboard");
-        else if (role === "Coordinator") navigate("/CompanyDashboard");
-        else if (role === "Admin") navigate("/AdminDashboard");
-        else alert("Unknown role.");
-      } else {
-        await user.delete();
-        await signOut(auth);
-        alert("This email is not registered in our system.");
-      }
+      const role = await loginWithGoogle();
+      if (role === "Student") navigate("/StudentDashboard");
+      else if (role === "Coordinator") navigate("/CompanyDashboard");
+      else if (role === "Admin") navigate("/AdminDashboard");
+      else alert("Unknown role.");
     } catch (error) {
       console.error("Google Sign-in error:", error);
       alert(error.message);
@@ -84,7 +40,7 @@ export default function LoginPage() {
 
   const handlePasswordReset = async () => {
     try {
-      await sendPasswordResetEmail(auth, resetEmail);
+      await resetPassword(resetEmail);
       alert("Password reset email sent!");
       setIsForgotModalOpen(false);
       setResetEmail("");
@@ -100,7 +56,7 @@ export default function LoginPage() {
         <div className="absolute top-6 left-6">
           <FaArrowLeft
             className="text-2xl cursor-pointer"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/homepage')}
           />
         </div>
         <div className="absolute top-6 right-6">

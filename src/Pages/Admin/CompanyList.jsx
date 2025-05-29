@@ -1,82 +1,37 @@
-import React, { useState, useEffect } from "react";
-import AdminSidebar from "./AdminSidebar";
-import AdminHeader from "./AdminHeader";
+import React, { useState } from "react";
+import AdminSidebar from "../PageComponents/AdminSidebar";
+import AdminHeader from "../PageComponents/AdminHeader";
 import { FiTrash2 } from "react-icons/fi";
 import { LuPenLine } from "react-icons/lu";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import axios from "axios";
+
+import { useCompanyService } from "../../services/admin/companyService";
 
 function CompanyList() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [companyName, setCompanyName] = useState("");
-  const [companies, setCompanies] = useState([]);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState(null);
-  const [editedName, setEditedName] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
 
-  const pageSize = 5;
-  const baseURL = import.meta.env.VITE_API_BASE_URL;
-  const totalPages = Math.ceil(companies.length / pageSize);
-
-  useEffect(() => {
-    fetchCompanies();
-  }, []);
-
-  const fetchCompanies = async () => {
-    try {
-      const res = await axios.get(`${baseURL}/companies`);
-      setCompanies(res.data);
-    } catch (err) {
-      console.error("Failed to load companies:", err);
-    }
-  };
-
-  const handleAddCompany = async () => {
-    if (companyName.trim()) {
-      try {
-        const res = await axios.post(`${baseURL}/companies`, {
-          name: companyName.trim(),
-        });
-        setCompanies([...companies, res.data]);
-        setCompanyName("");
-      } catch (err) {
-        console.error("Failed to add company:", err);
-      }
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`${baseURL}/companies/${selectedCompany._id}`);
-      setCompanies(companies.filter((c) => c._id !== selectedCompany._id));
-      setDeleteModalOpen(false);
-    } catch (err) {
-      console.error("Failed to delete company:", err);
-    }
-  };
-
-  const handleEdit = async () => {
-    try {
-      const res = await axios.patch(`${baseURL}/companies/${selectedCompany._id}`, {
-        name: editedName,
-      });
-      setCompanies(
-        companies.map((c) =>
-          c._id === selectedCompany._id ? { ...c, name: res.data.name } : c
-        )
-      );
-      setEditModalOpen(false);
-    } catch (err) {
-      console.error("Failed to update company:", err);
-    }
-  };
-
-  const paginatedCompanies = companies.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
+  // Use the service hook to manage company-related state and functions
+  const {
+    companyName,
+    setCompanyName,
+    companies,
+    editModalOpen,
+    setEditModalOpen,
+    deleteModalOpen,
+    setDeleteModalOpen,
+    selectedCompany,
+    setSelectedCompany,
+    editedName,
+    setEditedName,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    pageSize,
+    paginatedCompanies,
+    handleAddCompany,
+    handleDelete,
+    handleEdit,
+  } = useCompanyService();
 
   return (
     <div className="flex flex-col min-h-screen">
