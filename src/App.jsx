@@ -2,6 +2,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import LoadingOverlay from './components/loadingOverlay'; // ✅ Spinner used while lazy loading
+import LoadingPage from './components/LoadingPage';
 
 // Public
 const Homepage = lazy(() => import('./Pages/homepage'));
@@ -42,7 +43,8 @@ function App() {
         <Suspense fallback={<LoadingOverlay />}>
           <Routes>
             {/* Public Routes */}
-            <Route path="/" element={<Homepage />} />
+            <Route path="/" element={<LoadingPage />} />
+            <Route path="/homepage" element={<Homepage />} />
             <Route path="/slider" element={<Slider />} />
             <Route path="/SignUp" element={<SignUp />} />
             <Route path="/SignIn" element={<SignIn />} />

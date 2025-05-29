@@ -90,7 +90,7 @@ function Homepage() {
             </span>
           </div>
 
-          <div className="flex space-x-12 text-[23px]">
+          <div className="flex space-x-20 text-[23px]">
             <a href="#home" className="relative text-blue-900 font-bold">
               Home
               {activeSection === "home" && (
@@ -113,13 +113,13 @@ function Homepage() {
 
           <div className="flex space-x-3 text-[22.5px] font-bold">
             <button
-              className="px-7 py-2 bg-[#A4B2BE] text-[#1F3463] rounded-[10px] hover:bg-gray-400 transition"
+              className="px-7 py-2 bg-white/10 text-[#1F3463] border-2 border-[#1F3463] rounded-[10px] cursor-pointer"
               onClick={signUp}
             >
               Sign Up
             </button>
             <button
-              className="px-9 py-2 bg-[#1E3A8A] text-white rounded-[10px] hover:bg-purple-700 transition"
+              className="px-9 py-2 bg-[#1E3A8A] text-white rounded-[10px] cursor-pointer hover:bg-[#1F3463] transition"
               onClick={signIn}
             >
               Log In
@@ -142,7 +142,7 @@ function Homepage() {
               System Field Practicum Attendance Tracking System.
             </p>
             <button
-              className="mt-6 px-15 py-3 bg-[#1E3A8A] text-white font-semibold text-[24px] rounded-lg"
+              className="mt-6 px-15 py-3 bg-[#1E3A8A] text-white font-semibold text-[24px] rounded-lg cursor-pointer hover:bg-[#1F3463] transition"
               onClick={Explore}
             >
               Explore
