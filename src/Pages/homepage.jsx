@@ -113,7 +113,7 @@ function Homepage() {
 
           <div className="flex space-x-3 text-[22.5px] font-bold">
             <button
-              className="px-7 py-2 bg-[#A4B2BE] text-[#1F3463] rounded-[10px] hover:bg-gray-400 transition"
+              className="px-7 py-2 bg-white text-[#1F3463] border border-[#1F3463] rounded-[10px]"
               onClick={signUp}
             >
               Sign Up
