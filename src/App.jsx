@@ -2,6 +2,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import LoadingOverlay from './components/loadingOverlay'; // ✅ Spinner used while lazy loading
+import LoadingPage from './Pages/LoadingPage';
 
 // Public
 const Homepage = lazy(() => import('./Pages/homepage'));
@@ -139,6 +140,11 @@ function App() {
                   Unauthorized Access
                 </div>
               }
+            />
+            {/* Loading Page */}
+            <Route
+              path="/loading"
+              element={<LoadingPage />}
             />
           </Routes>
         </Suspense>
