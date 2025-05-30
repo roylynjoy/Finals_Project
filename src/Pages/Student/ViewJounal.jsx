@@ -26,7 +26,7 @@ function ViewJournal() {
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
         } bg-white`}
       >
-        <Header />
+        <Header isExpanded={isSidebarExpanded}/>
 
         <div className="flex flex-col flex-1 px-10 py-6 bg-[#F5F6FA]">
           <div className="bg-[#F9FAFD] mt-20 ml-10 mr-10 border border-[#B9B9B9] rounded-md shadow-lg px-10 h-[75vh] flex flex-col">

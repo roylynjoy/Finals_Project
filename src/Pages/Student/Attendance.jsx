@@ -31,7 +31,7 @@ function AttendanceSubmission() {
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
         } bg-[#FAFAFF]`}
       >
-        <Header />
+        <Header isExpanded={isSidebarExpanded}/>
 
         <div className='flex-1 flex items-center justify-center p-10 bg-[#F5F6FA]'>
           <div className='flex gap-12 justify-center items-start'>

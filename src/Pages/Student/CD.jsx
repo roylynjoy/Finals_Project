@@ -55,11 +55,11 @@ function CD() {
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
-        } bg-white min-h-screen`}
+        } bg-[#F5F7FB] min-h-screen`}
       >
-        <Header />
+        <Header isExpanded={isSidebarExpanded}/>
 
-        <div className="mt-[110px] ml-10">
+        <div className="mt-[110px] ml-10 bg-[#F5F7FB]">
           <FaArrowLeft className="text-2xl cursor-pointer" onClick={arrowBack} />
         </div>
 
