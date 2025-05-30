@@ -29,235 +29,170 @@ function StudentDashboard() {
   for (let i = 0; i < firstDay; i++) daysArray.push(null);
   for (let i = 1; i <= daysInMonth; i++) daysArray.push(i);
 
- return (
-    <div className="flex flex-col min-h-screen relative">
+  return (
+    <div className="flex flex-col min-h-screen bg-[#F5F6FA]">
       <Sidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
           isSidebarExpanded ? "ml-[400px]" : "ml-[106px]"
-        } bg-[#ffffff] relative`}
+        }`}
       >
         <Header isExpanded={isSidebarExpanded} firstName={firstName} />
 
-        <div className="px-8 grid grid-cols-3 gap-6 mt-[100px]">
+        <div className="px-8 grid grid-cols-3 gap-6 mt-[100px] mb-10">
           {/* Left Column */}
           <div className="col-span-2 space-y-6">
             {/* Welcome Card */}
-            <div className="bg-white p-5 rounded-[10px] shadow flex items-center justify-between border-2 border-[#B9B9B9]">
-              <div className="flex items-center gap-4 h-[118px]">
-                <div className="flex items-center justify-center">
+            <div className="bg-white p-6 rounded-xl shadow-md flex items-center justify-between border border-[#D1D5DB]">
+              <div className="flex items-center gap-5 h-[118px]">
+                <div className="flex items-center justify-center text-[#1E3A8A]">
                   <LuUser size={65} />
                 </div>
                 <div>
-                  <div className="text-[33px] font-semibold">
+                  <div className="text-[30px] font-semibold text-[#111827]">
                     {loading ? <Skeleton width="200px" height="36px" /> : `Hello, ${firstName || "Intern"}!`}
                   </div>
-                  <div className="text-[20px]">
+                  <div className="text-[18px] mt-1 text-[#4B5563]">
                     {loading ? <Skeleton width="150px" height="24px" /> : `${company || "Intern"} Intern`}
                   </div>
                 </div>
               </div>
-              <div className="w-[20px] h-[20px] rounded-full bg-[#3BC651]" />
             </div>
 
             {/* Attendance Summary */}
-            <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9]">
-              <div className="text-[25px] font-semibold text-[#3F3F46] mb-4">
-                Attendance Summary
-              </div>
+            <div className="bg-white p-6 rounded-xl shadow-md border border-[#D1D5DB]">
+              <h2 className="text-[22px] font-semibold text-[#1F2937] mb-4">Attendance Summary</h2>
               <div className="grid grid-cols-3 gap-4">
                 {/* Present */}
-                <div className="bg-[#F9FAFD] p-4 rounded-[10px] border-3 border-[#6BD37C]">
-                  <div className="flex justify-between items-center mt-7">
+                <div className="bg-[#EDEEF3] p-5 rounded-lg border-l-[6px] border-[#22C55E] shadow-sm">
+                  <div className="flex justify-between items-center mt-6">
                     <div>
-                      <div className="text-[40px] font-bold text-[#6BD37C]">
+                      <div className="text-[36px] font-bold text-[#22C55E]">
                         {loading ? <Skeleton width="60px" height="45px" /> : summary.presentDays}
                       </div>
-                      <p className="text-[20px] text-[#6BD37C]">Days</p>
+                      <p className="text-[18px] text-[#22C55E]">Days</p>
                     </div>
-                    <img src="/pictures/Green.png" alt="Present Icon" className="w-[85px] mr-5" />
+                    <img src="/pictures/Green.png" alt="Present Icon" className="w-[80px]" />
                   </div>
-                  <p className="text-start text-[25px] font-semibold text-[#6BD37C] mt-5">
-                    Total Present Days
-                  </p>
+                  <p className="text-[20px] font-medium text-[#22C55E] mt-4">Total Present Days</p>
                 </div>
 
                 {/* Late */}
-                <div className="bg-[#F9FAFD] p-4 rounded-[10px] border-3 border-[#F38A40]">
-                  <div className="flex justify-between items-center mt-7">
+                <div className="bg-[#EDEEF3] p-5 rounded-lg border-l-[6px] border-[#F97316] shadow-sm">
+                  <div className="flex justify-between items-center mt-6">
                     <div>
-                      <div className="text-[40px] font-bold text-[#F38A40]">
+                      <div className="text-[36px] font-bold text-[#F97316]">
                         {loading ? <Skeleton width="60px" height="45px" /> : summary.lateHours}
                       </div>
-                      <p className="text-[20px] text-[#F38A40]">Hours</p>
+                      <p className="text-[18px] text-[#F97316]">Hours</p>
                     </div>
-                    <img src="/pictures/Orange.png" alt="Late Icon" className="w-[85px] mr-5" />
+                    <img src="/pictures/Orange.png" alt="Late Icon" className="w-[80px]" />
                   </div>
-                  <p className="text-start text-[25px] font-semibold text-[#F38A40] mt-5">
-                    Total Late Time
-                  </p>
+                  <p className="text-[20px] font-medium text-[#F97316] mt-4">Total Late Time</p>
                 </div>
 
                 {/* Absent */}
-                <div className="bg-[#F9FAFD] p-4 rounded-[10px] border-3 border-[#9B3F62]">
-                  <div className="flex justify-between items-center mt-7">
+                <div className="bg-[#EDEEF3] p-5 rounded-lg border-l-[6px] border-[#DB2777] shadow-sm">
+                  <div className="flex justify-between items-center mt-6">
                     <div>
-                      <div className="text-[40px] font-bold text-[#9B3F62]">
+                      <div className="text-[36px] font-bold text-[#DB2777]">
                         {loading ? <Skeleton width="60px" height="45px" /> : summary.absentDays}
                       </div>
-                      <p className="text-[20px] text-[#9B3F62]">Days</p>
+                      <p className="text-[18px] text-[#DB2777]">Days</p>
                     </div>
-                    <img src="/pictures/Pink.png" alt="Absent Icon" className="w-[85px] mr-5" />
+                    <img src="/pictures/Pink.png" alt="Absent Icon" className="w-[80px]" />
                   </div>
-                  <p className="text-start text-[25px] font-semibold text-[#9B3F62] mt-5">
-                    Total Absent Days
-                  </p>
+                  <p className="text-[20px] font-medium text-[#DB2777] mt-4">Total Absent Days</p>
                 </div>
               </div>
             </div>
 
             {/* Time Remaining & Recently Accessed */}
             <div className="grid grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9]">
-              <h1 className="text-[25px] text-center font-semibold mb-4 text-[#3F3F46]">
-                Time Remaining
-              </h1>
-              <div className="flex justify-around">
-                {/* Days */}
-                <div className="flex flex-col items-center ">
-                {loading ? (
-                  // Skeleton Loader
-                  <div className="h-38 w-38 mb-1 animate-pulse rounded-full bg-gray-200" />
-                ) : (
-                  <svg className="h-38 w-38 mb-1" viewBox="0 0 36 36">
-                    {/* Background Circle */}
-                    <path
-                      fill="none"
-                      stroke="#E5E7EB"
-                      strokeWidth="4"
-                      d="M18 2.0845
-                        a 15.9155 15.9155 0 0 1 0 31.831
-                        a 15.9155 15.9155 0 0 1 0 -31.831"
-                    />
-                    
-                    {/* Progress Circle */}
-                    <path
-                      fill="none"
-                      stroke="#1E3A8A"
-                      strokeWidth="4"
-                      strokeDasharray="100, 100"
-                      strokeDashoffset={100 - (summary.remainingDays / 56) * 100}
-                      d="M18 2.0845
-                        a 15.9155 15.9155 0 0 1 0 31.831
-                        a 15.9155 15.9155 0 0 1 0 -31.831"
-                      transform="rotate(0 18 18)"
-                    />
+              {/* Time Remaining */}
+              <div className="bg-white p-6 rounded-xl shadow-md border border-[#D1D5DB]">
+                <h1 className="text-[22px] text-center font-semibold mb-5 text-[#1F2937]">Time Remaining</h1>
+                <div className="flex justify-around">
+                  {/* Days */}
+                  <div className="flex flex-col items-center">
+                    {loading ? (
+                      <div className="h-34 w-34 mb-2 animate-pulse rounded-full bg-gray-200" />
+                    ) : (
+                      <svg className="h-34 w-34 mb-2" viewBox="0 0 36 36">
+                        <path fill="none" stroke="#E5E7EB" strokeWidth="4"
+                          d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                        <path fill="none" stroke="#1F3463" strokeWidth="4"
+                          strokeDasharray="100, 100"
+                          strokeDashoffset={100 - (summary.remainingDays / 56) * 100}
+                          d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                        <text x="18" y="20" textAnchor="middle" fill="#1F3463" fontSize="6" fontWeight="bold">
+                          {summary.remainingDays}/56
+                        </text>
+                      </svg>
+                    )}
+                    <span className="text-[18px] text-[#374151]">Days</span>
+                  </div>
 
-                    {/* Text in the Center */}
-                    <text
-                      x="18"
-                      y="20"
-                      textAnchor="middle"
-                      alignmentBaseline="middle"
-                      fill="#1E3A8A"
-                      fontSize="6"
-                      fontWeight="bold"
-                    >
-                      {summary.remainingDays}/56
-                    </text>
-                  </svg>
-                )}
-
-
-                  <span className="text-[25px]">Days</span>
-                </div>
-
-                {/* Hours */}
-                <div className="flex flex-col items-center">
-                {loading ? (
-                  // Skeleton Loader
-                  <div className="h-38 w-38 mb-1 animate-pulse rounded-full bg-gray-200" />
-                ) : (
-                  <svg className="h-38 w-38 mb-1" viewBox="0 0 36 36">
-                    {/* Background Circle */}
-                    <path
-                      fill="none"
-                      stroke="#E5E7EB" // Tailwind's gray-200
-                      strokeWidth="4"
-                      d="M18 2.0845
-                        a 15.9155 15.9155 0 0 1 0 31.831
-                        a 15.9155 15.9155 0 0 1 0 -31.831"
-                    />
-                    
-                    {/* Progress Circle */}
-                    <path
-                      fill="none"
-                      stroke="#1E3A8A"
-                      strokeWidth="4"
-                      strokeDasharray="100, 100"
-                      strokeDashoffset={100 - (summary.totalHours / 500) * 100}
-                      d="M18 2.0845
-                        a 15.9155 15.9155 0 0 1 0 31.831
-                        a 15.9155 15.9155 0 0 1 0 -31.831"
-                      transform="rotate(0 18 18)" // Start from top
-                    />
-
-                    {/* Text in the Center */}
-                    <text
-                      x="18"
-                      y="20"
-                      textAnchor="middle"
-                      fill="#1E3A8A"
-                      fontSize="6"
-                      fontWeight="bold"
-                    >
-                      {summary.totalHours}/500
-                    </text>
-                  </svg>
-                  )}
-                  <span className="text-[25px]">Hours</span>
+                  {/* Hours */}
+                  <div className="flex flex-col items-center">
+                    {loading ? (
+                      <div className="h-34 w-34 mb-2 animate-pulse rounded-full bg-gray-200" />
+                    ) : (
+                      <svg className="h-34 w-34 mb-2" viewBox="0 0 36 36">
+                        <path fill="none" stroke="#E5E7EB" strokeWidth="4"
+                          d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                        <path fill="none" stroke="#1F3463" strokeWidth="4"
+                          strokeDasharray="100, 100"
+                          strokeDashoffset={100 - (summary.totalHours / 500) * 100}
+                          d="M18 2.0845a 15.9155 15.9155 0 0 1 0 31.831a 15.9155 15.9155 0 0 1 0 -31.831"
+                        />
+                        <text x="18" y="20" textAnchor="middle" fill="#1F3463" fontSize="6" fontWeight="bold">
+                          {summary.totalHours}/500
+                        </text>
+                      </svg>
+                    )}
+                    <span className="text-[18px] text-[#374151]">Hours</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-              {/* Recently Accessed Role */}     
-            <RecentlyAccessedRole loading={loading} />
+              {/* Recently Accessed Role */}
+              <RecentlyAccessedRole loading={loading} />
             </div>
           </div>
 
           {/* Right Column */}
           <div className="space-y-6">
-            <div className="bg-white p-6 rounded-[10px] shadow text-center border-2 border-[#B9B9B9]">
-              <h1 className="text-[25px] font-semibold mb-4 text-[#3F3F46]">Journal Submission</h1>
+            {/* Journal Submission */}
+            <div className="bg-white p-6 rounded-xl shadow-md text-center border border-[#D1D5DB]">
+              <h1 className="text-[22px] font-semibold mb-5 text-[#1F2937]">Journal Submission</h1>
               <div
-                onClick={() => navigate('/ViewJournal')}
-                className="relative flex justify-center border-2 border-[#B9B9B9] rounded-[10px] text-gray-700 bg-[#F1F1F1] h-[160px] p-5 text-[20px] cursor-pointer group hover:border-transparent hover:bg-[#E0E0E0] transition-colors duration-300"
+                onClick={() => navigate("/ViewJournal")}
+                className="relative flex justify-center items-center border border-[#D1D5DB] rounded-lg text-gray-700 bg-[#F3F4F6] h-[160px] p-5 text-[18px] cursor-pointer hover:bg-[#E5E7EB] transition duration-300"
               >
                 {loading ? (
                   <Skeleton width="200px" height="28px" />
                 ) : (
-                  `${firstName} ${lastName} – ${new Date().toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: '2-digit',
-                    year: 'numeric',
+                  `${firstName} ${lastName} – ${new Date().toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "2-digit",
+                    year: "numeric",
                   })}`
                 )}
-
-                {/* Hover overlay */}
-                <div className="absolute border-2 rounded-[10px] border-[#005CFA] inset-0 bg-white bg-opacity-90 opacity-0 group-hover:opacity-100 flex justify-center items-center transition-opacity duration-300">
-                  <span className="text-black/70 text-[22px]">View Submission</span>
-                </div>
               </div>
-
             </div>
 
-            <div>
-              <Calendar className="w-[500px] h-[545px] border-2 border-[#B9B9B9] rounded-[10px]" />
-            </div>
+            {/* Calendar */}
+            {/* <div className="bg-white p-6 rounded-xl shadow-md border border-[#D1D5DB]"> */}
+              <Calendar year={currentYear} month={currentMonth} />
           </div>
         </div>
+
+        <Footer />
       </div>
-      <Footer />
     </div>
   );
 }

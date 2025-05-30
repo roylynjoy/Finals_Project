@@ -107,7 +107,7 @@ export default function LoginPage() {
 
           <button
             onClick={handleLogin}
-            className="w-full bg-[#1E3A8A] text-white py-3 rounded text-[22.5px] font-bold"
+            className="w-full bg-[#1E3A8A] text-white py-3 rounded text-[22.5px] font-bold cursor-pointer hover:bg-[#1F3463] transition duration-300"
           >
             Log In
           </button>
@@ -120,7 +120,7 @@ export default function LoginPage() {
 
           <button
             onClick={handleGoogleSignIn}
-            className="flex items-center justify-center border border-[#D3CECE] py-3 w-full rounded space-x-2"
+            className="flex items-center justify-center border border-[#D3CECE] py-3 w-full rounded space-x-2 cursor-pointer hover:bg-[#F3F4F6] transition duration-300"
           >
             <FcGoogle className="h-[40px] w-[40px]" />
             <span className="text-[22.5px] text-[#5F5454]">

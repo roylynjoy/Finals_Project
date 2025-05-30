@@ -43,9 +43,7 @@ function CompanyJournal() {
             />
           </div>
 
-          {loading ? (
-            <div className="text-center text-lg">Loading journal entries...</div>
-          ) : !selectedDate ? (
+          {!selectedDate ? (
             <p className="text-gray-500 text-xl">Select a date to view daily journal submissions.</p>
           ) : filteredJournals.length === 0 ? (
             <p className="text-center text-gray-500 text-xl mt-50">No journal entries found for this date.</p>
@@ -72,26 +70,26 @@ function CompanyJournal() {
                       title={entry.viewed ? 'Mark as unread' : 'Mark as read'}
                     >
                       {entry.viewed ? (
-                        <BiEnvelopeOpen size={30} className="text-black hover:text-gray-700" />
+                        <BiEnvelopeOpen size={30} className="text-black hover:text-gray-700 cursor-pointer" />
                       ) : (
-                        <BiEnvelope size={30} className="text-[#0060F0] hover:text-blue-700" />
+                        <BiEnvelope size={30} className="text-[#0060F0] hover:text-blue-700 cursor-pointer" />
                       )}
                     </button>
 
                       { entry.viewed ? (<button
                         onClick={() => handleView(entry)}
-                        className="flex items-center gap-2 px-7 py-1 text-black bg-[#D9D9D9] border-1 rounded text-[20px] hover:bg-[#006ad1]"
+                        className="flex items-center gap-2 px-7 py-1 text-black bg-[#D9D9D9] border-1 border-black/10 rounded text-[20px] hover:bg-[#B0B0B0] cursor-pointer"
                       >
                         View
                       </button>) : (
                       <button
                         onClick={() => handleView(entry)}
-                        className="flex items-center gap-2 px-7 py-1 text-white bg-[#0385FF] rounded text-[20px] hover:bg-[#006ad1]">
+                        className="flex items-center gap-2 px-7 py-1 text-white bg-[#0385FF] rounded text-[20px] hover:bg-[#5CAEFF] cursor-pointer">
                         View
                       </button>
                       )}
                       <button
-                        className="text-[#1D1B20] hover:text-red-600"
+                        className="text-[#1D1B20] hover:text-red-600 cursor-pointer"
                         onClick={() => handleRemove(entry._id)}
                       >
                         <FaRegTrashAlt size={28} />

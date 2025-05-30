@@ -19,7 +19,7 @@ function ViewJournal() {
   const isDataLoaded = !loading && firstName && lastName && journalContent;
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-[#F5F6FA]">
       <Sidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
       <div
         className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
@@ -28,7 +28,7 @@ function ViewJournal() {
       >
         <Header />
 
-        <div className="flex flex-col flex-1 px-10 py-6">
+        <div className="flex flex-col flex-1 px-10 py-6 bg-[#F5F6FA]">
           <div className="bg-[#F9FAFD] mt-20 ml-10 mr-10 border border-[#B9B9B9] rounded-md shadow-lg px-10 h-[75vh] flex flex-col">
             <div className="h-[40px] mb-5 mt-10 flex items-center">
               {firstName && lastName ? (

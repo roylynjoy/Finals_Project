@@ -31,6 +31,8 @@ function CompanyList() {
     handleAddCompany,
     handleDelete,
     handleEdit,
+    message,
+    messageType,
   } = useCompanyService();
 
   return (
@@ -54,9 +56,18 @@ function CompanyList() {
               onChange={(e) => setCompanyName(e.target.value)}
               className="border border-[#A0A0A0] rounded w-full h-[61px] px-3 py-2 mb-4"
             />
+            {message && (
+              <div
+                className={`text-[18px] mb-4 font-medium ${
+                  messageType === "success" ? "text-green-600" : "text-red-600"
+                }`}
+              >
+                {message}
+              </div>
+            )}
             <button
               onClick={handleAddCompany}
-              className="bg-[#1E3A8A] text-white px-7 py-2 rounded text-[23px]"
+              className="bg-[#1E3A8A] text-white px-7 py-2 rounded text-[23px] cursor-pointer hover:bg-[#1F3463] transition duration-300"
             >
               Add
             </button>
@@ -70,7 +81,7 @@ function CompanyList() {
                   <th className="p-6">
                     <div className="flex justify-between w-full">
                       <span className="w-[80px] text-center">#</span>
-                      <span className="w-[300px] text-center">Company Name</span>
+                      <span className="w-[350px] text-center">Recently Added Company</span>
                       <span className="w-[160px] text-center"></span>
                     </div>
                   </th>

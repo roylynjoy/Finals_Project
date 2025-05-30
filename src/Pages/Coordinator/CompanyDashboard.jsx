@@ -4,7 +4,7 @@ import CompanyHeader from "../PageComponents/CompanyHeader";
 import Footer from "../PageComponents/footer";
 import Calendar from "../PageComponents/Calendar";
 import { LuUser } from "react-icons/lu";
-import { FaArrowLeft } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 import { MdArrowBackIos } from "react-icons/md";
 import { MdArrowForwardIos } from "react-icons/md";
 import CompanyDashboardStats from "../../components/CompanyDashboardStats";
@@ -76,7 +76,7 @@ function CompanyDashboard() {
               <div className="flex items-center gap-4 h-[118px]">
                 <LuUser size={65} />
                 <div>
-                  <div className="text-[33px] font-semibold">
+                  <div className="text-[33px] font-semibold mt-1">
                     {loading ? <Skeleton width="200px" height="36px" /> : `Hello, ${firstName || "Intern"}!`}
                   </div>
                   <div className="text-[20px]">
@@ -91,9 +91,28 @@ function CompanyDashboard() {
             <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9]">
               <div className="text-[25px] font-semibold text-[#3F3F46] mb-4">Daily Attendance Summary</div>
               <div className="grid grid-cols-3 gap-4">
-                <SummaryCard label="Present" interns={present} color="green" icon="/pictures/Green.png" />
-                <SummaryCard label="Late" interns={late} color="yellow" icon="/pictures/Orange.png" />
-                <SummaryCard label="Absent" interns={absentInterns} color="red" icon="/pictures/Pink.png" />
+                <SummaryCard
+                  label="Present"
+                  interns={present}
+                  color="green"
+                  icon="/pictures/Green.png"
+                  borderColor="border-green-500"
+                />
+                <SummaryCard
+                  label="Late"
+                  interns={late}
+                  color="yellow"
+                  icon="/pictures/Orange.png"
+                  borderColor="border-yellow-400"
+                />
+                <SummaryCard
+                  label="Absent"
+                  interns={absentInterns}
+                  color="red"
+                  icon="/pictures/Pink.png"
+                  borderColor="border-red-400"
+                />
+
               </div>
             </div>
 
@@ -116,7 +135,7 @@ function CompanyDashboard() {
                 }}
               >
                 <div className="flex flex-col items-center justify-center transition-opacity duration-300 group-hover:opacity-0 absolute cursor-pointer">
-                  <div className="text-[90px] font-bold text-[#2D0F7F]">
+                  <div className="text-[90px] font-bold text-[#1F3463]">
                     {loading ? <Skeleton width="150px" height="90px" className="mt-10" /> : `${interns.length}`}
                   </div>
                   <p className="text-[20px] text-[#0059AB] font-medium mb-5">Current Committed Interns</p>
@@ -135,19 +154,19 @@ function CompanyDashboard() {
         {showModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
             <div className="bg-white w-[600px] p-6 rounded-xl relative">
-              <button onClick={() => setShowModal(false)} className="text-black text-xl mb-4">
-                <FaArrowLeft />
+              <button onClick={() => setShowModal(false)} className="text-black text-[25px] mb-4 cursor-pointer">
+                <IoMdClose />
               </button>
-              <div className="bg-[#2D0F7F] text-white text-[40px] font-semibold text-center py-3 rounded-[10px] mb-4">
+              <div className="bg-[#1F3463] text-white text-[40px] font-semibold text-center py-3 rounded-[10px] mb-4">
                 {company} Interns
               </div>
               <ul className="text-[25px]">
                 {paginatedInterns.map((user, index) => (
                   <li key={user._id} className="flex items-center gap-4">
-                    <div className="w-[55px] h-[55px] bg-[#2D0F7F] text-white font-bold flex items-center justify-center rounded">
+                    <div className="w-[55px] h-[55px] bg-[#1F3463] text-white font-bold flex items-center justify-center rounded">
                       {`${user.firstName[0] ?? ""}${user.lastName[0] ?? ""}`.toUpperCase()}
                     </div>
-                    <div className="flex-1 pl-[25%] border-b-2 border-t-2 border-black/15 py-5">
+                    <div className="flex-1 pl-[25%] border-b-1 border-t-1 border-black/15 py-5">
                       <span className="font-semibold">
                         {user.firstName} {user.lastName}
                       </span>
@@ -158,22 +177,22 @@ function CompanyDashboard() {
 
               {/* Pagination */}
             {interns.length >= internsPerPage && (
-              <div className="mt-6 flex justify-center space-x-4 text-[25px]">
-                <button
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((p) => p - 1)}
-                  className="text-[#2D0F7F] disabled:opacity-30"
-                >
-                  <MdArrowBackIos />
-                </button>
-                <button
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((p) => p + 1)}
-                  className="text-[#2D0F7F] disabled:opacity-30"
-                >
-                  <MdArrowForwardIos />
-                </button>
-              </div>
+            <div className="mt-6 flex justify-center space-x-4 text-[25px]">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => p - 1)}
+                className="text-[#1F3463] w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full disabled:opacity-50 cursor-pointer hover:bg-gray-300"
+              >
+                <MdArrowBackIos className="relative left-[5px]" />
+              </button>
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => p + 1)}
+                className="text-[#1F3463] w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full disabled:opacity-50 cursor-pointer hover:bg-gray-300"
+              >
+                <MdArrowForwardIos className="relative left-[2px]" />
+              </button>
+            </div>
             )}
 
             </div>
@@ -185,21 +204,21 @@ function CompanyDashboard() {
   );
 }
 
-const SummaryCard = ({ label, interns, color, icon }) => {
+const SummaryCard = ({ label, interns, color, icon, borderColor }) => {
   const colorMap = {
-    green: "text-green-700",
-    yellow: "text-yellow-700",
-    red: "text-red-700",
+    green: "text-[#6BD37C]",
+    yellow: "text-[#F38A40]",
+    red: "text-[#9B3F62]",
   };
 
   return (
-    <div className="bg-[#F9FAFD] p-4 rounded border-2 border-[#B9B9B9]">
+    <div className={`bg-[#F9FAFD] p-4 rounded-[10px] border-3 ${borderColor}`}>
       <div className="flex justify-between items-center mt-7">
         <div>
           <div className="text-[40px] font-bold text-[#3F3F46]">
             {interns !== null ? interns : <Skeleton width="40px" />}
           </div>
-          <p className="text-[20px] text-[#3F3F46]">Interns</p>
+          <p className={`text-[20px] font-medium ${colorMap[color]}`}>Interns</p>
         </div>
         <img src={icon} alt={`${label} Icon`} className="w-[85px] mr-5" />
       </div>
@@ -209,6 +228,7 @@ const SummaryCard = ({ label, interns, color, icon }) => {
     </div>
   );
 };
+
 
 const TrackingCard = ({ title, count, color, buttonLabel, onClick }) => (
   <div className="bg-white p-6 rounded-[10px] shadow text-center border-2 border-[#B9B9B9]">
@@ -221,7 +241,7 @@ const TrackingCard = ({ title, count, color, buttonLabel, onClick }) => (
         {title.includes("Attendance") ? "Pending Attendance" : "Unread Journal Submissions"}
       </p>
     </div>
-    <button className="bg-[#0385FF] text-white mt-4 py-2 px-6 text-[20px] rounded-[10px]" onClick={() => onClick(buttonLabel)}>
+    <button className="bg-[#0385FF] text-white mt-4 py-2 px-6 text-[20px] rounded-[10px] cursor-pointer hover:bg-[#0999FF]" onClick={() => onClick(buttonLabel)}>
       {buttonLabel}
     </button>
   </div>

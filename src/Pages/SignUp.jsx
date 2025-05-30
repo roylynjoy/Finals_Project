@@ -65,7 +65,7 @@ export default function CreateAccount() {
             <input type="email" placeholder="LV Email" value={email} onChange={e => setEmail(e.target.value)} className="border border-[#D3CECE] text-[#5F5454] text-[20px] rounded p-3 w-full" />
 
             <div className="relative">
-              <select value={role} onChange={e => setRole(e.target.value)} className="appearance-none border bg-[rgba(217,217,217,0.5)] text-[#5F5454] border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
+              <select value={role} onChange={e => setRole(e.target.value)} className="cursor-pointer appearance-none border bg-[#F5F6FA] text-[#5F5454] border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
                 <option>Student</option>
                 <option>Coordinator</option>
               </select>
@@ -82,7 +82,7 @@ export default function CreateAccount() {
               />
             )}
 
-            <button onClick={handleContinue} className="w-full bg-[#240F8C] text-white py-3 rounded text-[18px] font-bold">Continue</button>
+            <button onClick={handleContinue} className="w-full bg-[#240F8C] text-white py-3 rounded text-[18px] font-bold cursor-pointer hover:bg-[#1F3463] transition duration-300">Continue</button>
             <p className="text-center text-[18px]">
               Already have an Account? <span className="text-[#005CFA] cursor-pointer font-medium" onClick={login}>Log In</span>
             </p>
@@ -104,7 +104,7 @@ export default function CreateAccount() {
             </div>
 
             <div className="relative">
-              <select value={arrangement} onChange={e => setArrangement(e.target.value)} className="appearance-none border text-[#5F5454] bg-white border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
+              <select value={arrangement} onChange={e => setArrangement(e.target.value)} className="cursor-pointer appearance-none border text-[#5F5454] bg-white border-[#D3CECE] text-[20px] rounded p-3 w-full pr-10">
                 <option>On-site</option>
                 <option>Remote</option>
                 <option>Hybrid</option>
@@ -143,10 +143,10 @@ export default function CreateAccount() {
             </div>
 
             <div className="flex space-x-2 mt-4">
-              <button onClick={handleBack} className="border border-[#D3CECE] w-1/2 bg-[#F5F5F5] text-black py-3 rounded text-[18px] font-bold">
+              <button onClick={handleBack} className="border border-[#D3CECE] w-1/2 bg-[#F5F5F5] text-black py-3 rounded text-[18px] font-bold cursor-pointer hover:bg-[#E0E0E0] transition duration-300">
                 Back
               </button>
-              <button onClick={handleSignup} className="w-1/2 bg-[#240F8C] text-white py-3 rounded text-[18px] font-bold">
+              <button onClick={handleSignup} className="w-1/2 bg-[#240F8C] text-white py-3 rounded text-[18px] font-bold cursor-pointer hover:bg-[#1F3463] transition duration-300">
                 Sign Up
               </button>
             </div>

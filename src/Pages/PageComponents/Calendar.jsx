@@ -39,7 +39,7 @@ const Calendar = ({ className = '' }) => {
   };
 
   return (
-    <div className={`bg-white p-10 rounded shadow w-full ${className}`}>
+    <div className={`bg-white p-12 rounded-xl shadow-md border border-[#D1D5DB] ${className}`}>
       {/* Header */}
       <div className="flex justify-between items-center mb-4 ml-10 mr-10">
         <button onClick={prevMonth} className="px-2 text-[23px]">&lt;</button>

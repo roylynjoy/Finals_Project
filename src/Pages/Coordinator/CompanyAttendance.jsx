@@ -66,7 +66,7 @@ function CompanyAttendance() {
                 </thead>
                 <tbody>
                   {filteredAttendances.map((record, index) => (
-                    <tr key={record._id} onClick={() => setSelectedRow(index)}>
+                    <tr className="border" key={record._id} onClick={() => setSelectedRow(index)}>
                       <td className="py-10 px-15 font-medium text-[#556689]">{record.firstName} {record.lastName}</td>
                       <td className="py-4 px-6">{record.timeIn || '—'}</td>
                       <td className="py-4 px-6">{record.timeOut || '—'}</td>
@@ -74,13 +74,13 @@ function CompanyAttendance() {
                       <td className="py-7 px-6 pr-15 flex justify-end items-center gap-4">
                         <button
                           onClick={() => confirmAction(record._id, 'approve')}
-                          className="bg-[#64AD70] text-white px-4 py-3 rounded-md hover:bg-green-600 transition"
+                          className="bg-[#64AD70] text-white px-4 py-3 rounded-md hover:bg-green-600 transition cursor-pointer hover:bg-[#4E8F5A]"
                         >
                           Approve
                         </button>
                         <button
                           onClick={() => confirmAction(record._id, 'deny')}
-                          className="bg-[#D84040] text-white px-10 py-3 rounded-md hover:bg-red-600 transition"
+                          className="bg-[#D84040] text-white px-10 py-3 rounded-md hover:bg-red-600 transition cursor-pointer hover:bg-[#B02A2A]"
                         >
                           Deny
                         </button>
@@ -97,21 +97,21 @@ function CompanyAttendance() {
 
       {/* Confirmation Modal */}
       {modalVisible && (
-        <div className="fixed inset-0 z-50 bg-black/30 backdrop-brightness-90 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 backdrop-blur-sm bg-black/30 flex items-center justify-center">
           <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-            <p className="text-center mb-7 text-gray-600">
+            <p className="text-[20px] text-center mb-7 text-gray-600">
               Are you sure you want to <span className="font-bold">{modalAction}</span> this attendance record?
             </p>
             <div className="flex justify-center gap-4">
               <button
                 onClick={handleModalConfirm}
-                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-10 rounded"
+                className="text-[20px] bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-10 rounded"
               >
                 Yes
               </button>
               <button
                 onClick={handleModalCancel}
-                className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-10 rounded"
+                className="text-[20px] bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-10 rounded"
               >
                 No
               </button>

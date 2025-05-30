@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import AdminSidebar from '../PageComponents/AdminSidebar';
 import AdminHeader from '../PageComponents/AdminHeader';
 import { LuUser, LuChevronDown, LuChevronUp } from "react-icons/lu";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Footer from '../PageComponents/footer';
 import Skeleton from '../../components/Skeleton';
 import useAdminInfo from '../../services/admin/useAdminInfo';
@@ -12,6 +13,10 @@ function AdminDashboard() {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [showCoordinators, setShowCoordinators] = useState(false);
   const [selectedCoordinatorGroup, setSelectedCoordinatorGroup] = useState(null);
+
+  const [companyPage, setCompanyPage] = useState(1);
+  const [coordinatorPage, setCoordinatorPage] = useState(1);
+  const itemsPerPage = 10;
 
   const baseURL = import.meta.env.VITE_API_BASE_URL;
   const { firstName, lastName } = useAdminInfo(baseURL);
@@ -40,7 +45,6 @@ function AdminDashboard() {
                   <p className="text-[20px]">Admin</p>
                 </div>
               </div>
-              <div className="w-[20px] h-[20px] rounded-full bg-[#3BC651]" />
             </div>
           </div>
 
@@ -48,37 +52,65 @@ function AdminDashboard() {
             <div className="space-y-6">
               <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9] text-center bg-[#F9FAFD]">
                 <p className="text-[25px] font-semibold text-gray-700">Total Number of Companies</p>
-                <div className="flex justify-center items-center h-[200px] text-[140px] font-bold text-[#0059AB] mt-4 bg-white rounded-[8px] border border-[#C2C2C2]">
+                <div className="flex justify-center items-center h-[205px] text-[140px] font-bold text-[#0059AB] mt-4 bg-white rounded-[8px] border border-[#C2C2C2]">
                   {loading ? <Skeleton width="120px" height="150px" /> : companies.length}
                 </div>
               </div>
 
               <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9] text-center bg-[#F9FAFD]">
                 <p className="text-[25px] font-semibold text-gray-700">Total Number of Company Coordinators</p>
-                <div className="flex justify-center items-center h-[200px] text-[140px] font-bold text-[#0059AB] mt-4 bg-white rounded-[8px] border border-[#C2C2C2]">
+                <div className="flex justify-center items-center h-[205px] text-[140px] font-bold text-[#0059AB] mt-4 bg-white rounded-[8px] border border-[#C2C2C2]">
                   {loading ? <Skeleton width="120px" height="150px" /> : coordinators.length}
                 </div>
               </div>
             </div>
 
+            {/* Company List Section */}
             <div className="bg-[#F9FAFD] p-4 rounded-[10px] shadow border-2 border-[#B9B9B9]">
               <p className="bg-[#243D73] text-white text-[25px] font-semibold p-4 rounded mb-4">Company List</p>
-              <ul className="space-y-2 text-[25px] text-gray-700">
-                {loading
-                  ? <Skeleton width="90%" height="300px" />
-                  : companies.map((c, idx) => (
-                    <li className="mx-4 pb-2 border-b-2 border-gray-300" key={c._id}>{idx + 1}. {c.name}</li>
-                  ))}
+              <ul className="space-y-2 text-[20px] text-gray-700">
+                {loading ? (
+                  <Skeleton width="90%" height="300px" />
+                ) : (
+                  <>
+                    {companies
+                      .slice((companyPage - 1) * itemsPerPage, companyPage * itemsPerPage)
+                      .map((c, idx) => (
+                        <li className="mx-4 pb-2 border-b-2 border-gray-300" key={c._id}>
+                          {(companyPage - 1) * itemsPerPage + idx + 1}. {c.name}
+                        </li>
+                      ))}
+                    {companies.length > itemsPerPage && (
+                      <div className="flex justify-center gap-6 mt-4 text-[20px]">
+                        <button
+                          onClick={() => setCompanyPage((prev) => prev - 1)}
+                          disabled={companyPage === 1}
+                          className="p-2 bg-gray-200 rounded-full disabled:opacity-50"
+                        >
+                          <FaChevronLeft />
+                        </button>
+                        <button
+                          onClick={() => setCompanyPage((prev) => prev + 1)}
+                          disabled={companyPage * itemsPerPage >= companies.length}
+                          className="p-2 bg-gray-200 rounded-full disabled:opacity-50"
+                        >
+                          <FaChevronRight />
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
               </ul>
             </div>
 
+            {/* Coordinators Section */}
             <div className="bg-[#F9FAFD] rounded-[10px] shadow border-2 border-[#B9B9B9]">
               <div
                 className="flex rounded-tr-lg rounded-tl-lg justify-between bg-[#F4F4F4] items-center cursor-pointer border-b"
                 onClick={() => setShowCoordinators(!showCoordinators)}
               >
                 <p className="text-[25px] font-semibold text-[#3F3F46] p-6">
-                  {selectedCoordinatorGroup ? `${selectedCoordinatorGroup} Company Coordinator` : 'Company Coordinator'}
+                  {selectedCoordinatorGroup ? `${selectedCoordinatorGroup} Coordinator` : 'Company Coordinator'}
                 </p>
                 {showCoordinators ? <LuChevronUp size={30} className="mr-6" /> : <LuChevronDown size={30} className="mr-6" />}
               </div>
@@ -91,20 +123,47 @@ function AdminDashboard() {
                       className="border-b-2 px-3 py-4 rounded bg-[#F4F4F4] cursor-pointer"
                       onClick={() => {
                         setSelectedCoordinatorGroup(group);
+                        setCoordinatorPage(1);
                         setShowCoordinators(false);
                       }}
                     >
-                      {group} Company Coordinator
+                      {group} Coordinator
                     </li>
                   ))}
                 </ul>
               )}
 
               {selectedCoordinatorGroup && (
-                <div className="p-4 pl-8 text-[22px] space-y-2 bg-white border-t border-gray-300">
-                  {groupedCoordinators[selectedCoordinatorGroup].map((name, idx) => (
-                    <p key={idx}>{idx + 1}. {name}</p>
-                  ))}
+                <div className="p-4 pl-8 text-[22px] space-y-2 bg-white border-t border-gray-300 bg-[#F9FAFD]">
+                  {groupedCoordinators[selectedCoordinatorGroup]
+                    .slice((coordinatorPage - 1) * itemsPerPage, coordinatorPage * itemsPerPage)
+                    .map((name, idx) => (
+                      <p key={idx}>
+                        {(coordinatorPage - 1) * itemsPerPage + idx + 1}. {name}
+                      </p>
+                    ))}
+
+                  {groupedCoordinators[selectedCoordinatorGroup].length > itemsPerPage && (
+                    <div className="flex justify-center gap-6 mt-4 text-[18px]">
+                      <button
+                        onClick={() => setCoordinatorPage((prev) => prev - 1)}
+                        disabled={coordinatorPage === 1}
+                        className="p-2 bg-gray-200 rounded-full disabled:opacity-50"
+                      >
+                        <FaChevronLeft />
+                      </button>
+                      <button
+                        onClick={() => setCoordinatorPage((prev) => prev + 1)}
+                        disabled={
+                          coordinatorPage * itemsPerPage >=
+                          groupedCoordinators[selectedCoordinatorGroup].length
+                        }
+                        className="p-2 bg-gray-200 rounded-full disabled:opacity-50"
+                      >
+                        <FaChevronRight />
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

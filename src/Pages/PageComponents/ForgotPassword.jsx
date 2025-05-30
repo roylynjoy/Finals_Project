@@ -3,6 +3,8 @@ import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 
 function ForgotPassword({ isOpen, onClose, email, setEmail }) {
   const [step, setStep] = useState("email");
@@ -13,6 +15,9 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
   const [message, setMessage] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [maxedOut, setMaxedOut] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
 
   const baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -170,22 +175,41 @@ function ForgotPassword({ isOpen, onClose, email, setEmail }) {
             <p className="mb-6 text-[21px] text-[#959494] text-center">
               Set the new password for your account.
             </p>
-            <input
-              type="password"
-              placeholder="New Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full px-3 py-4 border border-[#D3CECE] rounded mb-3 text-[21px] text-[#5F5454]"
-            />
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-3 py-4 border border-[#D3CECE] rounded mb-4 text-[21px] text-[#5F5454]"
-            />
+
+            <div className="relative">
+              <input
+                type={showNewPassword ? "text" : "password"}
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full px-3 py-4 border border-[#D3CECE] rounded mb-3 text-[21px] text-[#5F5454] pr-12"
+              />
+              <span
+                onClick={() => setShowNewPassword((prev) => !prev)}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-600"
+              >
+                {showNewPassword ? <FaEye /> : <FaEyeSlash />}
+              </span>
+            </div>
+
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full px-3 py-4 border border-[#D3CECE] rounded mb-4 text-[21px] text-[#5F5454] pr-12"
+              />
+              <span
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-600"
+              >
+                {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+              </span>
+            </div>
           </>
         )}
+
 
         {/* Step 4: Success */}
         {step === "success" && (

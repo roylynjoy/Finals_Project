@@ -1,5 +1,6 @@
 import React from "react";
 import { FaArrowLeft } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 
 function InternsModal({ isVisible, onClose, companyName, interns }) {
   if (!isVisible) return null;

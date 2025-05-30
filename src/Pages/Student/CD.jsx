@@ -10,7 +10,7 @@ function CD() {
   const navigate = useNavigate();
 
   const arrowBack = () => {
-    navigate(-1);
+    navigate('/Resources');
   };
 
   useEffect(() => {
