@@ -25,24 +25,26 @@ function AdminDashboard() {
   const groupedCoordinators = groupCoordinatorsByCompany(coordinators);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-[#F4F6F8]">
       <AdminSidebar isExpanded={isSidebarExpanded} setIsExpanded={setIsSidebarExpanded} />
       <div
         className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${
           isSidebarExpanded ? 'ml-[400px]' : 'ml-[106px]'
-        } bg-white`}
+        }`}
       >
         <AdminHeader isExpanded={isSidebarExpanded} firstName={firstName} />
         <div className="flex-1 flex flex-col">
           <div className="mt-25 px-5">
-            <div className="bg-[#F9FAFD] p-5 rounded-[10px] shadow flex items-center justify-between border-2 border-[#B9B9B9]">
+            <div className="bg-white p-5 rounded-[10px] shadow-sm flex items-center justify-between border border-[#D9D9D9]">
               <div className="flex items-center gap-4 h-[118px]">
-                <div className="flex items-center justify-center"><LuUser size={65} /></div>
+                <div className="flex items-center justify-center text-[#006fd6]">
+                  <LuUser size={65} />
+                </div>
                 <div>
-                  <div className="text-[33px] font-semibold">
+                  <div className="text-[33px] font-semibold text-gray-800">
                     {loading ? <Skeleton width="200px" height="36px" /> : `Hello, ${firstName || "Admin"}!`}
                   </div>
-                  <p className="text-[20px]">Admin</p>
+                  <p className="text-[20px] text-gray-600">Admin</p>
                 </div>
               </div>
             </div>
@@ -50,49 +52,50 @@ function AdminDashboard() {
 
           <div className="p-5 grid grid-cols-3 gap-6">
             <div className="space-y-6">
-              <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9] text-center bg-[#F9FAFD]">
-                <p className="text-[25px] font-semibold text-gray-700">Total Number of Companies</p>
-                <div className="flex justify-center items-center h-[205px] text-[140px] font-bold text-[#0059AB] mt-4 bg-white rounded-[8px] border border-[#C2C2C2]">
+              <div className="bg-white p-6 rounded-[10px] shadow-sm border border-[#D9D9D9] text-center">
+                <p className="text-[24px] font-semibold text-gray-800">Total Number of Companies</p>
+                <div className="flex justify-center items-center h-[205px] text-[140px] font-bold text-[#006fd6] mt-4 bg-[#FAFAFA] rounded-[8px] border border-[#D9D9D9]">
                   {loading ? <Skeleton width="120px" height="150px" /> : companies.length}
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-[10px] shadow border-2 border-[#B9B9B9] text-center bg-[#F9FAFD]">
-                <p className="text-[25px] font-semibold text-gray-700">Total Number of Company Coordinators</p>
-                <div className="flex justify-center items-center h-[205px] text-[140px] font-bold text-[#0059AB] mt-4 bg-white rounded-[8px] border border-[#C2C2C2]">
+              <div className="bg-white p-6 rounded-[10px] shadow-sm border border-[#D9D9D9] text-center">
+                <p className="text-[24px] font-semibold text-gray-800">Total Number of Company Coordinators</p>
+                <div className="flex justify-center items-center h-[205px] text-[140px] font-bold text-[#006fd6] mt-4 bg-[#FAFAFA] rounded-[8px] border border-[#D9D9D9]">
                   {loading ? <Skeleton width="120px" height="150px" /> : coordinators.length}
                 </div>
               </div>
             </div>
 
             {/* Company List Section */}
-            <div className="bg-[#F9FAFD] p-4 rounded-[10px] shadow border-2 border-[#B9B9B9]">
-              <p className="bg-[#243D73] text-white text-[25px] font-semibold p-4 rounded mb-4">Company List</p>
-              <ul className="space-y-2 text-[20px] text-gray-700">
+            <div className="bg-white p-4 rounded-[10px] shadow-sm border border-[#D9D9D9]">
+              <p className="bg-[#243D73] text-white text-[22px] font-semibold p-4 rounded mb-4">Company List</p>
+              <ul className="space-y-2 text-[18px] text-gray-800">
                 {loading ? (
-                  <Skeleton width="90%" height="300px" />
+                  <Skeleton width="90%" height="30px" />,
+                  <Skeleton width="90%" height="30px" />
                 ) : (
                   <>
                     {companies
                       .slice((companyPage - 1) * itemsPerPage, companyPage * itemsPerPage)
                       .map((c, idx) => (
-                        <li className="mx-4 pb-2 border-b-2 border-gray-300" key={c._id}>
+                        <li className="mx-4 pb-2 border-b border-[#E0E0E0]" key={c._id}>
                           {(companyPage - 1) * itemsPerPage + idx + 1}. {c.name}
                         </li>
                       ))}
                     {companies.length > itemsPerPage && (
-                      <div className="flex justify-center gap-6 mt-4 text-[20px]">
+                      <div className="flex justify-center gap-6 mt-4 text-[18px]">
                         <button
                           onClick={() => setCompanyPage((prev) => prev - 1)}
                           disabled={companyPage === 1}
-                          className="p-2 bg-gray-200 rounded-full disabled:opacity-50"
+                          className="p-2 bg-[#E0E0E0] rounded-full hover:bg-[#D0D0D0] disabled:opacity-40"
                         >
                           <FaChevronLeft />
                         </button>
                         <button
                           onClick={() => setCompanyPage((prev) => prev + 1)}
                           disabled={companyPage * itemsPerPage >= companies.length}
-                          className="p-2 bg-gray-200 rounded-full disabled:opacity-50"
+                          className="p-2 bg-[#E0E0E0] rounded-full hover:bg-[#D0D0D0] disabled:opacity-40"
                         >
                           <FaChevronRight />
                         </button>
@@ -104,23 +107,23 @@ function AdminDashboard() {
             </div>
 
             {/* Coordinators Section */}
-            <div className="bg-[#F9FAFD] rounded-[10px] shadow border-2 border-[#B9B9B9]">
+            <div className="bg-white rounded-[10px] shadow-sm border border-[#D9D9D9]">
               <div
-                className="flex rounded-tr-lg rounded-tl-lg justify-between bg-[#F4F4F4] items-center cursor-pointer border-b"
+                className="flex justify-between bg-[#F8F8F8] items-center cursor-pointer border-b border-[#D9D9D9] rounded-t-lg"
                 onClick={() => setShowCoordinators(!showCoordinators)}
               >
-                <p className="text-[25px] font-semibold text-[#3F3F46] p-6">
+                <p className="text-[22px] font-semibold text-gray-800 p-6">
                   {selectedCoordinatorGroup ? `${selectedCoordinatorGroup} Coordinator` : 'Company Coordinator'}
                 </p>
                 {showCoordinators ? <LuChevronUp size={30} className="mr-6" /> : <LuChevronDown size={30} className="mr-6" />}
               </div>
 
               {showCoordinators && (
-                <ul className="text-[24px] text-[#525252]">
+                <ul className="text-[20px] text-gray-700">
                   {Object.keys(groupedCoordinators).map((group, idx) => (
                     <li
                       key={idx}
-                      className="border-b-2 px-3 py-4 rounded bg-[#F4F4F4] cursor-pointer"
+                      className="border-b px-4 py-3 hover:bg-[#F0F0F0] transition cursor-pointer"
                       onClick={() => {
                         setSelectedCoordinatorGroup(group);
                         setCoordinatorPage(1);
@@ -134,7 +137,7 @@ function AdminDashboard() {
               )}
 
               {selectedCoordinatorGroup && (
-                <div className="p-4 pl-8 text-[22px] space-y-2 bg-white border-t border-gray-300 bg-[#F9FAFD]">
+                <div className="p-4 pl-8 text-[18px] space-y-2 bg-[#FAFAFA] border-t border-[#E0E0E0]">
                   {groupedCoordinators[selectedCoordinatorGroup]
                     .slice((coordinatorPage - 1) * itemsPerPage, coordinatorPage * itemsPerPage)
                     .map((name, idx) => (
@@ -144,11 +147,11 @@ function AdminDashboard() {
                     ))}
 
                   {groupedCoordinators[selectedCoordinatorGroup].length > itemsPerPage && (
-                    <div className="flex justify-center gap-6 mt-4 text-[18px]">
+                    <div className="flex justify-center gap-6 mt-4 text-[16px]">
                       <button
                         onClick={() => setCoordinatorPage((prev) => prev - 1)}
                         disabled={coordinatorPage === 1}
-                        className="p-2 bg-gray-200 rounded-full disabled:opacity-50"
+                        className="p-2 bg-[#E0E0E0] rounded-full hover:bg-[#D0D0D0] disabled:opacity-40"
                       >
                         <FaChevronLeft />
                       </button>
@@ -158,7 +161,7 @@ function AdminDashboard() {
                           coordinatorPage * itemsPerPage >=
                           groupedCoordinators[selectedCoordinatorGroup].length
                         }
-                        className="p-2 bg-gray-200 rounded-full disabled:opacity-50"
+                        className="p-2 bg-[#E0E0E0] rounded-full hover:bg-[#D0D0D0] disabled:opacity-40"
                       >
                         <FaChevronRight />
                       </button>
